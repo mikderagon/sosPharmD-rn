@@ -7,12 +7,15 @@
  */
 
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
-import AppRoot from './src/AppRoot';
 
-const App = () => {
-  return <AppRoot />;
+const SignIn = () => {
+  return (
+    <View style={styles.container}>
+      <Text>SignIn</Text>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -22,4 +25,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default SignIn;

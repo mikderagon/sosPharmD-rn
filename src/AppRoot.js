@@ -7,12 +7,14 @@
  */
 
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, useColorScheme } from 'react-native';
 import 'react-native-gesture-handler';
-import AppRoot from './src/AppRoot';
+import Navigator from './Navigator';
 
-const App = () => {
-  return <AppRoot />;
+const AppRoot = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  return <Navigator />;
 };
 
 const styles = StyleSheet.create({
@@ -22,4 +24,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default AppRoot;

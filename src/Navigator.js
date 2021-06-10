@@ -19,7 +19,8 @@ const Stack = createStackNavigator();
 const Navigator = ({ children }) => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator headerMode="none">
+        <Stack.Screen name="Onboarding" component={Onboarding} />
         <Stack.Screen name="Home" component={Calendar} />
         <Stack.Screen name="Welcome" component={SignIn} />
       </Stack.Navigator>

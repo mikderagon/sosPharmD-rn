@@ -10,7 +10,7 @@ import React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 
-const FirstSlide = ({ navigation }) => {
+const Slide2 = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text>FirstSlide</Text>
@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     width: '100%',
+    backgroundColor: 'green',
   },
 });
 
-export default FirstSlide;
+export default Slide2;

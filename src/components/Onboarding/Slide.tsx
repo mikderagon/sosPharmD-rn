@@ -15,20 +15,23 @@ import {
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
 
-const OnboardingImage1 = require('../../assets/images/onboarding1.png');
+interface Props {
+  title: string,
+  text: string,
+  image: Image,
+}
 
-const Slide = ({ navigation, props }) => {
-  const { Title, Text } = props;
+interface Navigation {
+  
+}
+
+const Slide = (props: Props | Navigation) => {
+  const { title, text, image } = props;
   return (
     <View style={styles.container}>
-      <Image source={OnboardingImage1} style={styles.onboardingImageSize} />
-      <Text>{Title}</Text>
-      <Button
-        title="Go back"
-        onPress={() => {
-          navigation.navigate('Welcome');
-        }}
-      />
+      <Image source={image} style={styles.onboardingImageSize} />
+      
+      <Text>{title}</Text>
     </View>
   );
 };

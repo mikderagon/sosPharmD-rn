@@ -11,12 +11,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import 'react-native-gesture-handler';
 import Calendar from './components/Home/Calendar';
-import Onboarding from './components/Onboarding/OnboardingView2';
+import Onboarding from './components/Onboarding/OnboardingView';
 import SignIn from './components/SignIn';
+import { StackParamList } from './types';
 
-const Stack = createStackNavigator();
 
-const Navigator = ({ children }) => {
+const Stack = createStackNavigator<StackParamList>();
+
+const Navigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator headerMode="none">

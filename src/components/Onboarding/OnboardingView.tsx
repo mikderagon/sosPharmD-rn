@@ -6,61 +6,65 @@
  * @flow strict-local
  */
 
-import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ReactElement } from 'react';
+import { Animated, FlatList, Image, ListRenderItem, StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
-import Onboarding from 'react-native-onboarding-swiper';
-import { heightPercentageToDP as hp } from '../../utils/responsiveLayout';
-import Slide1 from './Slide';
-import Slide2 from './Slide';
-import Slide3 from './Slide';
+import { NavigationProps } from '../../types';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from '../../utils/responsiveLayout';
+import Slide from './Slide';
 
-const OnboardingView = ({ navigation }) => {
+const OnboardingImage1 = require('../../assets/images/onboarding1.png');
+const OnboardingImage2 = require('../../assets/images/onboarding2.png');
+const OnboardingImage3 = require('../../assets/images/onboarding3.png');
+
+interface Props {
+
+}
+
+const OnboardingView = ({ navigation }: NavigationProps) => {
+  const pages = [
+    {
+      component: <Slide title="First Slide hey" text="Hello world" image={OnboardingImage1} />,
+    },
+    {
+      component: <Slide title="First Slide hey" text="Hello world" image={OnboardingImage2} />,
+    },
+    {
+      component: <Slide title="First Slide hey" text="Hello world" image={OnboardingImage3} />,
+    },
+  ];
+
+  const renderItem = ({ item }: any) => {
+    return item.component;
+  };
+
+  const keyExtractor = (item: any, index: number) => index.toString();
+
   return (
-    <View style={styles.container}>
-      {/* <Text>OnboardingView</Text> */}
-      {/* <Button
-        title="Go back"
-        onPress={() => {
-          navigation.navigate('Welcome');
-        }}
-      /> */}
-      <Onboarding
-        // controlStatusBar={false}
-        pages={[
-          {
-            image: <Slide1 />,
-            backgroundColor: 'transparent',
-            title: 'Slide1',
-            subtitle: 'Sub1',
-          },
-          {
-            image: <Slide2 />,
-            backgroundColor: 'transparent',
-            title: 'Slide2',
-            subtitle: 'Sub2',
-          },
-          {
-            image: <Slide3 />,
-            backgroundColor: 'transparent',
-            title: 'Slide3',
-            subtitle: 'Sub3',
-          },
-        ]}
-        // bottomBarColor="t"
-        // bottomBarHighlight={false}s
-        // bottomBarHeight={hp(0)}
-        showNext={false}
-        showSkip={false}
+    <Animated.View style={styles.container}>
+      <FlatList
+        data={pages}
+        pagingEnabled
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        // onViewableItemsChanged={onPageSwiped}
+        initialNumToRender={1}
       />
-    </View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
-    width: '100%',
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
   },
   imagePlace: {
     marginTop: hp(20),

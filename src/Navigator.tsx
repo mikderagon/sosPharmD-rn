@@ -15,12 +15,23 @@ import Onboarding from './components/Onboarding/OnboardingView';
 import SignIn from './components/SignIn';
 import { StackParamList } from './types';
 
-
 const Stack = createStackNavigator<StackParamList>();
+
+const defaultTheme = {
+  dark: false,
+  colors: {
+    primary: '#fff',
+    background: '#fff',
+    card: '#fff',
+    text: '#fff',
+    border: '#fff',
+    notification: '#fff',
+  },
+};
 
 const Navigator = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator headerMode="none">
         <Stack.Screen name="Onboarding" component={Onboarding} />
         <Stack.Screen name="Home" component={Calendar} />

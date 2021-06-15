@@ -16,39 +16,25 @@ import {
 } from '../../utils/responsiveLayout';
 
 interface Props {
-  title: string,
-  text: string,
-  image: Image,
+  title: string;
+  text: string;
+  image: Image;
 }
 
-interface Navigation {
-  
-}
+interface Navigation {}
 
 const Slide = (props: Props | Navigation) => {
   const { title, text, image } = props;
   return (
     <View style={styles.container}>
       <Image source={image} style={styles.onboardingImageSize} />
-      
-      <Text>{title}</Text>
     </View>
   );
 };
 
-Slide.propTypes = {
-  Title: propTypes.string,
-  Text: propTypes.string,
-};
-
-Slide.defaultProps = {
-  Title: 'Title',
-  Text: 'Longer Text goes here',
-};
-
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    height: hp(40),
     width: wp(100),
     backgroundColor: '#fff',
   },

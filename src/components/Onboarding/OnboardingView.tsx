@@ -6,35 +6,56 @@
  * @flow strict-local
  */
 
-import React, { useState, useEffect } from 'react';
-import { ReactElement } from 'react';
-import { Animated, FlatList, Image, ListRenderItem, StyleSheet, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import {
+  Alert,
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import 'react-native-gesture-handler';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { NavigationProps } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import Slide from './Slide';
+import Button from './Button';
 
 const OnboardingImage1 = require('../../assets/images/onboarding1.png');
 const OnboardingImage2 = require('../../assets/images/onboarding2.png');
 const OnboardingImage3 = require('../../assets/images/onboarding3.png');
 
-interface Props {
+interface Props {}
 
-}
+const OnboardingSlideFactory = (source: ImageSourcePropType) => (
+  <View style={styles.carouselSlide}>
+    <View style={styles.imageContainer}>
+      <Image source={source} style={styles.onboardingImages} />
+    </View>
+    <Text style={styles.title}>LOREM IPSUM DO</Text>
+    <Text style={styles.text}>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.
+    </Text>
+  </View>
+);
 
 const OnboardingView = ({ navigation }: NavigationProps) => {
-  const pages = [
+  const slides = [
     {
-      component: <Slide title="First Slide hey" text="Hello world" image={OnboardingImage1} />,
+      component: OnboardingSlideFactory(OnboardingImage1),
+      buttonText: 'Next',
     },
     {
-      component: <Slide title="First Slide hey" text="Hello world" image={OnboardingImage2} />,
+      component: OnboardingSlideFactory(OnboardingImage2),
+      buttonText: 'Next',
     },
     {
-      component: <Slide title="First Slide hey" text="Hello world" image={OnboardingImage3} />,
+      component: OnboardingSlideFactory(OnboardingImage3),
+      buttonText: 'Get Started',
     },
   ];
 
@@ -42,36 +63,100 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
     return item.component;
   };
 
-  const keyExtractor = (item: any, index: number) => index.toString();
+  const [activeSlide, setActiveSlide] = useState(0);
+  let carouselRef = useRef(null);
+
+  const lastSlideActive = activeSlide === slides.length - 1;
 
   return (
-    <Animated.View style={styles.container}>
-      <FlatList
-        data={pages}
-        pagingEnabled
-        horizontal
-        showsHorizontalScrollIndicator={false}
+    <View style={styles.container}>
+      <Carousel
+        ref={carouselRef}
+        data={slides}
         renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        // onViewableItemsChanged={onPageSwiped}
-        initialNumToRender={1}
+        sliderWidth={wp(100)}
+        itemWidth={wp(100)}
+        onSnapToItem={index => setActiveSlide(index)}
       />
-    </Animated.View>
+      <Pagination
+        containerStyle={styles.pagination}
+        dotsLength={slides.length}
+        activeDotIndex={activeSlide}
+        dotStyle={{ ...styles.dotStyle, width: 15 }}
+        inactiveDotStyle={styles.dotStyle}
+      />
+      <View style={styles.buttonsContainer}>
+        <Button
+          onPress={() => {
+            carouselRef.current.snapToPrev();
+          }}
+          text="Prev"
+          style="borderless"
+        />
+        <Button
+          onPress={() => {
+            if (lastSlideActive) {
+              Alert.alert('hell');
+              navigation.navigate('Welcome');
+            } else {
+              carouselRef.current.snapToNext();
+            }
+          }}
+          text={slides[activeSlide].buttonText}
+          style={activeSlide == slides.length - 1 ? 'bold' : 'default'}
+        />
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    height: hp(100),
+    width: wp(100),
+    alignItems: 'center',
   },
-  imagePlace: {
+  carouselSlide: {
+    height: hp(100),
+    width: wp(100),
+    alignItems: 'center',
+  },
+  imageContainer: {
+    height: hp(30),
     marginTop: hp(20),
+    width: '100%',
+    justifyContent: 'flex-end',
+  },
+  onboardingImages: {
+    width: '80%',
+    resizeMode: 'contain',
     alignSelf: 'center',
-    height: 200,
-    width: 300,
-    backgroundColor: 'red',
+  },
+  title: {
+    fontSize: 30,
+    marginTop: hp(10),
+  },
+  text: {
+    fontSize: 18,
+    marginTop: hp(3),
+    width: wp(80),
+    textAlign: 'center',
+  },
+  pagination: {
+    position: 'absolute',
+    top: hp(49.5),
+  },
+  dotStyle: {
+    width: 10,
+    height: 10,
+    borderRadius: 50,
+    marginHorizontal: -10,
+    backgroundColor: '#494949',
+  },
+  buttonsContainer: {
+    position: 'absolute',
+    bottom: hp(10),
+    flexDirection: 'row',
   },
 });
 

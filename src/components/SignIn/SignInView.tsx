@@ -7,22 +7,22 @@
  */
 
 import React, { useState } from 'react';
-import { Image, TouchableOpacity } from 'react-native';
 import {
+  Image,
+  ImageBackground,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
-  ImageBackground,
-  TextInput,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import { NavigationProps } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import Input from './Input';
 import LoginButton from './Button';
-import { NavigationProps } from '../../types';
+import Input from './Input';
 
 const logo = require('../../assets/images/logo.png');
 const backgroundSrc = require('../../assets/images/signInBackground.png');
@@ -85,15 +85,25 @@ const SignInView = ({ navigation }: NavigationProps) => {
             <Image source={require('../../assets/images/signWithApple.png')} />
           </TouchableOpacity>
         </View>
-
-        <View style={{ marginTop: hp(2) }}>
-          <Text
-            style={styles.bold}
+        {/* forgot password */}
+        <View style={{ marginTop: hp(4) }}>
+          <TouchableOpacity
             onPress={() => {
-              navigation.navigate('forgotPassword');
+              // navigation.navigate('forgotPassword');
             }}>
-            Forgot Password?
-          </Text>
+            <Text style={styles.boldText}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
+        {/*  */}
+        <View style={{ marginTop: hp(2.5) }}>
+          <TouchableOpacity
+            style={styles.signUp}
+            onPress={() => {
+              navigation.navigate('SignUp');
+            }}>
+            <Text style={styles.regularText}>Don't have an account?</Text>
+            <Text style={styles.boldText}> Sign Up</Text>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     </View>
@@ -120,9 +130,17 @@ const styles = StyleSheet.create({
     height: hp(20),
     resizeMode: 'contain',
   },
-  bold: {
+  signUp: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  boldText: {
     fontWeight: '500',
-    fontSize: 16,
+    fontSize: 15,
+  },
+  regularText: {
+    fontWeight: '300',
+    fontSize: 14,
   },
 });
 

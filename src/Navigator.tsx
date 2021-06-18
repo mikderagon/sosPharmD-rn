@@ -9,11 +9,16 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import Calendar from './components/Home/Calendar';
 import Onboarding from './components/Onboarding/OnboardingView';
 import SignIn from './components/SignIn/SignInView';
+import SignUp from './components/SignUp/SignUpView';
 import { StackParamList } from './types';
+
+const backCaret = require('./assets/images/backCaret.png');
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -29,22 +34,66 @@ const defaultTheme = {
   },
 };
 
-const routes = {
-  onboarding: 'Onboarding',
-  signin: 'SignIn',
-};
-
 const Navigator = () => {
-  const initialRouteName = routes.onboarding;
+  // const initialRouteName = 'Onboarding';
+  // const initialRouteName = 'Home';
+  const initialRouteName = 'SignUp';
   return (
     <NavigationContainer theme={defaultTheme}>
-      <Stack.Navigator headerMode="none" initialRouteName={initialRouteName}>
-        <Stack.Screen name="Onboarding" component={Onboarding} />
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="Home" component={Calendar} />
+      <Stack.Navigator headerMode="screen" initialRouteName={initialRouteName}>
+        <Stack.Screen
+          name="Onboarding"
+          component={Onboarding}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="SignIn"
+          component={SignIn}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={({ navigation }) => ({
+            title: 'Locum Registration',
+            headerStyle: {
+              backgroundColor: '#fff',
+            },
+            headerTitleStyle: {
+              fontWeight: '800',
+              color: '#303D5C',
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('SignIn');
+                }}>
+                <Image source={backCaret} style={styles.backCaret} />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Calendar}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  backCaret: {
+    height: 10,
+    resizeMode: 'contain',
+  },
+});
 
 export default Navigator;

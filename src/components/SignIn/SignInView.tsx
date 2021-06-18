@@ -66,7 +66,10 @@ const SignInView = ({ navigation }: NavigationProps) => {
         <View style={{ marginTop: hp(5) }}>
           <LoginButton
             onPress={() => {
-              navigation.navigate('Home');
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+              });
             }}
           />
         </View>

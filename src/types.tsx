@@ -1,16 +1,13 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 
 export type StackParamList = {
-  Onboarding: undefined,
-  Home: undefined,
-  Welcome: undefined,
-}
+  Onboarding: undefined;
+  Home: undefined;
+  SignIn: undefined;
+};
 
-type OnboardingViewNavigationProp = StackNavigationProp<
-  StackParamList,
-  'Onboarding' // current route
->;
+type OnboardingViewNavigationProp = StackNavigationProp<StackParamList>;
 
 export type NavigationProps = {
-  navigation: OnboardingViewNavigationProp,
-}
+  navigation: OnboardingViewNavigationProp;
+};

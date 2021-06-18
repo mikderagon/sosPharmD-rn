@@ -12,7 +12,7 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import Calendar from './components/Home/Calendar';
 import Onboarding from './components/Onboarding/OnboardingView';
-import SignIn from './components/SignIn';
+import SignIn from './components/SignIn/SignInView';
 import { StackParamList } from './types';
 
 const Stack = createStackNavigator<StackParamList>();
@@ -29,13 +29,19 @@ const defaultTheme = {
   },
 };
 
+const routes = {
+  onboarding: 'Onboarding',
+  signin: 'SignIn',
+};
+
 const Navigator = () => {
+  const initialRouteName = routes.onboarding;
   return (
     <NavigationContainer theme={defaultTheme}>
-      <Stack.Navigator headerMode="none">
+      <Stack.Navigator headerMode="none" initialRouteName={initialRouteName}>
         <Stack.Screen name="Onboarding" component={Onboarding} />
+        <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Home" component={Calendar} />
-        <Stack.Screen name="Welcome" component={SignIn} />
       </Stack.Navigator>
     </NavigationContainer>
   );

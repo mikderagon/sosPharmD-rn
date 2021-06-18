@@ -89,6 +89,7 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
         <Button
           onPress={() => {
             carouselRef.current.snapToPrev();
+            setActiveSlide(activeSlide - 1);
           }}
           text="Prev"
           style="borderless"
@@ -96,10 +97,10 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
         <Button
           onPress={() => {
             if (lastSlideActive) {
-              Alert.alert('hell');
-              navigation.navigate('Welcome');
+              navigation.navigate('SignIn');
             } else {
               carouselRef.current.snapToNext();
+              setActiveSlide(activeSlide + 1);
             }
           }}
           text={slides[activeSlide].buttonText}

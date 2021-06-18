@@ -22,7 +22,7 @@ import {
 } from '../../utils/responsiveLayout';
 
 interface Props {
-  value: string;
+  autoFocus?: boolean;
   set: Dispatch<SetStateAction<any>>;
   sourceImage: any;
   placeholder: string;
@@ -30,11 +30,12 @@ interface Props {
 }
 
 const Input = (props: Props) => {
-  const { value, set, sourceImage, placeholder, secured = false } = props;
+  const { autoFocus, set, sourceImage, placeholder, secured = false } = props;
   return (
     <View style={styles.container}>
       <Image source={sourceImage} style={styles.usernameImage} />
       <TextInput
+        autoFocus={autoFocus}
         secureTextEntry={secured}
         style={styles.input}
         onChangeText={set}
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     height: '95%',
   },
   input: {
-    fontSize: 16,
+    fontSize: 19,
     color: '#aaa',
     width: '70%',
     textAlign: 'center',

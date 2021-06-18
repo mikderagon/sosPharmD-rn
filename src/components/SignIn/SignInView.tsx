@@ -46,6 +46,7 @@ const SignInView = ({ navigation }: NavigationProps) => {
         {/* username */}
         <View style={{ marginTop: hp(5) }}>
           <Input
+            autoFocus
             value={username}
             set={setUsername}
             sourceImage={usernameImage}

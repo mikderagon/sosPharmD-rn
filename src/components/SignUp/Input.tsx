@@ -22,49 +22,57 @@ import {
 } from '../../utils/responsiveLayout';
 
 interface Props {
+  inputName: string;
   set: Dispatch<SetStateAction<any>>;
   placeholder: string;
   secured?: boolean;
+  autoCapitalize?: boolean;
 }
 
 const Input = (props: Props) => {
-  const { set, placeholder, secured = false } = props;
+  const {
+    inputName = 'input',
+    set,
+    placeholder,
+    secured = false,
+    autoCapitalize = false,
+  } = props;
   return (
     <View style={styles.container}>
-      <TextInput
-        secureTextEntry={secured}
-        style={styles.input}
-        onChangeText={set}
-        placeholder={placeholder}
-        placeholderTextColor="#aaa"
-        autoCapitalize="none"
-        autoCompleteType="off"
-        autoCorrect={false}
-      />
+      <Text style={styles.title}>{inputName}</Text>
+      <View style={{ marginTop: hp(2) }}>
+        <TextInput
+          secureTextEntry={secured}
+          style={styles.input}
+          onChangeText={set}
+          placeholder={placeholder}
+          placeholderTextColor="#CCCBCB"
+          autoCapitalize={autoCapitalize ? 'words' : 'none'}
+          autoCompleteType="off"
+          autoCorrect={false}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    borderColor: '#B4B4B4',
-    borderWidth: 2,
-    height: hp(5.5),
     width: wp(80),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  usernameImage: {
-    resizeMode: 'contain',
-    height: '95%',
+  title: {
+    fontSize: 15,
+    color: '#23B7FF',
+    fontWeight: '600',
   },
   input: {
-    fontSize: 16,
-    color: '#aaa',
-    width: '90%',
+    fontSize: 15,
+    color: '#494949',
+    width: '100%',
     textAlign: 'left',
+    borderBottomColor: '#CCCBCB',
+    borderBottomWidth: 1,
+    paddingBottom: 10,
   },
 });
 

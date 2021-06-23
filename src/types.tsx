@@ -11,4 +11,5 @@ type OnboardingViewNavigationProp = StackNavigationProp<StackParamList>;
 
 export type NavigationProps = {
   navigation: OnboardingViewNavigationProp;
+  children?: any;
 };

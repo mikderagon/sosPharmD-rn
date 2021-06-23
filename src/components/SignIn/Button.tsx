@@ -24,13 +24,20 @@ import {
 
 interface Props {
   onPress: () => void;
+  text?: string;
+  active?: boolean;
 }
 
 const Button = (props: Props) => {
-  const { onPress } = props;
+  const { onPress, text = 'Login', active = true } = props;
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Text style={styles.text}>Login</Text>
+    <TouchableOpacity
+      activeOpacity={active ? 0.2 : 1}
+      style={styles.container}
+      onPress={() => {
+        active ? onPress() : {};
+      }}>
+      <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   );
 };

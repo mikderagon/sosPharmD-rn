@@ -15,7 +15,7 @@ import 'react-native-gesture-handler';
 import Calendar from './components/Home/Calendar';
 import Onboarding from './components/Onboarding/OnboardingView';
 import SignIn from './components/SignIn/SignInView';
-import SignUp from './components/SignUp/SignUpView';
+import SignUp from './components/SignUp/SignUpTab';
 import { StackParamList } from './types';
 
 const backCaret = require('./assets/images/backCaret.png');
@@ -62,6 +62,8 @@ const Navigator = () => {
             title: 'Locum Registration',
             headerStyle: {
               backgroundColor: '#fff',
+              borderBottomColor: '#303D5C',
+              borderBottomWidth: 1,
             },
             headerTitleStyle: {
               fontWeight: '800',
@@ -91,7 +93,8 @@ const Navigator = () => {
 
 const styles = StyleSheet.create({
   backCaret: {
-    height: 10,
+    marginLeft: 10,
+    height: 15,
     resizeMode: 'contain',
   },
 });

@@ -7,14 +7,7 @@
  */
 
 import React, { useState } from 'react';
-import { useRef } from 'react';
-import {
-  FlatList,
-  ImageBackground,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { NavigationProps } from '../../types';
 import {
@@ -28,8 +21,12 @@ const logo = require('../../assets/images/logo.png');
 const backgroundSrc = require('../../assets/images/signInBackground.png');
 const usernameImage = require('../../assets/images/usernameImage.png');
 const passwordImage = require('../../assets/images/passwordImage.png');
+import View1 from './View1';
+import View2 from './View2';
+import View3 from './View3';
+import Button from '../SignIn/Button';
 
-const SignUpView = ({ navigation }: NavigationProps) => {
+const SignUpTab = ({ navigation }: NavigationProps) => {
   const fields = [
     {
       key: 'email',
@@ -38,10 +35,12 @@ const SignUpView = ({ navigation }: NavigationProps) => {
     {
       key: 'firstName',
       value: 'First Name',
+      autoCapitalize: true,
     },
     {
       key: 'lastName',
       value: 'Last Name',
+      autoCapitalize: true,
     },
     {
       key: 'dob',
@@ -63,54 +62,52 @@ const SignUpView = ({ navigation }: NavigationProps) => {
       key: 'diploma',
       value: 'Diploma',
     },
+    {
+      key: 'educationalInstitution',
+      value: 'Educational Institution',
+    },
+    {
+      key: 'knownSoftwares',
+      value: 'Known Softwares',
+    },
   ];
   const [userData, setUserData] = useState({});
-  // const [email, setEmail] = useState('');
-  // const [firstName, setFirstName] = useState('');
-  // const [lastName, setLastName] = useState('');
-  // const [dob, setDob] = useState('');
-  // const [gender, setGender] = useState('');
-  // const [address, setAddress] = useState('');
-  // const [city, setCity] = useState('');
-  // const [diploma, setDiploma] = useState('');
+  const allFieldsEntered = true;
   return (
     <View style={styles.container}>
-      <ImageBackground source={backgroundSrc} style={styles.backgroundImage}>
+      <View style={styles.flatListContainer}>
         <KeyboardAwareFlatList
-          extraScrollHeight={120}
+          scrollEnabled
           showsVerticalScrollIndicator={false}
           style={{ width: '100%' }}
-          contentContainerStyle={{ marginTop: hp(2), alignItems: 'center' }}
+          contentContainerStyle={{ alignItems: 'center' }}
           data={fields}
           renderItem={({ item }) => (
-            <View style={[{ marginTop: hp(3) }, styles.shadow]}>
+            <View style={[{ marginTop: hp(3) }]}>
               <Input
+                inputName={item.value}
                 placeholder={item.value}
+                autoCapitalize={item.autoCapitalize}
                 set={() => setUserData({ ...userData, [item.key]: item.key })}
               />
             </View>
           )}
-          keyboardOpeningTime={0}
+          ListFooterComponent={() => <View style={{ height: hp(5) }} />}
+          keyboardOpeningTime={10}
         />
-        <View style={styles.footer}>
-          {/* dialog box */}
-          {/* <View style={[styles.dialogBox, { marginBottom: hp(18) }]}>
-            <View style={styles.triangle} />
-            <Text style={styles.dialogText}>
-              <Text style={styles.regularText}>Step 1: {'\n'} </Text>
-              <Text style={styles.boldText}>Hello world</Text>
-            </Text>
-          </View> */}
+      </View>
 
-          <View style={styles.checkpointsContainer}>
-            <View style={styles.checkpoint} />
-            <View style={styles.progressLine} />
-            <View style={styles.checkpoint} />
-            <View style={styles.progressLine} />
-            <View style={styles.checkpoint} />
-          </View>
+      <View style={styles.footer}>
+        <View style={{ marginTop: hp(2) }}>
+          <Button
+            active={allFieldsEntered}
+            onPress={() => {
+              navigation.navigate('AccountConfirmation');
+            }}
+            text="Next"
+          />
         </View>
-      </ImageBackground>
+      </View>
     </View>
   );
 };
@@ -120,42 +117,29 @@ const styles = StyleSheet.create({
     height: hp(100),
     width: wp(100),
   },
-  backgroundImage: {
-    flex: 1,
-    alignItems: 'center',
-    resizeMode: 'cover',
-  },
-  header: {
-    backgroundColor: '#fff',
-    height: hp(5),
-    width: '100%',
-  },
-  backCaret: {
-    height: hp(3),
-    resizeMode: 'contain',
+  flatListContainer: {
+    height: hp(77),
   },
   footer: {
     position: 'absolute',
+    shadowColor: '#000',
+    shadowOffset: { height: -1, width: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
     bottom: 0,
     marginBottom: hp(10),
     height: hp(13),
     width: '100%',
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowRadius: 1,
-    shadowOpacity: 0.2,
-    shadowOffset: { height: 2, width: 3 },
   },
   dialogBox: {
     backgroundColor: '#1D2366',
     height: hp(7),
-    width: wp(36),
+    width: wp(30),
     borderRadius: wp(3),
     alignItems: 'center',
+    bottom: 55,
   },
   triangle: {
     width: 0,
@@ -185,6 +169,10 @@ const styles = StyleSheet.create({
   },
 
   checkpointsContainer: {
+    // backgroundColor: 'red',
+    // height: 100,
+    // width: 200,
+    bottom: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -193,13 +181,13 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 50,
-    backgroundColor: 'red',
+    backgroundColor: '#23B7FF',
   },
   progressLine: {
     height: 1,
-    width: wp(24),
-    backgroundColor: 'red',
+    width: wp(20),
+    backgroundColor: '#23B7FF',
   },
 });
 
-export default SignUpView;
+export default SignUpTab;

@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 19,
-    color: '#aaa',
+    color: '#494949',
     width: '70%',
     textAlign: 'center',
   },

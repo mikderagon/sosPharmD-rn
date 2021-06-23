@@ -7,26 +7,18 @@
  */
 
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import { NavigationProps } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import Input from './Input';
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-
-const logo = require('../../assets/images/logo.png');
-const backgroundSrc = require('../../assets/images/signInBackground.png');
-const usernameImage = require('../../assets/images/usernameImage.png');
-const passwordImage = require('../../assets/images/passwordImage.png');
-import View1 from './View1';
-import View2 from './View2';
-import View3 from './View3';
 import Button from '../SignIn/Button';
+import Input from './Input';
 
-const SignUpTab = ({ navigation }: NavigationProps) => {
+const SignUpView = ({ navigation }: NavigationProps) => {
   const fields = [
     {
       key: 'email',
@@ -190,4 +182,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpTab;
+export default SignUpView;

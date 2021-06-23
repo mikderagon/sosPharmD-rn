@@ -12,10 +12,11 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Image, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
+import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
 import Calendar from './components/Home/Calendar';
 import Onboarding from './components/Onboarding/OnboardingView';
 import SignIn from './components/SignIn/SignInView';
-import SignUp from './components/SignUp/SignUpTab';
+import SignUp from './components/SignUp/SignUpView';
 import { StackParamList } from './types';
 
 const backCaret = require('./assets/images/backCaret.png');
@@ -78,6 +79,13 @@ const Navigator = () => {
               </TouchableOpacity>
             ),
           })}
+        />
+        <Stack.Screen
+          name="AccountConfirmation"
+          component={AccountConfirmation}
+          options={{
+            headerShown: false,
+          }}
         />
         <Stack.Screen
           name="Home"

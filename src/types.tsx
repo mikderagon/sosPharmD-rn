@@ -5,6 +5,7 @@ export type StackParamList = {
   Home: undefined;
   SignIn: undefined;
   SignUp: undefined;
+  AccountConfirmation: undefined;
 };
 
 type OnboardingViewNavigationProp = StackNavigationProp<StackParamList>;

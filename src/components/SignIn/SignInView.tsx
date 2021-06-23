@@ -16,6 +16,7 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import { sharedStyles } from '../../styles/shared';
 import { NavigationProps } from '../../types';
 import {
   heightPercentageToDP as hp,
@@ -34,7 +35,9 @@ const SignInView = ({ navigation }: NavigationProps) => {
   const [password, setPassword] = useState('');
   return (
     <View style={styles.container}>
-      <ImageBackground source={backgroundSrc} style={styles.backgroundImage}>
+      <ImageBackground
+        source={backgroundSrc}
+        style={sharedStyles.backgroundImage}>
         {/* title */}
         <View style={{ marginTop: hp(1) }}>
           <Text style={styles.appTitle}>SOS Pharm D</Text>
@@ -115,11 +118,6 @@ const styles = StyleSheet.create({
   container: {
     height: hp(100),
     width: wp(100),
-  },
-  backgroundImage: {
-    flex: 1,
-    alignItems: 'center',
-    resizeMode: 'cover',
   },
   appTitle: {
     fontSize: 30,

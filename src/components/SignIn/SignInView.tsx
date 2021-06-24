@@ -20,6 +20,7 @@ import {
 } from 'react-native';
 import 'react-native-gesture-handler';
 import { sharedStyles } from '../../styles/shared';
+import colors from '../../styles/colors';
 import { NavigationProps } from '../../types';
 import {
   heightPercentageToDP as hp,
@@ -143,7 +144,7 @@ const SignInView = ({ navigation }: NavigationProps) => {
           onPress={() => {
             // navigation.navigate('forgotPassword');
           }}>
-          <Text style={[styles.boldText, { color: '#1E81CE' }]}>
+          <Text style={[styles.boldText, { color: colors.regularBlue }]}>
             Forgot Password?
           </Text>
         </TouchableOpacity>
@@ -156,7 +157,10 @@ const SignInView = ({ navigation }: NavigationProps) => {
             navigation.navigate('SignUp');
           }}>
           <Text style={styles.regularText}>Don't have an account?</Text>
-          <Text style={[styles.boldText, { color: '#1E81CE' }]}> Sign Up</Text>
+          <Text style={[styles.boldText, { color: colors.regularBlue }]}>
+            {' '}
+            Sign Up
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -172,18 +176,18 @@ const styles = StyleSheet.create({
   appTitle: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#303D5C',
+    color: colors.darkerBlue,
   },
   or: {
     fontSize: 14,
     fontWeight: '300',
-    color: '#303D5C',
+    color: colors.darkerBlue,
   },
   customUnderline: {
     marginTop: 3,
     height: 2,
     width: wp(40),
-    backgroundColor: '#303D5C',
+    backgroundColor: colors.darkerBlue,
   },
   logo: {
     height: hp(20),

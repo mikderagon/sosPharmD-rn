@@ -17,6 +17,7 @@ import {
   TextInput,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import colors from '../../styles/colors';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -47,16 +48,11 @@ const styles = StyleSheet.create({
     height: hp(6),
     width: wp(80),
     borderRadius: 50,
-    // backgroundColor: '#8BAFD1',
-    backgroundColor: '#183258',
+    backgroundColor: colors.darkerBlue,
     borderWidth: 1,
     borderColor: '#263C4D',
     alignItems: 'center',
     justifyContent: 'center',
-    // shadowColor: '#000',
-    // shadowOffset: { height: 3, width: 2 },
-    // shadowOpacity: 0.4,
-    // shadowRadius: 1,
   },
   text: {
     color: '#fff',

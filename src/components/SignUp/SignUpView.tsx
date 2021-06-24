@@ -94,7 +94,7 @@ const SignUpView = ({ navigation }: NavigationProps) => {
           <Button
             active={allFieldsEntered}
             onPress={() => {
-              navigation.navigate('AccountConfirmation');
+              navigation.navigate('Home');
             }}
             text="Sign Up"
           />
@@ -124,61 +124,6 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#fff',
     alignItems: 'center',
-  },
-  dialogBox: {
-    backgroundColor: '#1D2366',
-    height: hp(7),
-    width: wp(30),
-    borderRadius: wp(3),
-    alignItems: 'center',
-    bottom: 55,
-  },
-  triangle: {
-    width: 0,
-    height: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderLeftWidth: 10,
-    borderRightWidth: 10,
-    borderBottomWidth: 20,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: '#1D2366',
-    top: 55,
-    transform: [{ rotate: '180deg' }],
-  },
-  dialogText: {
-    marginTop: -6,
-    textAlign: 'center',
-  },
-  boldText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  regularText: {
-    color: '#fff',
-    fontWeight: '400',
-  },
-
-  checkpointsContainer: {
-    // backgroundColor: 'red',
-    // height: 100,
-    // width: 200,
-    bottom: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  checkpoint: {
-    height: 40,
-    width: 40,
-    borderRadius: 50,
-    backgroundColor: '#23B7FF',
-  },
-  progressLine: {
-    height: 1,
-    width: wp(20),
-    backgroundColor: '#23B7FF',
   },
 });
 

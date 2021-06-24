@@ -29,7 +29,7 @@ interface Props {
 }
 
 const Button = (props: Props) => {
-  const { onPress, text = 'Login', active = true } = props;
+  const { onPress, text = 'Log in', active = true } = props;
   return (
     <TouchableOpacity
       activeOpacity={active ? 0.2 : 1}
@@ -45,17 +45,18 @@ const Button = (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     height: hp(6),
-    width: wp(40),
-    borderRadius: 20,
-    backgroundColor: '#8BAFD1',
+    width: wp(80),
+    borderRadius: 50,
+    // backgroundColor: '#8BAFD1',
+    backgroundColor: '#183258',
     borderWidth: 1,
     borderColor: '#263C4D',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { height: 3, width: 2 },
-    shadowOpacity: 0.4,
-    shadowRadius: 1,
+    // shadowColor: '#000',
+    // shadowOffset: { height: 3, width: 2 },
+    // shadowOpacity: 0.4,
+    // shadowRadius: 1,
   },
   text: {
     color: '#fff',

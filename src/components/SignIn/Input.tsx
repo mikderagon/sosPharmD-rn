@@ -40,7 +40,7 @@ const Input = (props: Props) => {
         style={styles.input}
         onChangeText={set}
         placeholder={placeholder}
-        placeholderTextColor="#aaa"
+        placeholderTextColor="#bbb"
         autoCapitalize="none"
         autoCompleteType="off"
         autoCorrect={false}
@@ -53,16 +53,18 @@ const Input = (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    borderColor: '#B4B4B4',
+    borderColor: '#ddd',
     borderWidth: 2,
+    borderRadius: 50,
     height: hp(5.5),
     width: wp(80),
     flexDirection: 'row',
     alignItems: 'center',
   },
   usernameImage: {
+    right: wp(1.2),
     resizeMode: 'contain',
-    height: '95%',
+    height: '100%',
   },
   input: {
     fontSize: 19,

@@ -96,7 +96,7 @@ const SignUpView = ({ navigation }: NavigationProps) => {
             onPress={() => {
               navigation.navigate('AccountConfirmation');
             }}
-            text="Next"
+            text="Sign Up"
           />
         </View>
       </View>

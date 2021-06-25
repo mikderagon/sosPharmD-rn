@@ -11,10 +11,12 @@ import { Image, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
+import fonts from '../../styles/fonts';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
+import Calendar from './Calendar';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
@@ -63,14 +65,22 @@ const HomeView = ({ navigation }) => {
       </View>
 
       {/* Calednar */}
-      <View style={{ marginTop: hp(11), width: '85%' }}>
+      <View style={{ marginTop: hp(10), width: '85%' }}>
         <Text style={styles2.sectionTitle}>Calendar</Text>
+        <View style={{ marginTop: hp(3) }}>
+          <Calendar />
+        </View>
+      </View>
+
+      {/* Demands */}
+      <View style={{ marginTop: hp(3) }}>
+        <View style={styles3.locum}>
+          <Text>Locum</Text>
+        </View>
       </View>
     </View>
   );
 };
-
-const MAIN_COLOR = '#00BBF2';
 
 const styles = StyleSheet.create({
   container: {
@@ -119,6 +129,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 17,
     fontWeight: '400',
+    fontFamily: fonts.Light,
   },
   pictureNameRow: {
     marginTop: hp(4),
@@ -174,7 +185,17 @@ const styles2 = StyleSheet.create({
   sectionTitle: {
     color: '#494949',
     fontSize: 22,
-    fontWeight: '600',
+    fontWeight: '700',
+  },
+});
+
+const styles3 = StyleSheet.create({
+  locum: {
+    height: hp(13),
+    width: wp(85),
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
 });
 

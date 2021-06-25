@@ -36,8 +36,8 @@ const defaultTheme = {
 };
 
 const Navigator = () => {
-  // const initialRouteName = 'Onboarding';
-  const initialRouteName = 'Home';
+  const initialRouteName = 'Onboarding';
+  // const initialRouteName = 'Home';
   // const initialRouteName = 'SignUp';
   return (
     <NavigationContainer theme={defaultTheme}>

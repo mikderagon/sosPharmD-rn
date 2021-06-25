@@ -7,7 +7,8 @@
  */
 
 import React, { useState } from 'react';
-import { Image, TouchableOpacity } from 'react-native';
+import { useEffect } from 'react';
+import { Animated, Image, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
@@ -24,25 +25,104 @@ const verticalDots = require('../../assets/images/verticalDots.png');
 const userPicture =
   'https://i.guim.co.uk/img/media/852837afc22bfa78936b7b99ba0b6db03d877dda/0_1038_2816_2113/master/2816.jpg?width=445&quality=45&auto=format&fit=max&dpr=2&s=4781b085f86533dded353aa9badd0802';
 
-const HomeView = ({ navigation }) => {
-  const [selectedDate, setSelectedDate] = useState();
-  const [markedDates, setMarkedDates] = useState({});
+const user = {
+  name: 'John Doe',
+  educationalInstitution: 'UdeM',
+  schoolYear: '3rd year',
+  location: 'Ste-Rose, Laval',
+};
 
+const events = [
+  {
+    date: 2,
+    locum: {
+      name: 'Melissa Covery',
+      picture: userPicture,
+    },
+  },
+  {
+    date: 8,
+    locum: {
+      name: 'Guy Fieri',
+      picture: userPicture,
+    },
+  },
+  {
+    date: 12,
+    locum: {
+      name: 'Melissa Covery',
+      picture: userPicture,
+    },
+  },
+  {
+    date: 17,
+    locum: {
+      name: 'Melissa Covery',
+      picture: userPicture,
+    },
+  },
+  {
+    date: 20,
+    locum: {
+      name: 'Melissa Covery',
+      picture: userPicture,
+    },
+  },
+];
+
+function createAnimationContext() {
+  // check how many events there are
+  // if 0: don't do anything. show past locums? or most popular locums? if all else fails, show everyday and show that no events are planned, offer to add an event right away from that view (quicker than going to calendar)
+  // if 1: show it statically, no animation
+  // if 2+: switch between the two using a timed animations all looped together
+
+  // animation code
+  // start the highlight at the first event of the month(eg: 5th)
+  // keep it there 3000ms, then if next event is on the same row, just slide it to it, else if it's on another row, make the highlight slide away to the right of the current and come in from the left into the next event's row.
+  // repeat
+
+  if (!events.length) {
+    return; // will implement this later on
+  }
+  if (events.length === 1) {
+    return;
+  }
+  // Animated.loop(
+  //   Animated.sequence([
+  //     Animated.delay(3000),
+  //     Animated.timing(animatedVal, {
+  //       toValue: 1,
+  //       duration: 1000,
+  //       useNativeDriver: true,
+  //     }),
+  //   ]),
+  // ).start();
+}
+
+const HomeView = ({ navigation }) => {
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  const [previousEventIndex, setPreviousEventIndex] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPreviousEventIndex(currentEventIndex);
+      setCurrentEventIndex(
+        currentEventIndex === events.length - 1 ? 0 : currentEventIndex + 1,
+      );
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [currentEventIndex]);
   return (
     <View style={styles.container}>
       <View style={[styles.header, styles.headerShadow]}>
         <View style={styles.headerInnerContainer}>
           <View style={styles.headerBar}>
             <View style={styles.headerBarText}>
-              {/* <Text>Burger</Text> */}
               <TouchableOpacity>
                 <Image source={fourSquares} style={styles.fourSquares} />
               </TouchableOpacity>
               <TouchableOpacity>
                 <Image source={verticalDots} style={styles.verticalDots} />
               </TouchableOpacity>
-
-              {/* <Text>Settings</Text> */}
             </View>
           </View>
           <View style={styles.topLeftTitle}>
@@ -55,10 +135,11 @@ const HomeView = ({ navigation }) => {
 
             <View style={styles.userInfoContainer}>
               <Text style={styles.name} numberOfLines={1} adjustsFontSizeToFit>
-                Marc-Antoine D'Aquilla
+                {user.name}
               </Text>
-              <Text style={styles.year}>4th Year UdeM</Text>
-              <Text style={styles.location}>Ste-Rose, Laval</Text>
+              <Text style={styles.year}>{user.educationalInstitution}</Text>
+              <Text style={styles.year}>{user.schoolYear}</Text>
+              <Text style={styles.location}>{user.location}</Text>
             </View>
           </View>
         </View>
@@ -68,14 +149,21 @@ const HomeView = ({ navigation }) => {
       <View style={{ marginTop: hp(10), width: '85%' }}>
         <Text style={styles2.sectionTitle}>Calendar</Text>
         <View style={{ marginTop: hp(3) }}>
-          <Calendar />
+          <Calendar
+            openCalendar={() => navigation.navigate('Calendar')}
+            events={events}
+            currentEvent={events[currentEventIndex].date}
+            previousEvent={events[previousEventIndex].date}
+            // give it current event which will change according to our interval in this component here
+            // the calendar will run an event on currentEvent's change, Animating the circle towards the correct position in the grid
+          />
         </View>
       </View>
 
       {/* Demands */}
-      <View style={{ marginTop: hp(3) }}>
+      <View style={{ marginTop: hp(2) }}>
         <View style={styles3.locum}>
-          <Text>Locum</Text>
+          <Text>{events[currentEventIndex].date}</Text>
         </View>
       </View>
     </View>

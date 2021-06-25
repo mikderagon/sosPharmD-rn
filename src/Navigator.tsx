@@ -13,6 +13,7 @@ import { TouchableOpacity } from 'react-native';
 import { Image, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
+import Calendar from './components/Calendar/Calendar';
 import Home from './components/Home/HomeView';
 import Onboarding from './components/Onboarding/OnboardingView';
 import SignIn from './components/SignIn/SignInView';
@@ -36,8 +37,8 @@ const defaultTheme = {
 };
 
 const Navigator = () => {
-  const initialRouteName = 'Onboarding';
-  // const initialRouteName = 'Home';
+  // const initialRouteName = 'Onboarding';
+  const initialRouteName = 'Home';
   // const initialRouteName = 'SignUp';
   return (
     <NavigationContainer theme={defaultTheme}>
@@ -90,6 +91,13 @@ const Navigator = () => {
         <Stack.Screen
           name="Home"
           component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Calendar"
+          component={Calendar}
           options={{
             headerShown: false,
           }}

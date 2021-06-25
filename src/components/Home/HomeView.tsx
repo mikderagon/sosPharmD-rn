@@ -6,8 +6,9 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
+import { FlatList } from 'react-native';
 import { Animated, Image, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
@@ -18,6 +19,7 @@ import {
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
 import Calendar from './Calendar';
+import Locum from './Locum';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
@@ -70,47 +72,26 @@ const events = [
   },
 ];
 
-function createAnimationContext() {
-  // check how many events there are
-  // if 0: don't do anything. show past locums? or most popular locums? if all else fails, show everyday and show that no events are planned, offer to add an event right away from that view (quicker than going to calendar)
-  // if 1: show it statically, no animation
-  // if 2+: switch between the two using a timed animations all looped together
-
-  // animation code
-  // start the highlight at the first event of the month(eg: 5th)
-  // keep it there 3000ms, then if next event is on the same row, just slide it to it, else if it's on another row, make the highlight slide away to the right of the current and come in from the left into the next event's row.
-  // repeat
-
-  if (!events.length) {
-    return; // will implement this later on
-  }
-  if (events.length === 1) {
-    return;
-  }
-  // Animated.loop(
-  //   Animated.sequence([
-  //     Animated.delay(3000),
-  //     Animated.timing(animatedVal, {
-  //       toValue: 1,
-  //       duration: 1000,
-  //       useNativeDriver: true,
-  //     }),
-  //   ]),
-  // ).start();
-}
-
 const HomeView = ({ navigation }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [previousEventIndex, setPreviousEventIndex] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
+      const nextIndex =
+        currentEventIndex === events.length - 1 ? 0 : currentEventIndex + 1;
       setPreviousEventIndex(currentEventIndex);
-      setCurrentEventIndex(
-        currentEventIndex === events.length - 1 ? 0 : currentEventIndex + 1,
-      );
+      setCurrentEventIndex(nextIndex);
+      locumListRef.current.scrollToIndex({
+        animated: true,
+        index: nextIndex,
+        viewPosition: 0.5,
+      });
     }, 3000);
     return () => clearInterval(interval);
   }, [currentEventIndex]);
+
+  const locumListRef = useRef(null);
+
   return (
     <View style={styles.container}>
       <View style={[styles.header, styles.headerShadow]}>
@@ -162,9 +143,32 @@ const HomeView = ({ navigation }) => {
 
       {/* Demands */}
       <View style={{ marginTop: hp(2) }}>
-        <View style={styles3.locum}>
-          <Text>{events[currentEventIndex].date}</Text>
-        </View>
+        {events.length ? (
+          <FlatList
+            ref={locumListRef}
+            data={events.map(e => e.locum)}
+            horizontal
+            scrollEnabled={false}
+            ItemSeparatorComponent={() => <View style={{ width: wp(10) }} />}
+            ListFooterComponent={() => <View style={{ width: wp(7.5) }} />}
+            ListHeaderComponent={() => <View style={{ width: wp(7.5) }} />}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <Locum date={events[index].date} />
+            )}
+            getItemLayout={(data, index) => ({
+              length: wp(85),
+              offset: wp(85 + 10) * index + wp(7.5),
+              index,
+            })}
+          />
+        ) : (
+          // <View style={styles3.locum}>
+          //   <Text>{events[currentEventIndex].date}</Text>
+          // </View>
+          <Text>no events sorry</Text>
+        )}
       </View>
     </View>
   );
@@ -274,16 +278,6 @@ const styles2 = StyleSheet.create({
     color: '#494949',
     fontSize: 22,
     fontWeight: '700',
-  },
-});
-
-const styles3 = StyleSheet.create({
-  locum: {
-    height: hp(13),
-    width: wp(85),
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#ddd',
   },
 });
 

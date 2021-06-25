@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import { Image } from 'react-native';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
@@ -19,12 +20,25 @@ import {
 
 interface Props {
   date: number;
+  user: {
+    picture: string;
+    firstName: string;
+    lastName: string;
+  };
 }
 
 const Locum = (props: Props) => {
-  const { date } = props;
+  const { date, user } = props;
+  const { picture, firstName, lastName, educationalInstitution, year } = user;
   return (
     <TouchableOpacity style={styles.container}>
+      <View style={styles.userPicturePosition}>
+        <Image source={{ uri: picture }} style={styles.userPicture} />
+      </View>
+      <View style={styles.userInfoContainer}>
+        <Text style={styles.bold}>{`${firstName} ${lastName}`}</Text>
+        <Text>{`${educationalInstitution} ${year} year`}</Text>
+      </View>
       <Text>{date}</Text>
     </TouchableOpacity>
   );
@@ -37,6 +51,21 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#ddd',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userPicturePosition: {
+    marginLeft: 10,
+  },
+  userPicture: {
+    height: hp(10),
+    width: hp(10),
+    borderRadius: 50,
+  },
+  userInfoContainer: {},
+  bold: {
+    fontWeight: '800',
+    fontSize: 16,
   },
 });
 

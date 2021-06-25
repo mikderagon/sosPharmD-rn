@@ -38,7 +38,8 @@ const events = [
   {
     date: 2,
     locum: {
-      name: 'Melissa Covery',
+      firstName: 'Melissa',
+      lastName: 'Covery',
       picture: userPicture,
     },
   },
@@ -46,6 +47,8 @@ const events = [
     date: 8,
     locum: {
       name: 'Guy Fieri',
+      firstName: 'Guy',
+      lastName: 'Fieri',
       picture: userPicture,
     },
   },
@@ -53,20 +56,24 @@ const events = [
     date: 12,
     locum: {
       name: 'Melissa Covery',
+      firstName: 'Matthew',
+      lastName: 'Montgomery',
       picture: userPicture,
     },
   },
   {
     date: 17,
     locum: {
-      name: 'Melissa Covery',
+      firstName: 'Erika',
+      lastName: 'Poirier',
       picture: userPicture,
     },
   },
   {
     date: 20,
     locum: {
-      name: 'Melissa Covery',
+      firstName: 'Sebastian',
+      lastName: 'Vettel',
       picture: userPicture,
     },
   },
@@ -86,7 +93,7 @@ const HomeView = ({ navigation }) => {
         index: nextIndex,
         viewPosition: 0.5,
       });
-    }, 3000);
+    }, 8000);
     return () => clearInterval(interval);
   }, [currentEventIndex]);
 
@@ -155,7 +162,16 @@ const HomeView = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
-              <Locum date={events[index].date} />
+              <Locum
+                date={events[index].date}
+                user={{
+                  picture: userPicture,
+                  firstName: item.firstName,
+                  lastName: item.lastName,
+                  educationalInstitution: 'UdeM',
+                  year: '3rd',
+                }}
+              />
             )}
             getItemLayout={(data, index) => ({
               length: wp(85),

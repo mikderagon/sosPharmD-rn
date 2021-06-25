@@ -28,160 +28,163 @@ interface Props {
   previousEvent: number;
 }
 
+const col_margin = 45.9;
+const row_margin = 45;
+
 const date_positions = [
   {
     date: 1,
-    x: 45.5,
+    x: col_margin,
     y: 0,
   },
   {
     date: 2,
-    x: 45.5 * 2,
+    x: col_margin * 2,
     y: 0,
   },
   {
     date: 3,
-    x: 45.5 * 3,
+    x: col_margin * 3,
     y: 0,
   },
   {
     date: 4,
-    x: 45.5 * 4,
+    x: col_margin * 4,
     y: 0,
   },
   {
     date: 5,
-    x: 45.5 * 5,
+    x: col_margin * 5,
     y: 0,
   },
   {
     date: 6,
-    x: 45.5 * 6,
+    x: col_margin * 6,
     y: 0,
   },
   {
     date: 7,
-    x: 45.5 * 0,
-    y: 41,
+    x: col_margin * 0,
+    y: row_margin,
   },
   {
     date: 8,
-    x: 45.5 * 1,
-    y: 41,
+    x: col_margin * 1,
+    y: row_margin,
   },
   {
     date: 9,
-    x: 45.5 * 2,
-    y: 41,
+    x: col_margin * 2,
+    y: row_margin,
   },
   {
     date: 10,
-    x: 45.5 * 3,
-    y: 41,
+    x: col_margin * 3,
+    y: row_margin,
   },
   {
     date: 11,
-    x: 45.5 * 4,
-    y: 41,
+    x: col_margin * 4,
+    y: row_margin,
   },
   {
     date: 12,
-    x: 45.5 * 5,
-    y: 41,
+    x: col_margin * 5,
+    y: row_margin,
   },
   {
     date: 13,
-    x: 45.5 * 6,
-    y: 41,
+    x: col_margin * 6,
+    y: row_margin,
   },
   {
     date: 14,
-    x: 45.5 * 0,
+    x: col_margin * 0,
     y: 82,
   },
   {
     date: 15,
-    x: 45.5 * 1,
+    x: col_margin * 1,
     y: 82,
   },
   {
     date: 16,
-    x: 45.5 * 2,
+    x: col_margin * 2,
     y: 82,
   },
   {
     date: 17,
-    x: 45.5 * 3,
+    x: col_margin * 3,
     y: 82,
   },
   {
     date: 18,
-    x: 45.5 * 4,
+    x: col_margin * 4,
     y: 82,
   },
   {
     date: 19,
-    x: 45.5 * 5,
+    x: col_margin * 5,
     y: 82,
   },
   {
     date: 20,
-    x: 45.5 * 6,
+    x: col_margin * 6,
     y: 82,
   },
   {
     date: 21,
-    x: 45.5 * 0,
+    x: col_margin * 0,
     y: 123,
   },
   {
     date: 22,
-    x: 45.5 * 1,
+    x: col_margin * 1,
     y: 123,
   },
   {
     date: 23,
-    x: 45.5 * 2,
+    x: col_margin * 2,
     y: 123,
   },
   {
     date: 24,
-    x: 45.5 * 3,
+    x: col_margin * 3,
     y: 123,
   },
   {
     date: 25,
-    x: 45.5 * 4,
+    x: col_margin * 4,
     y: 123,
   },
   {
     date: 26,
-    x: 45.5 * 5,
+    x: col_margin * 5,
     y: 123,
   },
   {
     date: 27,
-    x: 45.5 * 6,
+    x: col_margin * 6,
     y: 123,
   },
   {
     date: 28,
-    x: 45.5 * 0,
+    x: col_margin * 0,
     y: 164,
   },
   {
     date: 29,
-    x: 45.5 * 1,
+    x: col_margin * 1,
     y: 164,
   },
   {
     date: 30,
-    x: 45.5 * 2,
+    x: col_margin * 2,
     y: 164,
   },
   {
     date: 31,
-    x: 45.5 * 3,
+    x: col_margin * 3,
     y: 164,
   },
 ];
@@ -197,7 +200,7 @@ const Calendar = (props: Props) => {
         previousEvent === events[events.length - 1].date
           ? events.length
           : getIndex(currentEvent),
-      duration: 1000,
+      duration: 300,
       useNativeDriver: true,
     }).start();
   }, [currentEvent]);
@@ -260,16 +263,7 @@ const Calendar = (props: Props) => {
             transform: [
               {
                 translateX: locumPosition.interpolate({
-                  // inputRange: [0, 1, 2, 3], // events.length + 1
                   inputRange: [...Array(events.length + 1).keys()],
-                  // outputRange: [
-                  //   // date_positions.filter(dp => dp.date === currentEvent).x,
-                  //   // date_positions.filter(dp => dp.date === currentEvent).x,
-                  //   date_positions.find(dp => dp.date === events[0].date).x,
-                  //   date_positions.find(dp => dp.date === events[1].date).x,
-                  //   date_positions.find(dp => dp.date === events[2].date).x,
-                  //   date_positions.find(dp => dp.date === events[0].date).x, // initial again
-                  // ],
                   outputRange: Array.from(
                     { length: events.length + 1 },
                     (_, i) =>
@@ -283,12 +277,6 @@ const Calendar = (props: Props) => {
               {
                 translateY: locumPosition.interpolate({
                   inputRange: [...Array(events.length + 1).keys()],
-                  // outputRange: [
-                  //   date_positions.find(dp => dp.date === events[0].date).y,
-                  //   date_positions.find(dp => dp.date === events[1].date).y,
-                  //   date_positions.find(dp => dp.date === events[2].date).y,
-                  //   date_positions.find(dp => dp.date === events[0].date).y,
-                  // ],
                   outputRange: Array.from(
                     { length: events.length + 1 },
                     (_, i) =>

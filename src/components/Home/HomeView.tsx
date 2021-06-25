@@ -93,7 +93,7 @@ const HomeView = ({ navigation }) => {
         index: nextIndex,
         viewPosition: 0.5,
       });
-    }, 8000);
+    }, 3000);
     return () => clearInterval(interval);
   }, [currentEventIndex]);
 

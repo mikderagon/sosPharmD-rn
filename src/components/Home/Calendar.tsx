@@ -6,9 +6,14 @@
  * @flow strict-local
  */
 
-import React, { useEffect, useMemo } from 'react';
-import { Animated } from 'react-native';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
 import {
@@ -26,6 +31,7 @@ interface Props {
   ];
   currentEvent: number;
   previousEvent: number;
+  currentMonth: string;
   firstDayOfMonth: string;
   firstDayOfMonthIndex: number;
   numberOfDaysInCurrentMonth: number;
@@ -200,6 +206,7 @@ const Calendar = (props: Props) => {
     events,
     currentEvent,
     previousEvent,
+    currentMonth,
     firstDayOfMonth,
     firstDayOfMonthIndex,
     numberOfDaysInCurrentMonth,
@@ -221,21 +228,11 @@ const Calendar = (props: Props) => {
       <Text style={styles.days}>{day}</Text>
     </View>
   ));
-  // const days_num = [
-  //   30, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-  //   21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3,
-  // ];
-  // const days_num = [
-  //   39, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-  //   21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3,
-  // ];
   function createDaysList() {
     // if monday then start at index1
     // if wednesday then start at index3,
     // etc. from sun 0 to sat 6
     let list = new Array(35);
-    // console.log(list);
-    // console.log(firstDayOfMonthIndex, firstDayOfMonth);
     list[firstDayOfMonthIndex] = 1;
     for (let i = 2; i <= numberOfDaysInCurrentMonth; i++) {
       list[firstDayOfMonthIndex + i - 1] = i;
@@ -327,7 +324,9 @@ const Calendar = (props: Props) => {
         ]}
       />
       <View style={{ marginTop: 20 }}>
-        <Text style={styles.monthYear}>June 2021</Text>
+        <Text style={styles.monthYear}>
+          {currentMonth} {new Date().getFullYear()}
+        </Text>
       </View>
 
       <View style={styles.daysRow}>{daysRow}</View>

@@ -14,6 +14,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import { Months } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -51,11 +52,20 @@ const firstDayOfMonthIndex = new Date(
   today.getMonth(),
   1,
 ).getDay();
-const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-  .toLocaleTimeString('en-US', {
-    weekday: 'long',
-  })
-  .split(' ')[0];
+const firstDayOfMonth = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  1,
+).toLocaleTimeString('en-US', {
+  weekday: 'long',
+  month: 'long',
+});
+// .split(' ')[0];
+const currentMonth = firstDayOfMonth
+  .split('(')[1]
+  .split(':')[1]
+  .split(')')[0]
+  .trim();
 
 const events = [
   {
@@ -169,6 +179,7 @@ const HomeView = ({ navigation }) => {
         <Text style={styles2.sectionTitle}>Calendar</Text>
         <View style={{ marginTop: hp(3) }}>
           <Calendar
+            currentMonth={currentMonth}
             numberOfDaysInCurrentMonth={numberOfDaysInCurrentMonth}
             firstDayOfMonthIndex={firstDayOfMonthIndex}
             firstDayOfMonth={firstDayOfMonth}

@@ -34,6 +34,29 @@ const user = {
   location: 'Ste-Rose, Laval',
 };
 
+const year = new Date().getFullYear();
+const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+const today = new Date();
+let numberOfDaysInCurrentMonth = new Date(
+  today.getFullYear(),
+  today.getMonth() + 1,
+  0,
+).getDate();
+// check if feb should have 29 days
+if (numberOfDaysInCurrentMonth === 28 && isLeapYear) {
+  numberOfDaysInCurrentMonth = 29;
+}
+const firstDayOfMonthIndex = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  1,
+).getDay();
+const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+  .toLocaleTimeString('en-US', {
+    weekday: 'long',
+  })
+  .split(' ')[0];
+
 const events = [
   {
     date: 2,
@@ -66,6 +89,14 @@ const events = [
     locum: {
       firstName: 'Erika',
       lastName: 'Poirier',
+      picture: userPicture,
+    },
+  },
+  {
+    date: 17,
+    locum: {
+      firstName: 'Steven',
+      lastName: 'Doucet',
       picture: userPicture,
     },
   },
@@ -138,6 +169,9 @@ const HomeView = ({ navigation }) => {
         <Text style={styles2.sectionTitle}>Calendar</Text>
         <View style={{ marginTop: hp(3) }}>
           <Calendar
+            numberOfDaysInCurrentMonth={numberOfDaysInCurrentMonth}
+            firstDayOfMonthIndex={firstDayOfMonthIndex}
+            firstDayOfMonth={firstDayOfMonth}
             openCalendar={() => navigation.navigate('Calendar')}
             events={events}
             currentEvent={events[currentEventIndex].date}

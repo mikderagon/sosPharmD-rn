@@ -26,6 +26,9 @@ interface Props {
   ];
   currentEvent: number;
   previousEvent: number;
+  firstDayOfMonth: string;
+  firstDayOfMonthIndex: number;
+  numberOfDaysInCurrentMonth: number;
 }
 
 const col_margin = 45.9;
@@ -192,7 +195,15 @@ const date_positions = [
 const Calendar = (props: Props) => {
   const getIndex = (event: number) => events.findIndex(e => e.date === event);
   const today = new Date().getDate();
-  const { openCalendar, events, currentEvent, previousEvent } = props;
+  const {
+    openCalendar,
+    events,
+    currentEvent,
+    previousEvent,
+    firstDayOfMonth,
+    firstDayOfMonthIndex,
+    numberOfDaysInCurrentMonth,
+  } = props;
   const locumPosition = new Animated.Value(getIndex(previousEvent));
   useEffect(() => {
     Animated.timing(locumPosition, {
@@ -210,10 +221,34 @@ const Calendar = (props: Props) => {
       <Text style={styles.days}>{day}</Text>
     </View>
   ));
-  const days_num = [
-    30, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-    21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3,
-  ];
+  // const days_num = [
+  //   30, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+  //   21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3,
+  // ];
+  // const days_num = [
+  //   39, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+  //   21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3,
+  // ];
+  function createDaysList() {
+    // if monday then start at index1
+    // if wednesday then start at index3,
+    // etc. from sun 0 to sat 6
+    let list = new Array(35);
+    // console.log(list);
+    // console.log(firstDayOfMonthIndex, firstDayOfMonth);
+    list[firstDayOfMonthIndex] = 1;
+    for (let i = 2; i <= numberOfDaysInCurrentMonth; i++) {
+      list[firstDayOfMonthIndex + i - 1] = i;
+    }
+    for (let i = 0; i < list.length; i++) {
+      if (!list[i]) {
+        list[i] = ' ';
+      }
+    }
+    return list;
+  }
+  createDaysList();
+  const days_num = createDaysList();
   const daysGrid = days_num.map((day, index) => {
     const isEvent = events.map(event => event.date).includes(day);
     if (day === today && isEvent) {

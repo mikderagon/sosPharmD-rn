@@ -37,162 +37,166 @@ interface Props {
   numberOfDaysInCurrentMonth: number;
 }
 
+const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const col_margin = 45.9;
 const row_margin = 45;
 
+// map function to map dates onto the date_positions
+// eg if we get the date '3' we need to check on which cell it's at, and then use that cell for the animations
+
 const date_positions = [
   {
-    date: 1,
+    cell: 1,
     x: col_margin,
     y: 0,
   },
   {
-    date: 2,
+    cell: 2,
     x: col_margin * 2,
     y: 0,
   },
   {
-    date: 3,
+    cell: 3,
     x: col_margin * 3,
     y: 0,
   },
   {
-    date: 4,
+    cell: 4,
     x: col_margin * 4,
     y: 0,
   },
   {
-    date: 5,
+    cell: 5,
     x: col_margin * 5,
     y: 0,
   },
   {
-    date: 6,
+    cell: 6,
     x: col_margin * 6,
     y: 0,
   },
   {
-    date: 7,
+    cell: 7,
     x: col_margin * 0,
     y: row_margin,
   },
   {
-    date: 8,
+    cell: 8,
     x: col_margin * 1,
     y: row_margin,
   },
   {
-    date: 9,
+    cell: 9,
     x: col_margin * 2,
     y: row_margin,
   },
   {
-    date: 10,
+    cell: 10,
     x: col_margin * 3,
     y: row_margin,
   },
   {
-    date: 11,
+    cell: 11,
     x: col_margin * 4,
     y: row_margin,
   },
   {
-    date: 12,
+    cell: 12,
     x: col_margin * 5,
     y: row_margin,
   },
   {
-    date: 13,
+    cell: 13,
     x: col_margin * 6,
     y: row_margin,
   },
   {
-    date: 14,
+    cell: 14,
     x: col_margin * 0,
     y: 82,
   },
   {
-    date: 15,
+    cell: 15,
     x: col_margin * 1,
     y: 82,
   },
   {
-    date: 16,
+    cell: 16,
     x: col_margin * 2,
     y: 82,
   },
   {
-    date: 17,
+    cell: 17,
     x: col_margin * 3,
     y: 82,
   },
   {
-    date: 18,
+    cell: 18,
     x: col_margin * 4,
     y: 82,
   },
   {
-    date: 19,
+    cell: 19,
     x: col_margin * 5,
     y: 82,
   },
   {
-    date: 20,
+    cell: 20,
     x: col_margin * 6,
     y: 82,
   },
   {
-    date: 21,
+    cell: 21,
     x: col_margin * 0,
     y: 123,
   },
   {
-    date: 22,
+    cell: 22,
     x: col_margin * 1,
     y: 123,
   },
   {
-    date: 23,
+    cell: 23,
     x: col_margin * 2,
     y: 123,
   },
   {
-    date: 24,
+    cell: 24,
     x: col_margin * 3,
     y: 123,
   },
   {
-    date: 25,
+    cell: 25,
     x: col_margin * 4,
     y: 123,
   },
   {
-    date: 26,
+    cell: 26,
     x: col_margin * 5,
     y: 123,
   },
   {
-    date: 27,
+    cell: 27,
     x: col_margin * 6,
     y: 123,
   },
   {
-    date: 28,
+    cell: 28,
     x: col_margin * 0,
     y: 164,
   },
   {
-    date: 29,
+    cell: 29,
     x: col_margin * 1,
     y: 164,
   },
   {
-    date: 30,
+    cell: 30,
     x: col_margin * 2,
     y: 164,
   },
   {
-    date: 31,
+    cell: 31,
     x: col_margin * 3,
     y: 164,
   },
@@ -211,6 +215,21 @@ const Calendar = (props: Props) => {
     firstDayOfMonthIndex,
     numberOfDaysInCurrentMonth,
   } = props;
+  // console.log(events.map(e => e.date));
+  // first item of events will be at cell # 'events[0].date' + 1
+  function createCellsList() {
+    let cells = [];
+    cells.push(firstDayOfMonthIndex + events[0].date - 1);
+    for (let i = 1; i < events.length; i++) {
+      cells.push(events[i].date + 1);
+    }
+    return cells;
+  }
+  const cellList = createCellsList();
+  function mapToCell(n: number) {
+    const index = events.findIndex(e => e.date === n);
+    return cellList[index];
+  }
   const locumPosition = new Animated.Value(getIndex(previousEvent));
   useEffect(() => {
     Animated.timing(locumPosition, {
@@ -222,7 +241,6 @@ const Calendar = (props: Props) => {
       useNativeDriver: true,
     }).start();
   }, [currentEvent]);
-  const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const daysRow = days_alpha.map((day, index) => (
     <View style={[styles.cell, { height: hp(2) }]} key={index}>
       <Text style={styles.days}>{day}</Text>
@@ -301,7 +319,8 @@ const Calendar = (props: Props) => {
                     (_, i) =>
                       date_positions.find(
                         dp =>
-                          dp.date === events[i === events.length ? 0 : i].date,
+                          dp.cell ===
+                          mapToCell(events[i === events.length ? 0 : i].date),
                       ).x,
                   ),
                 }),
@@ -314,7 +333,8 @@ const Calendar = (props: Props) => {
                     (_, i) =>
                       date_positions.find(
                         dp =>
-                          dp.date === events[i === events.length ? 0 : i].date,
+                          dp.cell ===
+                          mapToCell(events[i === events.length ? 0 : i].date),
                       ).y,
                   ),
                 }),

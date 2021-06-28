@@ -6,15 +6,19 @@
  * @flow strict-local
  */
 
-import React, { useRef, useState } from 'react';
-import { useEffect } from 'react';
-import { FlatList } from 'react-native';
-import { Animated, Image, TouchableOpacity } from 'react-native';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import 'react-native-gesture-handler';
+import { store } from '../../store';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
-import { Months } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -67,60 +71,12 @@ const currentMonth = firstDayOfMonth
   .split(')')[0]
   .trim();
 
-const events = [
-  {
-    date: 2,
-    locum: {
-      firstName: 'Melissa',
-      lastName: 'Covery',
-      picture: userPicture,
-    },
-  },
-  {
-    date: 8,
-    locum: {
-      name: 'Guy Fieri',
-      firstName: 'Guy',
-      lastName: 'Fieri',
-      picture: userPicture,
-    },
-  },
-  {
-    date: 12,
-    locum: {
-      name: 'Melissa Covery',
-      firstName: 'Matthew',
-      lastName: 'Montgomery',
-      picture: userPicture,
-    },
-  },
-  {
-    date: 17,
-    locum: {
-      firstName: 'Erika',
-      lastName: 'Poirier',
-      picture: userPicture,
-    },
-  },
-  {
-    date: 19,
-    locum: {
-      firstName: 'Steven',
-      lastName: 'Doucet',
-      picture: userPicture,
-    },
-  },
-  {
-    date: 20,
-    locum: {
-      firstName: 'Sebastian',
-      lastName: 'Vettel',
-      picture: userPicture,
-    },
-  },
-];
-
 const HomeView = ({ navigation }) => {
+  const { state } = useContext(store);
+  const thisMonthEvents = state.events.find(
+    e => e.month === today.getMonth() + 1 && e.year === year,
+  );
+  const events = thisMonthEvents.events;
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [previousEventIndex, setPreviousEventIndex] = useState(0);
   useEffect(() => {
@@ -179,7 +135,9 @@ const HomeView = ({ navigation }) => {
         <Text style={styles2.sectionTitle}>Calendar</Text>
         <View style={{ marginTop: hp(3) }}>
           <Calendar
+            events={events}
             currentMonth={currentMonth}
+            currentMonthIndex={today.getMonth() + 1}
             numberOfDaysInCurrentMonth={numberOfDaysInCurrentMonth}
             firstDayOfMonthIndex={firstDayOfMonthIndex}
             firstDayOfMonth={firstDayOfMonth}
@@ -188,7 +146,7 @@ const HomeView = ({ navigation }) => {
                 currentMonth,
               })
             }
-            events={events}
+            year={today.getFullYear()}
             currentEvent={events[currentEventIndex].date}
             previousEvent={events[previousEventIndex].date}
             // give it current event which will change according to our interval in this component here
@@ -202,7 +160,7 @@ const HomeView = ({ navigation }) => {
         {events.length ? (
           <FlatList
             ref={locumListRef}
-            data={events.map(e => e.locum)}
+            data={events}
             horizontal
             scrollEnabled={false}
             ItemSeparatorComponent={() => <View style={{ width: wp(10) }} />}

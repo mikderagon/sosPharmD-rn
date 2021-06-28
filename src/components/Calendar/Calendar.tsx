@@ -22,12 +22,7 @@ import {
 } from '../../utils/responsiveLayout';
 
 interface Props {
-  events?: [
-    {
-      date: number;
-      name: string;
-    },
-  ];
+  events: any;
   currentEvent?: number;
   previousEvent?: number;
   currentMonth: string;
@@ -42,30 +37,16 @@ interface Props {
 const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const Calendar = (props: Props) => {
-  const getIndex = (event: number) => events.findIndex(e => e.date === event);
   const today = new Date().getDate();
   const {
     additionalRow,
     events,
-    currentEvent,
-    previousEvent,
     month,
     currentMonth,
     year,
-    firstDayOfMonth,
     firstDayOfMonthIndex,
     numberOfDaysInCurrentMonth,
   } = props;
-  // console.log(events.map(e => e.date));
-  // first item of events will be at cell # 'events[0].date' + 1
-  function createCellsList() {
-    let cells = [];
-    cells.push(firstDayOfMonthIndex + events[0].date - 1);
-    for (let i = 1; i < events.length; i++) {
-      cells.push(events[i].date + 1);
-    }
-    return cells;
-  }
   const daysRow = days_alpha.map((day, index) => (
     <View style={[styles.cell, { height: hp(2) }]} key={index}>
       <Text style={styles.days}>{day}</Text>
@@ -89,35 +70,35 @@ const Calendar = (props: Props) => {
     const isEvent = events.map(event => event.date).includes(day);
     if (day === today && isEvent) {
       return (
-        <View style={styles.cell} key={index}>
+        <TouchableOpacity style={styles.cell} key={index}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
             <View style={styles.todayDot} />
           </View>
-        </View>
+        </TouchableOpacity>
       );
     }
     if (day === today && month === currentMonth) {
       return (
-        <View style={styles.cell} key={index}>
+        <TouchableOpacity style={styles.cell} key={index}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       );
     }
     if (isEvent) {
       return (
-        <View style={styles.cell} key={index}>
+        <TouchableOpacity style={styles.cell} key={index}>
           <Text style={styles.day}>{day}</Text>
           <View style={styles.dayDot} />
-        </View>
+        </TouchableOpacity>
       );
     }
     return (
-      <View style={styles.cell} key={index}>
+      <TouchableOpacity style={styles.cell} key={index}>
         <Text style={styles.day}>{day}</Text>
-      </View>
+      </TouchableOpacity>
     );
   });
   return (

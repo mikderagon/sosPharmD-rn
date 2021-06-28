@@ -24,8 +24,9 @@ import {
 import Modal from 'react-native-modal';
 import Input from './Input';
 import Calendar from './Calendar';
-
-const events = [{}];
+import { useContext } from 'react';
+import { store } from '../../store';
+import { useEffect } from 'react';
 
 // first month is the current month
 const today = new Date();
@@ -92,27 +93,37 @@ const shownMonths = [...Array(12).keys()].map(m => {
   }
   return {
     month,
+    monthIndex: today.getMonth() + m + 1,
     year: runningYear,
     firstDayIndex,
     firstDay,
     numberOfDays,
   };
 });
-console.log(shownMonths);
 
 const CalendarView = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const selectHours = () => {
     setModalVisible(true);
   };
+  const { state } = useContext(store);
   return (
     <View style={styles.container}>
       <FlatList
         data={shownMonths}
+        keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{ width: '100%', alignItems: 'center' }}
         renderItem={({ item, index }) => (
           <Calendar
-            events={events}
+            events={
+              state.events.find(
+                e => e.month === item.monthIndex && e.year === item.year,
+              )
+                ? state.events.find(
+                    e => e.month === item.monthIndex && e.year === item.year,
+                  ).events
+                : []
+            }
             currentMonth={getLongMonth(today.getMonth())}
             month={item.month}
             year={item.year}
@@ -123,8 +134,6 @@ const CalendarView = () => {
               (item.numberOfDays < 31 && item.firstDayIndex === 6) ||
               (item.numberOfDays === 31 && item.firstDayIndex > 4)
             }
-            // if numberofdays is 30 or less: then add row only if firstday is saturday
-            // if numberofdays is 31: then add row if firstday is fri or saturday.
           />
         )}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}

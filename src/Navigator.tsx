@@ -13,7 +13,7 @@ import { TouchableOpacity } from 'react-native';
 import { Image, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
-import Calendar from './components/Calendar/Calendar';
+import Calendar from './components/Calendar/CalendarView';
 import Home from './components/Home/HomeView';
 import Onboarding from './components/Onboarding/OnboardingView';
 import SignIn from './components/SignIn/SignInView';

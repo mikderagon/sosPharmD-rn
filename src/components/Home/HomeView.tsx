@@ -103,7 +103,7 @@ const events = [
     },
   },
   {
-    date: 17,
+    date: 19,
     locum: {
       firstName: 'Steven',
       lastName: 'Doucet',
@@ -183,7 +183,11 @@ const HomeView = ({ navigation }) => {
             numberOfDaysInCurrentMonth={numberOfDaysInCurrentMonth}
             firstDayOfMonthIndex={firstDayOfMonthIndex}
             firstDayOfMonth={firstDayOfMonth}
-            openCalendar={() => navigation.navigate('Calendar')}
+            openCalendar={() =>
+              navigation.navigate('Calendar', {
+                currentMonth,
+              })
+            }
             events={events}
             currentEvent={events[currentEventIndex].date}
             previousEvent={events[previousEventIndex].date}

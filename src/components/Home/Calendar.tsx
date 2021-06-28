@@ -22,15 +22,15 @@ import {
 } from '../../utils/responsiveLayout';
 
 interface Props {
-  openCalendar: () => {};
-  events: [
+  openCalendar?: () => {};
+  events?: [
     {
       date: number;
       name: string;
     },
   ];
-  currentEvent: number;
-  previousEvent: number;
+  currentEvent?: number;
+  previousEvent?: number;
   currentMonth: string;
   firstDayOfMonth: string;
   firstDayOfMonthIndex: number;

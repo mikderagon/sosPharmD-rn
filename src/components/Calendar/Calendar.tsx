@@ -6,131 +6,155 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
-import { Animated } from 'react-native';
+import React, { useEffect } from 'react';
 import {
-  ScrollView,
-  TouchableOpacity,
+  Animated,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import colors from '../../styles/colors';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import Modal from 'react-native-modal';
-import Input from './Input';
 
 interface Props {
-  openCalendar: () => {};
+  events?: [
+    {
+      date: number;
+      name: string;
+    },
+  ];
+  currentEvent?: number;
+  previousEvent?: number;
+  currentMonth: string;
+  month: string;
+  year: number;
+  firstDayOfMonth: string;
+  firstDayOfMonthIndex: number;
+  numberOfDaysInCurrentMonth: number;
+  additionalRow: boolean;
 }
 
+const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 const Calendar = (props: Props) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const selectHours = () => {
-    setModalVisible(true);
-  };
-  const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const getIndex = (event: number) => events.findIndex(e => e.date === event);
+  const today = new Date().getDate();
+  const {
+    additionalRow,
+    events,
+    currentEvent,
+    previousEvent,
+    month,
+    currentMonth,
+    year,
+    firstDayOfMonth,
+    firstDayOfMonthIndex,
+    numberOfDaysInCurrentMonth,
+  } = props;
+  // console.log(events.map(e => e.date));
+  // first item of events will be at cell # 'events[0].date' + 1
+  function createCellsList() {
+    let cells = [];
+    cells.push(firstDayOfMonthIndex + events[0].date - 1);
+    for (let i = 1; i < events.length; i++) {
+      cells.push(events[i].date + 1);
+    }
+    return cells;
+  }
   const daysRow = days_alpha.map((day, index) => (
     <View style={[styles.cell, { height: hp(2) }]} key={index}>
       <Text style={styles.days}>{day}</Text>
     </View>
   ));
-  const days_num = [
-    30, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-    21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 1, 2, 3,
-  ];
-  const daysGrid = days_num.map((day, index) => (
-    <View style={styles.cell} key={index}>
-      <Text style={styles.day}>{day}</Text>
-    </View>
-  ));
+  function createDaysList() {
+    // if monday then start at index1
+    // if wednesday then start at index3,
+    // etc. from sun 0 to sat 6
+    let list = new Array(35);
+    list[firstDayOfMonthIndex] = 1;
+    for (let i = 2; i <= numberOfDaysInCurrentMonth; i++) {
+      list[firstDayOfMonthIndex + i - 1] = i;
+    }
+    for (let i = 0; i < list.length; i++) {
+      if (!list[i]) {
+        list[i] = ' ';
+      }
+    }
+    return list;
+  }
+  createDaysList();
+  const days_num = createDaysList();
+  const daysGrid = days_num.map((day, index) => {
+    const isEvent = events.map(event => event.date).includes(day);
+    if (day === today && isEvent) {
+      return (
+        <View style={styles.cell} key={index}>
+          <View style={styles.todayHighlight}>
+            <Text style={styles.highlightedDay}>{day}</Text>
+            <View style={styles.todayDot} />
+          </View>
+        </View>
+      );
+    }
+    if (day === today && month === currentMonth) {
+      return (
+        <View style={styles.cell} key={index}>
+          <View style={styles.todayHighlight}>
+            <Text style={styles.highlightedDay}>{day}</Text>
+          </View>
+        </View>
+      );
+    }
+    if (isEvent) {
+      return (
+        <View style={styles.cell} key={index}>
+          <Text style={styles.day}>{day}</Text>
+          <View style={styles.dayDot} />
+        </View>
+      );
+    }
+    return (
+      <View style={styles.cell} key={index}>
+        <Text style={styles.day}>{day}</Text>
+      </View>
+    );
+  });
   return (
-    <View style={styles.container}>
-      <ScrollView
-        contentInset={{ top: hp(1), bottom: hp(1) }}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ alignItems: 'center' }}>
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.monthYear}>June 2021</Text>
-        </View>
-
-        <View style={styles.daysRow}>{daysRow}</View>
-        <View style={styles.gridContainer}>{daysGrid}</View>
-
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.monthYear}>June 2021</Text>
-        </View>
-
-        <View style={styles.daysRow}>{daysRow}</View>
-        <View style={styles.gridContainer}>{daysGrid}</View>
-
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.monthYear}>June 2021</Text>
-        </View>
-
-        <View style={styles.daysRow}>{daysRow}</View>
-        <View style={styles.gridContainer}>{daysGrid}</View>
-
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.monthYear}>June 2021</Text>
-        </View>
-
-        <View style={styles.daysRow}>{daysRow}</View>
-        <View style={styles.gridContainer}>{daysGrid}</View>
-
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.monthYear}>June 2021</Text>
-        </View>
-
-        <View style={styles.daysRow}>{daysRow}</View>
-        <View style={styles.gridContainer}>{daysGrid}</View>
-      </ScrollView>
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={selectHours}>
-          <Text>Add</Text>
-        </TouchableOpacity>
+    <View
+      style={[
+        styles.container,
+        {
+          height: additionalRow
+            ? styles.container.height + hp(5)
+            : styles.container.height,
+        },
+      ]}>
+      <View style={{ marginTop: 20 }}>
+        <Text style={styles.monthYear}>
+          {month} {year}
+        </Text>
       </View>
 
-      {/* Modal */}
-      <Modal
-        isVisible={modalVisible}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-        style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-        <View style={styles.modalView}>
-          <View style={styles.modalHeader}>
-            <TouchableOpacity>
-              <Text style={styles.cancel}>Cancel</Text>
-            </TouchableOpacity>
-            <Text style={styles.modalHeaderTitle}>New Event</Text>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={styles.add}>Add</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ marginTop: 12 }}>
-            <Input set={() => {}} placeholder="Title" />
-          </View>
-          <Input set={() => {}} placeholder="Location" />
-          <View style={{ marginTop: 12 }}>
-            <Input set={() => {}} placeholder="Min. Experience" />
-          </View>
-          <View style={{ marginTop: 12 }}>
-            <Input set={() => {}} placeholder="Starts" />
-            <Input set={() => {}} placeholder="Ends" />
-          </View>
-        </View>
-      </Modal>
+      <View style={styles.daysRow}>{daysRow}</View>
+      <View style={styles.gridContainer}>{daysGrid}</View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: hp(100),
-    width: wp(100),
+    height: hp(35),
+    width: wp(85),
+    backgroundColor: '#fff',
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 20,
+    alignItems: 'center',
   },
   monthYear: {
     fontSize: 14,
@@ -151,6 +175,9 @@ const styles = StyleSheet.create({
   day: {
     color: '#494949',
   },
+  highlightedDay: {
+    color: '#fff',
+  },
   days: {
     color: '#aaa',
     fontWeight: '500',
@@ -162,42 +189,46 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     width: '100%',
   },
-  footer: {
-    height: hp(10),
-    width: '100%',
-    backgroundColor: '#eee',
+  dateHighlight: {
+    height: '60%',
+    width: '60%',
+    borderRadius: 50,
+    backgroundColor: colors.regularBlue,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  modalView: {
-    height: hp(80),
-    width: wp(100),
-    backgroundColor: '#898989',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  locumHighlight: {
+    position: 'absolute',
+    height: 30,
+    width: 30,
+    borderRadius: 50,
     backgroundColor: '#ddd',
-    height: hp(5),
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  cancel: {
-    color: '#f00',
-    fontWeight: '300',
-    fontSize: 15,
+  todayHighlight: {
+    height: '80%',
+    width: '80%',
+    borderRadius: 50,
+    backgroundColor: colors.regularBlue,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  add: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 14,
+  dayDot: {
+    position: 'absolute',
+    bottom: 5,
+    height: 5,
+    width: 5,
+    borderRadius: 50,
+    backgroundColor: colors.regularBlue,
   },
-  modalHeaderTitle: {
-    color: '#fff',
-    fontSize: 17,
-    fontWeight: '500',
+  todayDot: {
+    position: 'absolute',
+    bottom: 3,
+    height: 5,
+    width: 5,
+    borderRadius: 50,
+    backgroundColor: '#fff',
   },
 });
 

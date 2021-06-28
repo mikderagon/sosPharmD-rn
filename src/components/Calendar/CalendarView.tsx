@@ -185,7 +185,7 @@ const CalendarView = () => {
         style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
         <View style={styles.modalView}>
           <View style={styles.modalHeader}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(false)}>
               <Text style={styles.cancel}>Cancel</Text>
             </TouchableOpacity>
             <Text style={styles.modalHeaderTitle}>New Event</Text>
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalView: {
-    height: hp(80),
+    height: hp(60),
     width: wp(100),
     backgroundColor: '#898989',
     borderTopLeftRadius: 10,

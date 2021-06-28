@@ -72,10 +72,7 @@ const Calendar = (props: Props) => {
     </View>
   ));
   function createDaysList() {
-    // if monday then start at index1
-    // if wednesday then start at index3,
-    // etc. from sun 0 to sat 6
-    let list = new Array(35);
+    let list = new Array(additionalRow ? 42 : 35);
     list[firstDayOfMonthIndex] = 1;
     for (let i = 2; i <= numberOfDaysInCurrentMonth; i++) {
       list[firstDayOfMonthIndex + i - 1] = i;
@@ -87,7 +84,6 @@ const Calendar = (props: Props) => {
     }
     return list;
   }
-  createDaysList();
   const days_num = createDaysList();
   const daysGrid = days_num.map((day, index) => {
     const isEvent = events.map(event => event.date).includes(day);
@@ -186,7 +182,7 @@ const styles = StyleSheet.create({
   daysRow: {
     marginTop: 15,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '100%',
   },
   dateHighlight: {

@@ -34,6 +34,8 @@ interface Props {
   numberOfDaysInCurrentMonth: number;
   additionalRow: boolean;
   selectionState?: boolean;
+  selectedDays: any;
+  onDayPress: any;
 }
 
 const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -48,7 +50,8 @@ const Calendar = (props: Props) => {
     year,
     firstDayOfMonthIndex,
     numberOfDaysInCurrentMonth,
-    selectionState,
+    selectedDays,
+    onDayPress,
   } = props;
   const daysRow = days_alpha.map((day, index) => (
     <View style={[styles.cell, { height: hp(2) }]} key={index}>
@@ -69,24 +72,6 @@ const Calendar = (props: Props) => {
     return list;
   }
 
-  interface DateObject {
-    day: number;
-    month: string;
-    year: number;
-  }
-
-  const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
-
-  function onDayPress(day: number) {
-    if (selectionState) {
-      // find user selected cell's day, month and year
-      console.log(day);
-      console.log(month);
-      console.log(year);
-      setSelectedDays([...selectedDays, { day, month, year }]);
-    }
-  }
-  console.log(selectedDays);
   const days_num = createDaysList();
   const daysGrid = days_num.map((day, index) => {
     // 4 types of cells right, now TODO: simplify this function to one cell taking multiple styles
@@ -104,11 +89,10 @@ const Calendar = (props: Props) => {
           style={styles.cell}
           key={index}
           onPress={() => {
-            onDayPress(day);
+            onDayPress(day, month, year);
           }}>
-          <View style={styles.todayHighlight}>
+          <View style={styles.userSelectedHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
-            <View style={styles.todayDot} />
           </View>
         </TouchableOpacity>
       );
@@ -119,7 +103,7 @@ const Calendar = (props: Props) => {
           style={styles.cell}
           key={index}
           onPress={() => {
-            onDayPress(day);
+            onDayPress(day, month, year);
           }}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
@@ -134,7 +118,7 @@ const Calendar = (props: Props) => {
           style={styles.cell}
           key={index}
           onPress={() => {
-            onDayPress(day);
+            onDayPress(day, month, year);
           }}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
@@ -148,7 +132,7 @@ const Calendar = (props: Props) => {
           style={styles.cell}
           key={index}
           onPress={() => {
-            onDayPress(day);
+            onDayPress(day, month, year);
           }}>
           <Text style={styles.day}>{day}</Text>
           <View style={styles.dayDot} />
@@ -160,7 +144,7 @@ const Calendar = (props: Props) => {
         style={styles.cell}
         key={index}
         onPress={() => {
-          onDayPress(day);
+          onDayPress(day, month, year);
         }}>
         <Text style={styles.day}>{day}</Text>
       </TouchableOpacity>
@@ -253,6 +237,14 @@ const styles = StyleSheet.create({
     width: '80%',
     borderRadius: 50,
     backgroundColor: colors.regularBlue,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  userSelectedHighlight: {
+    height: '80%',
+    width: '80%',
+    borderRadius: 50,
+    backgroundColor: colors.darkerBlue,
     alignItems: 'center',
     justifyContent: 'center',
   },

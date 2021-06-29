@@ -106,7 +106,7 @@ const shownMonths = [...Array(12).keys()].map(m => {
 
 const CalendarView = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectionState, setSelectionState] = useState(true); // set true to test
+  const [selectionState, setSelectionState] = useState(false); // set true to test
   const toggleModalVisibility = () => {
     setModalVisible(!modalVisible);
   };
@@ -115,13 +115,53 @@ const CalendarView = () => {
   };
   const { state } = useContext(store);
   const [userEvent, setUserEvent] = useState<CalendarEvent>();
+
+  interface DateObject {
+    day: number;
+    month: string;
+    year: number;
+  }
+
+  const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
+
+  function onDayPress(day: number, month: string, year: number) {
+    if (selectionState) {
+      if (
+        selectedDays.find(
+          selectedDay =>
+            selectedDay.day === day &&
+            selectedDay.month === month &&
+            selectedDay.year === year,
+        )
+      ) {
+        const index = selectedDays.findIndex(
+          selectedDay =>
+            selectedDay.day === day &&
+            selectedDay.month === month &&
+            selectedDay.year === year,
+        );
+        const newSelectedDays = selectedDays;
+        newSelectedDays.splice(index, 1);
+        setSelectedDays([...newSelectedDays]);
+      } else {
+        setSelectedDays([...selectedDays, { day, month, year }]);
+      }
+    }
+  }
+
+  function deployEvents() {
+    console.log('will deploy:');
+    console.log(userEvent);
+    console.log('for these days:');
+    console.log(selectedDays);
+    setSelectionState(false);
+    // create an animation to show that events have been set in the calendar,
+    // which are now visible by the students
+    // first find how we want to style the cells for days that have events (need to combine well with the 'student' notif dot)
+  }
+
   function addCalendarEvent(event: CalendarEvent) {
-    console.log('adding a calendar event');
     setUserEvent(event);
-    console.log(
-      'click on the dates on the calendar that you want this event to happen on',
-      event,
-    );
     // trigger event to alert the user to click on wanted dates on the calendars
     // this could be an animated view coming from the side...think creative
     // starting with a simple native alert to get the functionality done
@@ -139,6 +179,8 @@ const CalendarView = () => {
         renderItem={({ item, index }) => (
           <Calendar
             selectionState={selectionState}
+            selectedDays={selectedDays}
+            onDayPress={onDayPress}
             events={
               state.events.find(
                 e => e.month === item.monthIndex && e.year === item.year,
@@ -165,8 +207,15 @@ const CalendarView = () => {
         showsVerticalScrollIndicator={false}
       />
       <View style={styles.footer}>
-        <TouchableOpacity onPress={selectHours}>
-          <Text>Add</Text>
+        <TouchableOpacity
+          onPress={() => {
+            if (selectionState) {
+              deployEvents();
+            } else {
+              selectHours();
+            }
+          }}>
+          <Text>{selectionState ? 'Deploy events' : 'Add'}</Text>
         </TouchableOpacity>
       </View>
 

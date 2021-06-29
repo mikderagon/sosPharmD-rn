@@ -86,14 +86,16 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
         inactiveDotStyle={styles.dotStyle}
       />
       <View style={styles.buttonsContainer}>
-        <Button
-          onPress={() => {
-            carouselRef.current.snapToPrev();
-            setActiveSlide(activeSlide - 1);
-          }}
-          text="Prev"
-          style="borderless"
-        />
+        {activeSlide > 0 && (
+          <Button
+            onPress={() => {
+              carouselRef.current.snapToPrev();
+              setActiveSlide(activeSlide - 1);
+            }}
+            text="Prev"
+            style="borderless"
+          />
+        )}
         <Button
           onPress={() => {
             if (lastSlideActive) {

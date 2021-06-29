@@ -9,6 +9,7 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
+import colors from '../../styles/colors';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -61,9 +62,9 @@ const styles = StyleSheet.create({
     height: hp(5),
     width: wp(30),
     backgroundColor: '#fff',
-    borderColor: '#aaa',
-    borderRadius: 50,
-    borderWidth: 5,
+    borderColor: colors.regularBlue,
+    borderRadius: 20,
+    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },

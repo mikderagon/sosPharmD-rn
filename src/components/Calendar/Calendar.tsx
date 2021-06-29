@@ -7,6 +7,7 @@
  */
 
 import React, { useEffect } from 'react';
+import { useState } from 'react';
 import {
   Animated,
   StyleSheet,
@@ -32,6 +33,7 @@ interface Props {
   firstDayOfMonthIndex: number;
   numberOfDaysInCurrentMonth: number;
   additionalRow: boolean;
+  selectionState?: boolean;
 }
 
 const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -46,6 +48,7 @@ const Calendar = (props: Props) => {
     year,
     firstDayOfMonthIndex,
     numberOfDaysInCurrentMonth,
+    selectionState,
   } = props;
   const daysRow = days_alpha.map((day, index) => (
     <View style={[styles.cell, { height: hp(2) }]} key={index}>
@@ -65,12 +68,59 @@ const Calendar = (props: Props) => {
     }
     return list;
   }
+
+  interface DateObject {
+    day: number;
+    month: string;
+    year: number;
+  }
+
+  const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
+
+  function onDayPress(day: number) {
+    if (selectionState) {
+      // find user selected cell's day, month and year
+      console.log(day);
+      console.log(month);
+      console.log(year);
+      setSelectedDays([...selectedDays, { day, month, year }]);
+    }
+  }
+  console.log(selectedDays);
   const days_num = createDaysList();
   const daysGrid = days_num.map((day, index) => {
+    // 4 types of cells right, now TODO: simplify this function to one cell taking multiple styles
+    // const isSelectedForNewEvent = // is in array of selected days? day and month and year
+    const isSelectedForNewEvent = selectedDays.find(
+      selectedDay =>
+        selectedDay.day === day &&
+        selectedDay.month === month &&
+        selectedDay.year === year,
+    );
     const isEvent = events.map(event => event.date).includes(day);
+    if (isSelectedForNewEvent) {
+      return (
+        <TouchableOpacity
+          style={styles.cell}
+          key={index}
+          onPress={() => {
+            onDayPress(day);
+          }}>
+          <View style={styles.todayHighlight}>
+            <Text style={styles.highlightedDay}>{day}</Text>
+            <View style={styles.todayDot} />
+          </View>
+        </TouchableOpacity>
+      );
+    }
     if (day === today && isEvent) {
       return (
-        <TouchableOpacity style={styles.cell} key={index}>
+        <TouchableOpacity
+          style={styles.cell}
+          key={index}
+          onPress={() => {
+            onDayPress(day);
+          }}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
             <View style={styles.todayDot} />
@@ -80,7 +130,12 @@ const Calendar = (props: Props) => {
     }
     if (day === today && month === currentMonth) {
       return (
-        <TouchableOpacity style={styles.cell} key={index}>
+        <TouchableOpacity
+          style={styles.cell}
+          key={index}
+          onPress={() => {
+            onDayPress(day);
+          }}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
           </View>
@@ -89,14 +144,24 @@ const Calendar = (props: Props) => {
     }
     if (isEvent) {
       return (
-        <TouchableOpacity style={styles.cell} key={index}>
+        <TouchableOpacity
+          style={styles.cell}
+          key={index}
+          onPress={() => {
+            onDayPress(day);
+          }}>
           <Text style={styles.day}>{day}</Text>
           <View style={styles.dayDot} />
         </TouchableOpacity>
       );
     }
     return (
-      <TouchableOpacity style={styles.cell} key={index}>
+      <TouchableOpacity
+        style={styles.cell}
+        key={index}
+        onPress={() => {
+          onDayPress(day);
+        }}>
         <Text style={styles.day}>{day}</Text>
       </TouchableOpacity>
     );

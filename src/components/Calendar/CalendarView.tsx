@@ -7,9 +7,11 @@
  */
 
 import React, { useState } from 'react';
-import { Animated } from 'react-native';
+import { Alert, Animated } from 'react-native';
+import AddEventModal from './AddEventModal';
 import {
   ScrollView,
+  SafeAreaView,
   TouchableOpacity,
   StyleSheet,
   FlatList,
@@ -27,6 +29,7 @@ import Calendar from './Calendar';
 import { useContext } from 'react';
 import { store } from '../../store';
 import { useEffect } from 'react';
+import { CalendarEvent } from '../../types';
 
 // first month is the current month
 const today = new Date();
@@ -103,18 +106,39 @@ const shownMonths = [...Array(12).keys()].map(m => {
 
 const CalendarView = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectionState, setSelectionState] = useState(true); // set true to test
+  const toggleModalVisibility = () => {
+    setModalVisible(!modalVisible);
+  };
   const selectHours = () => {
-    setModalVisible(true);
+    toggleModalVisibility();
   };
   const { state } = useContext(store);
+  const [userEvent, setUserEvent] = useState<CalendarEvent>();
+  function addCalendarEvent(event: CalendarEvent) {
+    console.log('adding a calendar event');
+    setUserEvent(event);
+    console.log(
+      'click on the dates on the calendar that you want this event to happen on',
+      event,
+    );
+    // trigger event to alert the user to click on wanted dates on the calendars
+    // this could be an animated view coming from the side...think creative
+    // starting with a simple native alert to get the functionality done
+    Alert.alert('Click on the dates on the calendar that you want');
+    // then we need to record the clicked dates
+    // we need to know that we're in this 'selection' state
+    setSelectionState(true);
+  }
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={shownMonths}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{ width: '100%', alignItems: 'center' }}
         renderItem={({ item, index }) => (
           <Calendar
+            selectionState={selectionState}
             events={
               state.events.find(
                 e => e.month === item.monthIndex && e.year === item.year,
@@ -137,85 +161,21 @@ const CalendarView = () => {
           />
         )}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-        ListHeaderComponent={() => <View style={{ height: 40 }} />}
-        ListFooterComponent={() => <View style={{ height: 20 }} />}
+        ListFooterComponent={() => <View style={{ height: 70 }} />}
         showsVerticalScrollIndicator={false}
       />
-      {/* <ScrollView
-        contentInset={{ top: hp(1), bottom: hp(1) }}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ alignItems: 'center' }}>
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.monthYear}>June 2021</Text>
-        </View>
-
-        <View style={styles.daysRow}>{daysRow}</View>
-        <View style={styles.gridContainer}>{daysGrid}</View>
-
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.monthYear}>June 2021</Text>
-        </View>
-
-        <View style={styles.daysRow}>{daysRow}</View>
-        <View style={styles.gridContainer}>{daysGrid}</View>
-
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.monthYear}>June 2021</Text>
-        </View>
-
-        <View style={styles.daysRow}>{daysRow}</View>
-        <View style={styles.gridContainer}>{daysGrid}</View>
-
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.monthYear}>June 2021</Text>
-        </View>
-
-        <View style={styles.daysRow}>{daysRow}</View>
-        <View style={styles.gridContainer}>{daysGrid}</View>
-
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.monthYear}>June 2021</Text>
-        </View>
-
-        <View style={styles.daysRow}>{daysRow}</View>
-        <View style={styles.gridContainer}>{daysGrid}</View>
-      </ScrollView> */}
       <View style={styles.footer}>
         <TouchableOpacity onPress={selectHours}>
           <Text>Add</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Modal */}
-      <Modal
+      <AddEventModal
         isVisible={modalVisible}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-        style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-        <View style={styles.modalView}>
-          <View style={styles.modalHeader}>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={styles.cancel}>Cancel</Text>
-            </TouchableOpacity>
-            <Text style={styles.modalHeaderTitle}>New Event</Text>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={styles.add}>Add</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ marginTop: 12 }}>
-            <Input set={() => {}} placeholder="Title" />
-          </View>
-          <Input set={() => {}} placeholder="Location" />
-          <View style={{ marginTop: 12 }}>
-            <Input set={() => {}} placeholder="Min. Experience" />
-          </View>
-          <View style={{ marginTop: 12 }}>
-            <Input set={() => {}} placeholder="Starts" />
-            <Input set={() => {}} placeholder="Ends" />
-          </View>
-        </View>
-      </Modal>
-    </View>
+        toggleModal={toggleModalVisibility}
+        addCalendarEvent={(event: CalendarEvent) => addCalendarEvent(event)}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -255,6 +215,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   footer: {
+    position: 'absolute',
+    bottom: 0,
     height: hp(10),
     width: '100%',
     backgroundColor: '#eee',

@@ -15,3 +15,11 @@ export type NavigationProps = {
   navigation: OnboardingViewNavigationProp;
   children?: any;
 };
+
+export interface CalendarEvent {
+  title: string;
+  location: string;
+  minExperience: string;
+  startTime: string;
+  endTime: string;
+}

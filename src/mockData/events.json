@@ -1,0 +1,26 @@
+[
+  {
+    "id": 0,
+    "day": 2,
+    "month": 6,
+    "year": 2021,
+    "userId": 2,
+    "title": "locum required",
+    "startTime": "8:30",
+    "endTime": "16:30",
+    "interestedLocums": [1],
+    "acceptedLocums": []
+  },
+  {
+    "id": 1,
+    "day": 4,
+    "month": 8,
+    "year": 2021,
+    "userId": 2,
+    "title": "locum required",
+    "startTime": "8:30",
+    "endTime": "16:30",
+    "interestedLocums": [],
+    "acceptedLocums": []
+  }
+]

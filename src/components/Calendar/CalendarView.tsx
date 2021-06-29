@@ -30,6 +30,7 @@ import { useContext } from 'react';
 import { store } from '../../store';
 import { useEffect } from 'react';
 import { CalendarEvent } from '../../types';
+import * as dates from '../../utils/dates';
 
 // first month is the current month
 const today = new Date();
@@ -113,7 +114,8 @@ const CalendarView = () => {
   const selectHours = () => {
     toggleModalVisibility();
   };
-  const { state } = useContext(store);
+  const { state, dispatch } = useContext(store);
+  const { currentUser } = state;
   const [userEvent, setUserEvent] = useState<CalendarEvent>();
 
   interface DateObject {
@@ -158,6 +160,24 @@ const CalendarView = () => {
     // create an animation to show that events have been set in the calendar,
     // which are now visible by the students
     // first find how we want to style the cells for days that have events (need to combine well with the 'student' notif dot)
+    const formattedEvents = selectedDays.map(selectedDay => {
+      return {
+        id: 50,
+        day: selectedDay.day,
+        month: dates.getMonthIndex(selectedDay.month),
+        year: selectedDay.year,
+        userId: currentUser.id,
+        title: userEvent?.title,
+        startTime: userEvent?.startTime,
+        endTime: userEvent?.endTime,
+        interestedLocums: [],
+        acceptedLocums: [],
+      };
+    });
+    dispatch({
+      type: 'SET_CALENDAR_EVENTS',
+      events: formattedEvents,
+    });
   }
 
   function addCalendarEvent(event: CalendarEvent) {
@@ -176,32 +196,30 @@ const CalendarView = () => {
         data={shownMonths}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{ width: '100%', alignItems: 'center' }}
-        renderItem={({ item, index }) => (
-          <Calendar
-            selectionState={selectionState}
-            selectedDays={selectedDays}
-            onDayPress={onDayPress}
-            events={
-              state.events.find(
-                e => e.month === item.monthIndex && e.year === item.year,
-              )
-                ? state.events.find(
-                    e => e.month === item.monthIndex && e.year === item.year,
-                  ).events
-                : []
-            }
-            currentMonth={getLongMonth(today.getMonth())}
-            month={item.month}
-            year={item.year}
-            firstDayOfMonth={item.firstDay}
-            firstDayOfMonthIndex={item.firstDayIndex}
-            numberOfDaysInCurrentMonth={item.numberOfDays}
-            additionalRow={
-              (item.numberOfDays < 31 && item.firstDayIndex === 6) ||
-              (item.numberOfDays === 31 && item.firstDayIndex > 4)
-            }
-          />
-        )}
+        renderItem={({ item, index }) => {
+          return (
+            <Calendar
+              selectionState={selectionState}
+              selectedDays={selectedDays}
+              onDayPress={onDayPress}
+              events={state.events.filter(event => {
+                return (
+                  event.year === item.year && event.month === item.monthIndex
+                );
+              })}
+              currentMonth={getLongMonth(today.getMonth())}
+              month={item.month}
+              year={item.year}
+              firstDayOfMonth={item.firstDay}
+              firstDayOfMonthIndex={item.firstDayIndex}
+              numberOfDaysInCurrentMonth={item.numberOfDays}
+              additionalRow={
+                (item.numberOfDays < 31 && item.firstDayIndex === 6) ||
+                (item.numberOfDays === 31 && item.firstDayIndex > 4)
+              }
+            />
+          );
+        }}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
         ListFooterComponent={() => <View style={{ height: 70 }} />}
         showsVerticalScrollIndicator={false}

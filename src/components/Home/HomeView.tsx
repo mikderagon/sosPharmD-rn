@@ -19,6 +19,7 @@ import 'react-native-gesture-handler';
 import { store } from '../../store';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import { getDateState, getMonthName } from '../../utils/dates';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -29,60 +30,23 @@ import Locum from './Locum';
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
 
-const userPicture =
-  'https://i.guim.co.uk/img/media/852837afc22bfa78936b7b99ba0b6db03d877dda/0_1038_2816_2113/master/2816.jpg?width=445&quality=45&auto=format&fit=max&dpr=2&s=4781b085f86533dded353aa9badd0802';
-
-const user = {
-  name: 'John Doe',
-  educationalInstitution: 'UdeM',
-  schoolYear: '3rd year',
-  location: 'Ste-Rose, Laval',
-};
-
-const year = new Date().getFullYear();
-const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-const today = new Date();
-let numberOfDaysInCurrentMonth = new Date(
-  today.getFullYear(),
-  today.getMonth() + 1,
-  0,
-).getDate();
-// check if feb should have 29 days
-if (numberOfDaysInCurrentMonth === 28 && isLeapYear) {
-  numberOfDaysInCurrentMonth = 29;
-}
-const firstDayOfMonthIndex = new Date(
-  today.getFullYear(),
-  today.getMonth(),
-  1,
-).getDay();
-const firstDayOfMonth = new Date(
-  today.getFullYear(),
-  today.getMonth(),
-  1,
-).toLocaleTimeString('en-US', {
-  weekday: 'long',
-  month: 'long',
-});
-// .split(' ')[0];
-const currentMonth = firstDayOfMonth
-  .split('(')[1]
-  .split(':')[1]
-  .split(')')[0]
-  .trim();
-
 const HomeView = ({ navigation }) => {
   const { state } = useContext(store);
-  const thisMonthEvents = state.events.find(
-    e => e.month === today.getMonth() + 1 && e.year === year,
-  );
-  const events = thisMonthEvents.events;
+  const thisState = getDateState();
+  const thisMonthEvents = state.events.filter(event => {
+    return (
+      event.year === thisState.year && event.month === thisState.monthIndex
+    );
+  });
+  const thisEventDates = thisMonthEvents.map(e => e.day);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [previousEventIndex, setPreviousEventIndex] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
       const nextIndex =
-        currentEventIndex === events.length - 1 ? 0 : currentEventIndex + 1;
+        currentEventIndex === thisEventDates.length - 1
+          ? 0
+          : currentEventIndex + 1;
       setPreviousEventIndex(currentEventIndex);
       setCurrentEventIndex(nextIndex);
       locumListRef.current.scrollToIndex({
@@ -95,6 +59,15 @@ const HomeView = ({ navigation }) => {
   }, [currentEventIndex]);
 
   const locumListRef = useRef(null);
+
+  const { currentUser, users } = state;
+
+  const currentLocumTags = [
+    users.find(
+      user =>
+        user.id === thisMonthEvents[currentEventIndex].interestedLocums[0],
+    ),
+  ];
 
   return (
     <View style={styles.container}>
@@ -115,16 +88,19 @@ const HomeView = ({ navigation }) => {
           </View>
           <View style={styles.pictureNameRow}>
             <View style={styles.userPictureShadow}>
-              <Image source={{ uri: userPicture }} style={styles.userPicture} />
+              <Image
+                source={{ uri: currentUser.pictureUrl }}
+                style={styles.userPicture}
+              />
             </View>
 
             <View style={styles.userInfoContainer}>
               <Text style={styles.name} numberOfLines={1} adjustsFontSizeToFit>
-                {user.name}
+                {currentUser.firstName + ' ' + currentUser.lastName}
               </Text>
-              <Text style={styles.year}>{user.educationalInstitution}</Text>
-              <Text style={styles.year}>{user.schoolYear}</Text>
-              <Text style={styles.location}>{user.location}</Text>
+              <Text style={styles.year}>{'udeM'}</Text>
+              <Text style={styles.year}>{currentUser.year || 0}</Text>
+              <Text style={styles.location}>{currentUser.city}</Text>
             </View>
           </View>
         </View>
@@ -135,20 +111,20 @@ const HomeView = ({ navigation }) => {
         <Text style={styles2.sectionTitle}>Calendar</Text>
         <View style={{ marginTop: hp(3) }}>
           <Calendar
-            events={events}
-            currentMonth={currentMonth}
-            currentMonthIndex={today.getMonth() + 1}
-            numberOfDaysInCurrentMonth={numberOfDaysInCurrentMonth}
-            firstDayOfMonthIndex={firstDayOfMonthIndex}
-            firstDayOfMonth={firstDayOfMonth}
+            events={thisEventDates}
+            currentMonth={thisState.month}
+            currentMonthIndex={thisState.monthIndex}
+            numberOfDaysInCurrentMonth={thisState.numberOfDays}
+            firstDayOfMonthIndex={thisState.firstDayOfMonthIndex}
+            firstDayOfMonth={thisState.firstDayOfMonth}
             openCalendar={() =>
               navigation.navigate('Calendar', {
-                currentMonth,
+                currentMonth: thisState.month,
               })
             }
-            year={today.getFullYear()}
-            currentEvent={events[currentEventIndex].date}
-            previousEvent={events[previousEventIndex].date}
+            year={thisState.year}
+            currentEvent={thisEventDates[currentEventIndex]}
+            previousEvent={thisEventDates[previousEventIndex]}
             // give it current event which will change according to our interval in this component here
             // the calendar will run an event on currentEvent's change, Animating the circle towards the correct position in the grid
           />
@@ -157,10 +133,10 @@ const HomeView = ({ navigation }) => {
 
       {/* Demands */}
       <View style={{ marginTop: hp(2) }}>
-        {events.length ? (
+        {thisEventDates.length ? (
           <FlatList
             ref={locumListRef}
-            data={events}
+            data={currentLocumTags}
             horizontal
             scrollEnabled={false}
             ItemSeparatorComponent={() => <View style={{ width: wp(10) }} />}
@@ -169,16 +145,7 @@ const HomeView = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
-              <Locum
-                date={events[index].date}
-                user={{
-                  picture: userPicture,
-                  firstName: item.firstName,
-                  lastName: item.lastName,
-                  educationalInstitution: 'UdeM',
-                  year: '3rd',
-                }}
-              />
+              <Locum date={thisEventDates[index]} user={item} />
             )}
             getItemLayout={(data, index) => ({
               length: wp(85),

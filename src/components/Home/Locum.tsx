@@ -21,23 +21,34 @@ import {
 interface Props {
   date: number;
   user: {
-    picture: string;
+    city: string;
     firstName: string;
     lastName: string;
+    id: number;
+    pictureUrl: string;
+    year: number;
+    educationalInstitution: string;
   };
 }
 
 const Locum = (props: Props) => {
   const { date, user } = props;
-  const { picture, firstName, lastName, educationalInstitution, year } = user;
+  const {
+    firstName,
+    lastName,
+    pictureUrl,
+    city,
+    year,
+    educationalInstitution,
+  } = user;
   return (
     <TouchableOpacity style={styles.container}>
       <View style={styles.userPicturePosition}>
-        <Image source={{ uri: picture }} style={styles.userPicture} />
+        <Image source={{ uri: pictureUrl }} style={styles.userPicture} />
       </View>
       <View style={styles.userInfoContainer}>
         <Text style={styles.bold}>{`${firstName} ${lastName}`}</Text>
-        <Text>{`${educationalInstitution} ${year} year`}</Text>
+        <Text>{`${educationalInstitution} - year ${year}`}</Text>
       </View>
       <Text>{date}</Text>
     </TouchableOpacity>

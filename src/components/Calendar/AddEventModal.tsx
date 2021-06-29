@@ -30,20 +30,6 @@ const AddEventModal = (props: Props) => {
   const [minExperience, setMinExperience] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  function logState() {
-    console.log(
-      title,
-      '\n',
-      location,
-      '\n',
-      minExperience,
-      '\n',
-      startTime,
-      '\n',
-      endTime,
-    );
-  }
-  // logState();
   return (
     <Modal
       onBackdropPress={toggleModal}

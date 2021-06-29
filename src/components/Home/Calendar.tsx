@@ -25,7 +25,7 @@ import { date_positions } from './gridMeasurements';
 
 interface Props {
   openCalendar?: () => {};
-  events: any;
+  events: number[];
   currentEvent?: number;
   previousEvent?: number;
   currentMonth: string;
@@ -40,30 +40,6 @@ const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const Calendar = (props: Props) => {
   const { state, dispatch } = useContext(store);
-  // useEffect(() => {
-  //   dispatch({
-  //     type: 'SET_CALENDAR_EVENTS',
-  //     events: {
-  //       'june/2021': [
-  //         {
-  //           date: 22,
-  //         },
-  //         {
-  //           date: 23,
-  //         },
-  //       ],
-  //       'september/2021': [
-  //         {
-  //           date: 2,
-  //         },
-  //         {
-  //           date: 1,
-  //         },
-  //       ],
-  //     },
-  //   });
-  // }, [dispatch]);
-  // const getIndex = (event: number) => events.findIndex(e => e.date === event);
   const today = new Date().getDate();
   const {
     openCalendar,
@@ -80,27 +56,27 @@ const Calendar = (props: Props) => {
 
   // const events = [];
   const getIndex = (eventDate: number) =>
-    events.findIndex(e => e.date === eventDate);
+    events.findIndex(e => e === eventDate);
 
   // first item of events will be at cell # 'events[0].date' + 1
   function createCellsList() {
     let cells = [];
-    cells.push(firstDayOfMonthIndex + events[0]?.date - 1);
+    cells.push(firstDayOfMonthIndex + events[0] - 1);
     for (let i = 1; i < events.length; i++) {
-      cells.push(events[i].date + 1);
+      cells.push(events[i] + 1);
     }
     return cells;
   }
   const cellList = createCellsList();
   function mapToCell(n: number) {
-    const index = events.findIndex(e => e.date === n);
+    const index = events.findIndex(e => e === n);
     return cellList[index];
   }
   const locumPosition = new Animated.Value(getIndex(previousEvent));
   useEffect(() => {
     Animated.timing(locumPosition, {
       toValue:
-        previousEvent === events[events.length - 1].date
+        previousEvent === events[events.length - 1]
           ? events.length
           : getIndex(currentEvent),
       duration: 300,
@@ -186,7 +162,7 @@ const Calendar = (props: Props) => {
                       date_positions.find(
                         dp =>
                           dp.cell ===
-                          mapToCell(events[i === events.length ? 0 : i].date),
+                          mapToCell(events[i === events.length ? 0 : i]),
                       ).x,
                   ),
                 }),
@@ -200,7 +176,7 @@ const Calendar = (props: Props) => {
                       date_positions.find(
                         dp =>
                           dp.cell ===
-                          mapToCell(events[i === events.length ? 0 : i].date),
+                          mapToCell(events[i === events.length ? 0 : i]),
                       ).y,
                   ),
                 }),

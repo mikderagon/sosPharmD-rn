@@ -50,6 +50,7 @@ const Calendar = (props: Props) => {
     year,
     firstDayOfMonthIndex,
     numberOfDaysInCurrentMonth,
+    selectionState,
     selectedDays,
     onDayPress,
   } = props;
@@ -75,14 +76,19 @@ const Calendar = (props: Props) => {
   const days_num = createDaysList();
   const daysGrid = days_num.map((day, index) => {
     // 4 types of cells right, now TODO: simplify this function to one cell taking multiple styles
-    // const isSelectedForNewEvent = // is in array of selected days? day and month and year
-    const isSelectedForNewEvent = selectedDays.find(
-      selectedDay =>
-        selectedDay.day === day &&
-        selectedDay.month === month &&
-        selectedDay.year === year,
-    );
-    const isEvent = events.map(event => event.date).includes(day);
+    const isSelectedForNewEvent =
+      selectionState &&
+      selectedDays.find(
+        selectedDay =>
+          selectedDay.day === day &&
+          selectedDay.month === month &&
+          selectedDay.year === year,
+      );
+    const isLocumNotif = events
+      .filter(event => event.interestedLocums.length)
+      .map(event => event.day)
+      .includes(day);
+    const isUserEvent = events.map(event => event.day).includes(day);
     if (isSelectedForNewEvent) {
       return (
         <TouchableOpacity
@@ -97,7 +103,7 @@ const Calendar = (props: Props) => {
         </TouchableOpacity>
       );
     }
-    if (day === today && isEvent) {
+    if (day === today && isLocumNotif) {
       return (
         <TouchableOpacity
           style={styles.cell}
@@ -126,7 +132,7 @@ const Calendar = (props: Props) => {
         </TouchableOpacity>
       );
     }
-    if (isEvent) {
+    if (isLocumNotif) {
       return (
         <TouchableOpacity
           style={styles.cell}
@@ -136,6 +142,21 @@ const Calendar = (props: Props) => {
           }}>
           <Text style={styles.day}>{day}</Text>
           <View style={styles.dayDot} />
+        </TouchableOpacity>
+      );
+    }
+    if (isUserEvent) {
+      return (
+        <TouchableOpacity
+          style={styles.cell}
+          key={index}
+          onPress={() => {
+            onDayPress(day, month, year);
+          }}>
+          <Text style={styles.day}>{day}</Text>
+          <View
+            style={[styles.dayDot, { backgroundColor: colors.regularBlue }]}
+          />
         </TouchableOpacity>
       );
     }
@@ -254,7 +275,7 @@ const styles = StyleSheet.create({
     height: 5,
     width: 5,
     borderRadius: 50,
-    backgroundColor: colors.regularBlue,
+    backgroundColor: 'green',
   },
   todayDot: {
     position: 'absolute',

@@ -9,10 +9,10 @@ export type StackParamList = {
   Calendar: undefined;
 };
 
-type OnboardingViewNavigationProp = StackNavigationProp<StackParamList>;
+export type NavigationProp = StackNavigationProp<StackParamList>;
 
 export type NavigationProps = {
-  navigation: OnboardingViewNavigationProp;
+  navigation: NavigationProp;
   children?: any;
 };
 

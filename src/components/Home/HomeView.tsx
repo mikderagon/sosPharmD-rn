@@ -26,6 +26,7 @@ import {
 } from '../../utils/responsiveLayout';
 import Calendar from './Calendar';
 import Locum from './Locum';
+import SidePanel from './SidePanel';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
@@ -69,8 +70,17 @@ const HomeView = ({ navigation }) => {
     ),
   ];
 
+  const [sidePanelVisible, setSidePanelVisibility] = useState(false);
+  function toggleSidePanel() {
+    setSidePanelVisibility(!sidePanelVisible);
+  }
+
   return (
     <View style={styles.container}>
+      {/* SidePanel */}
+      {sidePanelVisible && (
+        <SidePanel navigation={navigation} toggleSidePanel={toggleSidePanel} />
+      )}
       <View style={[styles.header, styles.headerShadow]}>
         <View style={styles.headerInnerContainer}>
           <View style={styles.headerBar}>
@@ -78,7 +88,9 @@ const HomeView = ({ navigation }) => {
               <TouchableOpacity>
                 <Image source={fourSquares} style={styles.fourSquares} />
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity
+                hitSlop={{ top: 10, bottom: 30, left: 15, right: 15 }}
+                onPress={toggleSidePanel}>
                 <Image source={verticalDots} style={styles.verticalDots} />
               </TouchableOpacity>
             </View>

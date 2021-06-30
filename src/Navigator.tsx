@@ -15,6 +15,7 @@ import 'react-native-gesture-handler';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
 import Calendar from './components/Calendar/CalendarView';
 import Home from './components/Home/HomeView';
+import Settings from './components/Settings/SettingsView';
 import Onboarding from './components/Onboarding/OnboardingView';
 import SignIn from './components/SignIn/SignInView';
 import SignUp from './components/SignUp/SignUpView';
@@ -91,6 +92,13 @@ const Navigator = () => {
         <Stack.Screen
           name="Home"
           component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
           options={{
             headerShown: false,
           }}

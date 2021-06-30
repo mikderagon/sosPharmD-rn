@@ -22,5 +22,41 @@
     "endTime": "16:30",
     "interestedLocums": [],
     "acceptedLocums": []
+  },
+  {
+    "id": 2,
+    "day": 6,
+    "month": 6,
+    "year": 2021,
+    "userId": 2,
+    "title": "locum required",
+    "startTime": "8:30",
+    "endTime": "16:30",
+    "interestedLocums": [1],
+    "acceptedLocums": []
+  },
+  {
+    "id": 3,
+    "day": 15,
+    "month": 6,
+    "year": 2021,
+    "userId": 2,
+    "title": "locum required",
+    "startTime": "8:30",
+    "endTime": "16:30",
+    "interestedLocums": [3],
+    "acceptedLocums": []
+  },
+  {
+    "id": 4,
+    "day": 29,
+    "month": 6,
+    "year": 2021,
+    "userId": 2,
+    "title": "locum required",
+    "startTime": "8:30",
+    "endTime": "16:30",
+    "interestedLocums": [3, 4],
+    "acceptedLocums": []
   }
 ]

@@ -16,17 +16,17 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import _ from 'underscore';
 import { store } from '../../store';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
-import { getDateState, getMonthName } from '../../utils/dates';
+import { getDateState } from '../../utils/dates';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
 import Calendar from './Calendar';
 import Locum from './Locum';
-import SidePanel from './SidePanel';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
@@ -39,7 +39,11 @@ const HomeView = ({ navigation }) => {
       event.year === thisState.year && event.month === thisState.monthIndex
     );
   });
-  const thisEventDates = thisMonthEvents.map(e => e.day);
+  const thisEventDates = _.flatten(
+    thisMonthEvents.map(e => {
+      return Array.from({ length: e.interestedLocums.length }).fill(e.day);
+    }),
+  );
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [previousEventIndex, setPreviousEventIndex] = useState(0);
   useEffect(() => {
@@ -57,30 +61,31 @@ const HomeView = ({ navigation }) => {
       });
     }, 3000);
     return () => clearInterval(interval);
-  }, [currentEventIndex]);
+  });
 
   const locumListRef = useRef(null);
 
   const { currentUser, users } = state;
 
-  const currentLocumTags = [
-    users.find(
-      user =>
-        user.id === thisMonthEvents[currentEventIndex].interestedLocums[0],
-    ),
-  ];
+  // events with multiple interested locums:
+  // for each event: we get the interested locums
+  // we need an array of all of the interested locums
 
-  const [sidePanelVisible, setSidePanelVisibility] = useState(false);
-  function toggleSidePanel() {
-    setSidePanelVisibility(!sidePanelVisible);
+  // for each event of thisMonthEvents:
+  // create a sub array of the interestedlocums
+  let currentLocumTags = [];
+  for (const event of thisMonthEvents) {
+    const theLocumsAre = event.interestedLocums;
+    for (const locum of theLocumsAre) {
+      const userFound = users.find(user => user.id === locum);
+      if (userFound) {
+        currentLocumTags.push(userFound);
+      }
+    }
   }
 
   return (
     <View style={styles.container}>
-      {/* SidePanel */}
-      {sidePanelVisible && (
-        <SidePanel navigation={navigation} toggleSidePanel={toggleSidePanel} />
-      )}
       <View style={[styles.header, styles.headerShadow]}>
         <View style={styles.headerInnerContainer}>
           <View style={styles.headerBar}>
@@ -90,7 +95,9 @@ const HomeView = ({ navigation }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 hitSlop={{ top: 10, bottom: 30, left: 15, right: 15 }}
-                onPress={toggleSidePanel}>
+                onPress={() => {
+                  navigation.navigate('Settings');
+                }}>
                 <Image source={verticalDots} style={styles.verticalDots} />
               </TouchableOpacity>
             </View>

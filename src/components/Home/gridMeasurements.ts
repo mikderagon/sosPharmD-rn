@@ -1,5 +1,5 @@
 const col_margin = 45.9;
-const row_margin = 45;
+const row_margin = 40.5;
 // 1 2 3 4 5 6 7
 // 8 9 ...
 const date_positions = [

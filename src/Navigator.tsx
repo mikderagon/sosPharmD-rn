@@ -31,7 +31,9 @@ const Drawer = createDrawerNavigator();
 
 const HomeDrawer = () => {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      drawerStyle={{ width: 100, backgroundColor: '#fff' }}
+      drawerContent={({ navigation }) => <Menu navigation={navigation} />}>
       <Drawer.Screen name="Home" component={Home} />
     </Drawer.Navigator>
   );

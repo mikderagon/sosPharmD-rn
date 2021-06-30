@@ -7,22 +7,58 @@
  */
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
-import SidePanel from './SidePanel';
 
 const MenuView = ({ navigation }) => {
+  function navigate(routeName: string) {
+    navigation.closeDrawer();
+    navigation.navigate(routeName);
+  }
   return (
     <View style={styles.container}>
-      <Text>Menu</Text>
+      <View style={styles.header}>
+        <View style={styles.margins}>
+          <TouchableOpacity
+            onPress={() => {
+              navigate('Calendar');
+            }}
+            style={styles.item}>
+            <Text>Calendar</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.margins}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => {
+              navigate('Calendar');
+            }}>
+            <Text>Locums</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    height: 100,
-    width: 100,
-    backgroundColor: 'red',
+    alignItems: 'center',
+    height: '100%',
+    width: '100% ',
+  },
+  header: {
+    marginTop: 50,
+  },
+  item: {
+    height: 80,
+    width: 80,
+    backgroundColor: '#ddd',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  margins: {
+    marginTop: 10,
   },
 });
 

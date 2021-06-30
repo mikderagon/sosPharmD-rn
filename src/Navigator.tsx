@@ -7,6 +7,7 @@
  */
 
 import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
@@ -16,6 +17,7 @@ import AccountConfirmation from './components/AccountConfirmation/AccountConfirm
 import Calendar from './components/Calendar/CalendarView';
 import Home from './components/Home/HomeView';
 import Settings from './components/Settings/SettingsView';
+import Menu from './components/Menu/MenuView';
 import Onboarding from './components/Onboarding/OnboardingView';
 import SignIn from './components/SignIn/SignInView';
 import SignUp from './components/SignUp/SignUpView';
@@ -25,6 +27,15 @@ import { store } from './store';
 const backCaret = require('./assets/images/backCaret.png');
 
 const Stack = createStackNavigator<StackParamList>();
+const Drawer = createDrawerNavigator();
+
+const HomeDrawer = () => {
+  return (
+    <Drawer.Navigator>
+      <Drawer.Screen name="Home" component={Home} />
+    </Drawer.Navigator>
+  );
+};
 
 const defaultTheme = {
   dark: false,
@@ -41,9 +52,9 @@ const defaultTheme = {
 const Navigator = () => {
   const { state } = useContext(store);
   // const initialRouteName = 'Onboarding';
-  // const initialRouteName = 'Home';
+  const initialRouteName = 'Home';
   // const initialRouteName = 'SignUp';
-  const initialRouteName = 'SignIn';
+  // const initialRouteName = 'SignIn';
   return (
     <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator headerMode="screen" initialRouteName={initialRouteName}>
@@ -97,7 +108,7 @@ const Navigator = () => {
         />
         <Stack.Screen
           name="Home"
-          component={Home}
+          component={HomeDrawer}
           options={{
             headerShown: false,
           }}

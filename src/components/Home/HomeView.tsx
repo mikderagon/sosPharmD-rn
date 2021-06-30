@@ -90,6 +90,9 @@ const HomeView = ({ navigation }) => {
                   bottom: 20,
                   left: 15,
                   right: 15,
+                }}
+                onPress={() => {
+                  navigation.openDrawer();
                 }}>
                 <Image source={fourSquares} style={styles.fourSquares} />
               </TouchableOpacity>
@@ -125,7 +128,7 @@ const HomeView = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Calednar */}
+      {/* Calendar */}
       <View style={{ marginTop: hp(10), width: '85%' }}>
         <Text style={styles2.sectionTitle}>Calendar</Text>
         <View style={{ marginTop: hp(3) }}>

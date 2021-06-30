@@ -7,7 +7,7 @@ const events = require('./mockData/events.json');
 const initialState = {
   users,
   events,
-  currentUser: null,
+  currentUser: users[1],
   language: 'french',
 };
 const store = createContext(initialState);

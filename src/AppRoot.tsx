@@ -14,7 +14,6 @@ import { StateProvider, store } from './store';
 
 const AppRoot = () => {
   const isDarkMode = useColorScheme() === 'dark';
-
   return (
     <StateProvider>
       <Navigator />

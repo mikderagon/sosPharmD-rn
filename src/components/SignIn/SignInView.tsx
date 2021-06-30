@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import { useEffect } from 'react';
-import { Easing } from 'react-native';
+import { Alert, Easing } from 'react-native';
 import {
   Image,
   ImageBackground,
@@ -28,15 +28,20 @@ import {
 } from '../../utils/responsiveLayout';
 import LoginButton from './Button';
 import Input from './Input';
+import { useContext } from 'react';
+import { store } from '../../store';
 
 const logo = require('../../assets/images/logo.png');
 const backgroundSrc = require('../../assets/images/signInBackground.png');
 const usernameImage = require('../../assets/images/usernameImage.png');
 const passwordImage = require('../../assets/images/passwordImage.png');
 
-const SignInView = ({ navigation }: NavigationProps) => {
+const SignInView = ({ navigation }) => {
+  const { state, dispatch } = useContext(store);
+  const { users } = state;
+
   const animatedValue = new Animated.Value(0);
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
@@ -73,16 +78,19 @@ const SignInView = ({ navigation }: NavigationProps) => {
           alignSelf: 'flex-start',
           marginLeft: wp(11),
         }}>
-        <Text style={styles.appTitle}>Login</Text>
+        <Text style={styles.appTitle}>
+          {state.language === 'french' ? 'Connexion' : 'Login'}
+        </Text>
         <Animated.View
           style={[
             styles.customUnderline,
             {
+              width: state.language === 'french' ? wp(50) : wp(40),
               transform: [
                 {
                   translateX: animatedValue.interpolate({
                     inputRange: [0, 1, 2],
-                    outputRange: [-200, 0, 400],
+                    outputRange: [-300, 0, 400],
                   }),
                 },
               ],
@@ -94,13 +102,15 @@ const SignInView = ({ navigation }: NavigationProps) => {
       {/* <View style={{ marginTop: hp(1) }}>
         <Image source={logo} style={styles.logo} />
       </View> */}
-      {/* username */}
+      {/* identifier */}
       <View style={{ marginTop: hp(8) }}>
         <Input
           autoFocus
-          set={setUsername}
+          set={setEmail}
           sourceImage={usernameImage}
-          placeholder="Username/Email"
+          placeholder={
+            state.language === 'french' ? 'Addresse courrielle' : 'Email'
+          }
         />
       </View>
       {/* password */}
@@ -108,7 +118,9 @@ const SignInView = ({ navigation }: NavigationProps) => {
         <Input
           set={setPassword}
           sourceImage={passwordImage}
-          placeholder="Password"
+          placeholder={
+            state.language === 'french' ? 'Mot de passe' : 'Password'
+          }
           secured
         />
       </View>
@@ -116,18 +128,35 @@ const SignInView = ({ navigation }: NavigationProps) => {
       <View style={{ marginTop: hp(4) }}>
         <LoginButton
           onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Home' }],
-            });
+            // login logic TODO: persist user connection, and refactor in store.tsx
+            const validUser = users.find(
+              user => user.email === email && user.password === password,
+            );
+            if (validUser) {
+              dispatch({
+                type: 'SET_CURRENT_USER',
+                currentUser: validUser,
+              });
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+              });
+            } else {
+              Alert.alert('No user');
+            }
           }}
+          text={state.language === 'french' ? 'Se connecter' : 'Log in'}
         />
       </View>
       <View style={{ marginTop: hp(5) }}>
-        <Text style={styles.or}>or connect using one of these</Text>
+        <Text style={styles.or}>
+          {state.language === 'french'
+            ? 'ou connectez-vous avec'
+            : 'or connect using one of these'}
+        </Text>
       </View>
       {/* facebook */}
-      <View style={{ marginTop: hp(3) }}>
+      <View style={{ marginTop: hp(2) }}>
         <TouchableOpacity>
           <Image source={require('../../assets/images/facebookButton.png')} />
         </TouchableOpacity>
@@ -145,7 +174,9 @@ const SignInView = ({ navigation }: NavigationProps) => {
             // navigation.navigate('forgotPassword');
           }}>
           <Text style={[styles.boldText, { color: colors.regularBlue }]}>
-            Forgot Password?
+            {state.language === 'french'
+              ? 'Mot de passe oublié?'
+              : 'Forgot Password?'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -156,10 +187,14 @@ const SignInView = ({ navigation }: NavigationProps) => {
           onPress={() => {
             navigation.navigate('SignUp');
           }}>
-          <Text style={styles.regularText}>Don't have an account?</Text>
+          <Text style={styles.regularText}>
+            {state.language === 'french'
+              ? 'Sans compte?'
+              : "Don't have an account?"}
+          </Text>
           <Text style={[styles.boldText, { color: colors.regularBlue }]}>
             {' '}
-            Sign Up
+            {state.language === 'french' ? 'Enregistrez-vous' : 'Sign Up'}
           </Text>
         </TouchableOpacity>
       </View>

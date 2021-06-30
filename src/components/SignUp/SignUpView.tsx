@@ -7,9 +7,11 @@
  */
 
 import React, { useState } from 'react';
+import { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
+import { store } from '../../store';
 import { NavigationProps } from '../../types';
 import {
   heightPercentageToDP as hp,
@@ -18,20 +20,21 @@ import {
 import Button from '../SignIn/Button';
 import Input from './Input';
 
-const SignUpView = ({ navigation }: NavigationProps) => {
+const SignUpView = ({ navigation }) => {
+  const { state } = useContext(store);
   const fields = [
     {
       key: 'email',
-      value: 'Email',
+      value: state.language === 'french' ? 'Courriel' : 'Email',
     },
     {
       key: 'firstName',
-      value: 'First Name',
+      value: state.language === 'french' ? 'Prénom' : 'First Name',
       autoCapitalize: true,
     },
     {
       key: 'lastName',
-      value: 'Last Name',
+      value: state.language === 'french' ? 'Nom' : 'Last Name',
       autoCapitalize: true,
     },
     {
@@ -96,7 +99,7 @@ const SignUpView = ({ navigation }: NavigationProps) => {
             onPress={() => {
               navigation.navigate('Home');
             }}
-            text="Sign Up"
+            text={state.language === 'french' ? "S'enregistrer" : 'Sign Up'}
           />
         </View>
       </View>

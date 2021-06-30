@@ -67,12 +67,6 @@ const HomeView = ({ navigation }) => {
 
   const { currentUser, users } = state;
 
-  // events with multiple interested locums:
-  // for each event: we get the interested locums
-  // we need an array of all of the interested locums
-
-  // for each event of thisMonthEvents:
-  // create a sub array of the interestedlocums
   let currentLocumTags = [];
   for (const event of thisMonthEvents) {
     const theLocumsAre = event.interestedLocums;
@@ -90,7 +84,13 @@ const HomeView = ({ navigation }) => {
         <View style={styles.headerInnerContainer}>
           <View style={styles.headerBar}>
             <View style={styles.headerBarText}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                hitSlop={{
+                  top: 10,
+                  bottom: 20,
+                  left: 15,
+                  right: 15,
+                }}>
                 <Image source={fourSquares} style={styles.fourSquares} />
               </TouchableOpacity>
               <TouchableOpacity

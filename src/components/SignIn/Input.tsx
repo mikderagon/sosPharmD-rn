@@ -44,7 +44,7 @@ const Input = (props: Props) => {
         autoCapitalize="none"
         autoCompleteType="off"
         autoCorrect={false}
-        maxLength={20}
+        // maxLength={20}
       />
     </View>
   );

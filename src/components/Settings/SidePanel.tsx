@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { useEffect } from 'react';
-import { Text } from 'react-native';
+import { Alert, Text } from 'react-native';
 import {
   Animated,
   Easing,
@@ -18,6 +18,7 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import colors from '../../styles/colors';
 import { NavigationProp } from '../../types';
 import {
   heightPercentageToDP as hp,
@@ -41,7 +42,14 @@ const SidePanel = (props: Props) => {
               <TouchableOpacity
                 onPress={toggleSidePanel}
                 style={{ width: '35%' }}>
-                <View style={{ flexDirection: 'row' }}>
+                <View
+                  style={{
+                    marginLeft: 5,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: wp(16),
+                  }}>
                   <Image source={backCaret} style={styles.backCaret} />
                   <Text>Home</Text>
                 </View>
@@ -54,26 +62,32 @@ const SidePanel = (props: Props) => {
           </View>
 
           <View style={styles.row}>
-            <Text>Photo</Text>
+            <Text style={styles.rowText}>Favorite Softwares</Text>
           </View>
           <View style={styles.row}>
-            <Text>Name</Text>
-          </View>
-          <View style={styles.row}>
-            <Text>Favorite Softwares</Text>
-          </View>
-          <View style={styles.row}>
-            <Text>Account type</Text>
+            <Text style={styles.rowText}>Account type</Text>
           </View>
           <TouchableOpacity
             style={styles.row}
             onPress={() => {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'SignIn' }],
-              });
+              Alert.alert('Confirm', '', [
+                {
+                  text: 'Cancel',
+                  onPress: () => {},
+                  style: 'cancel',
+                },
+                {
+                  text: 'Sign Out',
+                  onPress: () => {
+                    navigation.reset({
+                      index: 0,
+                      routes: [{ name: 'SignIn' }],
+                    });
+                  },
+                },
+              ]);
             }}>
-            <Text>Sign Out</Text>
+            <Text style={styles.rowText}>Sign Out</Text>
           </TouchableOpacity>
         </View>
       </>
@@ -103,7 +117,7 @@ const styles = StyleSheet.create({
   header: {
     height: hp(10),
     width: '100%',
-    backgroundColor: 'yellow',
+    backgroundColor: '#ddd',
   },
   innerHeader: {
     bottom: 10,
@@ -113,8 +127,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   backCaret: {
-    tintColor: 'red',
-    height: 20,
+    tintColor: '#494949',
+    height: 17,
     resizeMode: 'contain',
   },
   headerTitle: {
@@ -127,6 +141,9 @@ const styles = StyleSheet.create({
     height: hp(5),
     backgroundColor: '#fff',
     justifyContent: 'center',
+  },
+  rowText: {
+    marginLeft: 10,
   },
 });
 

@@ -8,7 +8,7 @@
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, { useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Image, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
@@ -20,6 +20,7 @@ import Onboarding from './components/Onboarding/OnboardingView';
 import SignIn from './components/SignIn/SignInView';
 import SignUp from './components/SignUp/SignUpView';
 import { StackParamList } from './types';
+import { store } from './store';
 
 const backCaret = require('./assets/images/backCaret.png');
 
@@ -38,9 +39,11 @@ const defaultTheme = {
 };
 
 const Navigator = () => {
+  const { state } = useContext(store);
   // const initialRouteName = 'Onboarding';
-  const initialRouteName = 'Home';
+  // const initialRouteName = 'Home';
   // const initialRouteName = 'SignUp';
+  const initialRouteName = 'SignIn';
   return (
     <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator headerMode="screen" initialRouteName={initialRouteName}>
@@ -62,7 +65,10 @@ const Navigator = () => {
           name="SignUp"
           component={SignUp}
           options={({ navigation }) => ({
-            title: 'Locum Registration',
+            title:
+              state.language === 'french'
+                ? 'Enregistrement de locum'
+                : 'Locum Registration',
             headerStyle: {
               backgroundColor: '#fff',
               borderBottomColor: '#303D5C',

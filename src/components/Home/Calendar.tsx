@@ -197,10 +197,16 @@ const Calendar = (props: Props) => {
   );
 };
 
+export const calendarDimensions = {
+  height: wp(85) * 0.85,
+  width: wp(85),
+  cell: wp(85) / 8,
+};
+
 const styles = StyleSheet.create({
   container: {
-    height: hp(35),
-    width: wp(85),
+    height: calendarDimensions.height,
+    width: calendarDimensions.width,
     backgroundColor: '#fff',
     borderColor: '#ddd',
     borderWidth: 1,
@@ -213,8 +219,8 @@ const styles = StyleSheet.create({
     color: '#444',
   },
   cell: {
-    height: hp(5),
-    width: hp(5),
+    height: calendarDimensions.cell,
+    width: calendarDimensions.cell,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -1,5 +1,7 @@
-const col_margin = 45.9;
-const row_margin = 40.5;
+import { calendarDimensions } from './Calendar';
+
+const col_margin = calendarDimensions.cell * 1.15;
+const row_margin = calendarDimensions.cell * 1.0;
 // 1 2 3 4 5 6 7
 // 8 9 ...
 const date_positions = [

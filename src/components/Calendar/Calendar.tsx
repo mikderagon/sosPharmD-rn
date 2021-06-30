@@ -17,10 +17,12 @@ import {
 } from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
+import { responsive } from '../../utils/phoneSizes';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
+import { calendarDimensions } from '../Home/Calendar';
 
 interface Props {
   events: any;
@@ -176,12 +178,13 @@ const Calendar = (props: Props) => {
       style={[
         styles.container,
         {
+          top: responsive({ $480: 15, $812: 0 }),
           height: additionalRow
             ? styles.container.height + hp(5)
             : styles.container.height,
         },
       ]}>
-      <View style={{ marginTop: 20 }}>
+      <View style={{ marginTop: hp(2.5) }}>
         <Text style={styles.monthYear}>
           {month} {year}
         </Text>
@@ -195,8 +198,10 @@ const Calendar = (props: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: hp(35),
-    width: wp(85),
+    // height: hp(35),
+    height: calendarDimensions.height,
+    width: calendarDimensions.width,
+    // width: wp(85),
     backgroundColor: '#fff',
     borderColor: '#ddd',
     borderWidth: 1,
@@ -209,8 +214,10 @@ const styles = StyleSheet.create({
     color: '#444',
   },
   cell: {
-    height: hp(5),
-    width: hp(5),
+    // height: hp(5),
+    // width: hp(5),
+    height: calendarDimensions.cell,
+    width: calendarDimensions.cell,
     alignItems: 'center',
     justifyContent: 'center',
   },

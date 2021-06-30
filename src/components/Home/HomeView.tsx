@@ -21,6 +21,7 @@ import { store } from '../../store';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import { getDateState } from '../../utils/dates';
+import { responsive } from '../../utils/phoneSizes';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -131,7 +132,7 @@ const HomeView = ({ navigation }) => {
       {/* Calendar */}
       <View style={{ marginTop: hp(10), width: '85%' }}>
         <Text style={styles2.sectionTitle}>Calendar</Text>
-        <View style={{ marginTop: hp(3) }}>
+        <View style={{ marginTop: responsive({ $480: hp(2), $812: hp(3) }) }}>
           <Calendar
             events={thisEventDates}
             currentMonth={thisState.month}
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: colors.regularBlue,
-    height: hp(29),
+    height: responsive({ $480: hp(25), $812: hp(29) }),
     width: '100%',
     borderBottomLeftRadius: wp(15),
     borderBottomRightRadius: wp(15),
@@ -243,8 +244,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   userPicture: {
-    height: hp(19),
-    width: wp(29),
+    height: responsive({ $480: hp(16), $812: hp(19) }),
+    width: responsive({ $480: wp(25), $812: wp(29) }),
     borderRadius: 22,
     resizeMode: 'cover',
     backgroundColor: '#fff',

@@ -15,7 +15,7 @@ const screenHypotenuse = Math.sqrt(screenWidth ** 2 + screenHeight ** 2);
  *                               along with the percentage symbol (%).
  * @return {number}              The calculated dp depending on current device's screen width.
  */
-const widthPercentageToDP = (widthPercent: number) => {
+const widthPercentageToDP = (widthPercent: number): number => {
   // Use PixelRatio.roundToNearestPixel method in order to round the layout
   // size (dp) to the nearest one that correspons to an integer number of pixels.
   return PixelRatio.roundToNearestPixel((screenWidth * widthPercent) / 100);
@@ -27,7 +27,7 @@ const widthPercentageToDP = (widthPercent: number) => {
  *                                along with the percentage symbol (%).
  * @return {number}               The calculated dp depending on current device's screen height.
  */
-const heightPercentageToDP = (heightPercent: number) => {
+const heightPercentageToDP = (heightPercent: number): number => {
   // Use PixelRatio.roundToNearestPixel method in order to round the layout
   // size (dp) to the nearest one that correspons to an integer number of pixels.
   return PixelRatio.roundToNearestPixel((screenHeight * heightPercent) / 100);
@@ -39,8 +39,10 @@ const heightPercentageToDP = (heightPercent: number) => {
  *
  * @return {number}
  */
-const hypotenusePercentageToDP = (hypotenusePercent: number) => {
-  return PixelRatio.roundToNearestPixel((screenHypotenuse * hypotenusePercent) / 100);
+const hypotenusePercentageToDP = (hypotenusePercent: number): number => {
+  return PixelRatio.roundToNearestPixel(
+    (screenHypotenuse * hypotenusePercent) / 100,
+  );
 };
 
 /**
@@ -53,7 +55,7 @@ const hypotenusePercentageToDP = (hypotenusePercent: number) => {
  *                      invoke setState method and trigger screen rerender (this.setState()).
  */
 interface StateObject {
-  setState: ({}) => null,
+  setState: ({}) => null;
 }
 
 const listenOrientationChange = (that: StateObject) => {

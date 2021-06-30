@@ -7,12 +7,8 @@
  */
 
 import React from 'react';
-import { Image } from 'react-native';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
-import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
-import { NavigationProps } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,

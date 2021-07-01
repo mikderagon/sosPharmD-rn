@@ -39,7 +39,7 @@ const Locum = (props: Props) => {
     educationalInstitution,
   } = user;
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <View style={styles.container}>
       <View style={styles.userPicturePosition}>
         <Image source={{ uri: pictureUrl }} style={styles.userPicture} />
       </View>
@@ -48,7 +48,7 @@ const Locum = (props: Props) => {
         <Text>{`${educationalInstitution} - year ${year}`}</Text>
       </View>
       <Text>{date}</Text>
-    </TouchableOpacity>
+    </View>
   );
 };
 

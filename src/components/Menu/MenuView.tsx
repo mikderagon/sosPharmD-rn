@@ -27,7 +27,7 @@ const MenuView = ({ navigation }) => {
             <Text>Calendar</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.margins}>
+        {/* <View style={styles.margins}>
           <TouchableOpacity
             style={styles.item}
             onPress={() => {
@@ -35,7 +35,7 @@ const MenuView = ({ navigation }) => {
             }}>
             <Text>Locums</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </View>
   );

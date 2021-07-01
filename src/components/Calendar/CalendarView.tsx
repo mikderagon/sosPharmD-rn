@@ -265,8 +265,9 @@ const CalendarView = () => {
             } else {
               selectHours();
             }
-          }}>
-          <Text>{selectionState ? 'Deploy events' : 'Add'}</Text>
+          }}
+          style={[styles.addButton, { marginTop: -15 }]}>
+          <Text style={styles.addButtonText}>{selectionState ? '✔' : '+'}</Text>
         </TouchableOpacity>
       </View>
 
@@ -343,8 +344,24 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: hp(10),
     width: '100%',
-    backgroundColor: '#eee',
+    backgroundColor: colors.regularBlue,
     alignItems: 'center',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  addButton: {
+    height: 60,
+    width: 60,
+    borderRadius: 50,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: colors.darkerBlue,
+    borderWidth: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.5,
+    shadowOffset: { height: 0, width: 0 },
+    shadowRadius: 1,
   },
   modalView: {
     height: hp(60),
@@ -367,10 +384,12 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 15,
   },
-  add: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 14,
+  addButtonText: {
+    color: '#494949',
+    fontWeight: '500',
+    fontSize: 30,
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
   modalHeaderTitle: {
     color: '#fff',

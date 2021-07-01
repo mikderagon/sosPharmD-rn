@@ -189,7 +189,7 @@ const SignInView = ({ navigation }) => {
           }}>
           <Text style={styles.regularText}>
             {state.language === 'french'
-              ? 'Sans compte?'
+              ? 'Pas de compte?'
               : "Don't have an account?"}
           </Text>
           <Text style={[styles.boldText, { color: colors.regularBlue }]}>

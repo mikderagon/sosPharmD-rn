@@ -55,8 +55,8 @@ const Locum = (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     height: hp(13),
-    width: wp(85),
-    borderRadius: 20,
+    width: wp(90),
+    borderRadius: 5,
     borderWidth: 1,
     borderColor: '#ddd',
     flexDirection: 'row',

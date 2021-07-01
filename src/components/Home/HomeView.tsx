@@ -16,7 +16,7 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import _ from 'underscore';
+import _, { isEmpty } from 'underscore';
 import { store } from '../../store';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -32,6 +32,24 @@ import CalendarEventTag from './CalendarEventTag';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
+
+export interface locumTag {
+  user: {
+    city: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    id: number;
+    pictureUrl: string;
+    year: number;
+    educationalInstitution: string;
+  };
+  date: {
+    day: number;
+    month: number;
+    year: number;
+  };
+}
 
 const HomeView = ({ navigation }) => {
   const { state } = useContext(store);
@@ -70,13 +88,16 @@ const HomeView = ({ navigation }) => {
 
   const { currentUser, users } = state;
 
-  let currentLocumTags = [];
+  let currentLocumTags: locumTag[] = [];
   for (const event of thisMonthEvents) {
     const theLocumsAre = event.interestedLocums;
     for (const locum of theLocumsAre) {
       const userFound = users.find(user => user.id === locum);
       if (userFound) {
-        currentLocumTags.push(userFound);
+        currentLocumTags.push({
+          user: userFound,
+          date: { day: event.day, month: event.month, year: event.year },
+        });
       }
     }
   }
@@ -177,7 +198,15 @@ const HomeView = ({ navigation }) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) =>
             currentLocumTags.length ? (
-              <Locum date={thisEventDates[index]} user={item} />
+              <Locum
+                date={thisEventDates[index]}
+                user={item.user}
+                onPress={() => {
+                  navigation.navigate('Locums', {
+                    locums: currentLocumTags,
+                  });
+                }}
+              />
             ) : (
               <CalendarEventTag />
             )

@@ -15,6 +15,7 @@ import { Image, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
 import Calendar from './components/Calendar/CalendarView';
+import Locums from './components/Locums/LocumsView';
 import Home from './components/Home/HomeView';
 import Settings from './components/Settings/SettingsView';
 import Menu from './components/Menu/MenuView';
@@ -125,6 +126,13 @@ const Navigator = () => {
         <Stack.Screen
           name="Calendar"
           component={Calendar}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Locums"
+          component={Locums}
           options={{
             headerShown: false,
           }}

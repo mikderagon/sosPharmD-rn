@@ -31,6 +31,7 @@ import { store } from '../../store';
 import { useEffect } from 'react';
 import { CalendarEvent } from '../../types';
 import * as dates from '../../utils/dates';
+import colors from '../../styles/colors';
 
 // first month is the current month
 const today = new Date();
@@ -192,38 +193,70 @@ const CalendarView = () => {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={shownMonths}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={{ width: '100%', alignItems: 'center' }}
-        renderItem={({ item, index }) => {
-          return (
-            <Calendar
-              selectionState={selectionState}
-              selectedDays={selectedDays}
-              onDayPress={onDayPress}
-              events={state.events.filter(event => {
-                return (
-                  event.year === item.year && event.month === item.monthIndex
-                );
-              })}
-              currentMonth={getLongMonth(today.getMonth())}
-              month={item.month}
-              year={item.year}
-              firstDayOfMonth={item.firstDay}
-              firstDayOfMonthIndex={item.firstDayIndex}
-              numberOfDaysInCurrentMonth={item.numberOfDays}
-              additionalRow={
-                (item.numberOfDays < 31 && item.firstDayIndex === 6) ||
-                (item.numberOfDays === 31 && item.firstDayIndex > 4)
-              }
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Calendar</Text>
+        <View style={[styles.flexRow, { marginTop: 5 }]}>
+          <View style={styles.flexRow}>
+            <View
+              style={[
+                styles.legendDot,
+                { backgroundColor: 'green', marginRight: 5 },
+              ]}
             />
-          );
-        }}
-        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-        ListFooterComponent={() => <View style={{ height: 70 }} />}
-        showsVerticalScrollIndicator={false}
-      />
+            <Text style={[styles.legendText, { color: 'green' }]}>
+              Fulfilled
+            </Text>
+          </View>
+          <View style={[styles.flexRow, { marginLeft: 20 }]}>
+            <View
+              style={[
+                styles.legendDot,
+                { backgroundColor: colors.regularBlue, marginRight: 5 },
+              ]}
+            />
+            <Text style={[styles.legendText, { color: colors.regularBlue }]}>
+              Unfulfilled
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={{ marginTop: 10 }}>
+        <FlatList
+          data={shownMonths}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{
+            width: '100%',
+            alignItems: 'center',
+          }}
+          renderItem={({ item, index }) => {
+            return (
+              <Calendar
+                selectionState={selectionState}
+                selectedDays={selectedDays}
+                onDayPress={onDayPress}
+                events={state.events.filter(event => {
+                  return (
+                    event.year === item.year && event.month === item.monthIndex
+                  );
+                })}
+                currentMonth={getLongMonth(today.getMonth())}
+                month={item.month}
+                year={item.year}
+                firstDayOfMonth={item.firstDay}
+                firstDayOfMonthIndex={item.firstDayIndex}
+                numberOfDaysInCurrentMonth={item.numberOfDays}
+                additionalRow={
+                  (item.numberOfDays < 31 && item.firstDayIndex === 6) ||
+                  (item.numberOfDays === 31 && item.firstDayIndex > 4)
+                }
+              />
+            );
+          }}
+          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+          ListFooterComponent={() => <View style={{ height: 70 }} />}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
       <View style={styles.footer}>
         <TouchableOpacity
           onPress={() => {
@@ -250,6 +283,30 @@ const styles = StyleSheet.create({
   container: {
     height: hp(100),
     width: wp(100),
+  },
+  header: {
+    height: hp(5),
+    width: wp(100),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#494949',
+  },
+  flexRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  legendDot: {
+    height: 7,
+    width: 7,
+    borderRadius: 50,
+  },
+  legendText: {
+    fontSize: 13,
+    fontWeight: '400',
   },
   monthYear: {
     fontSize: 14,

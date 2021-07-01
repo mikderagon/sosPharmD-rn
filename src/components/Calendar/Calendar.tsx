@@ -178,7 +178,6 @@ const Calendar = (props: Props) => {
       style={[
         styles.container,
         {
-          top: responsive({ $480: 15, $812: 0 }),
           height: additionalRow
             ? styles.container.height + hp(5)
             : styles.container.height,

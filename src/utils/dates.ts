@@ -1,4 +1,4 @@
-const months = [
+export const months = [
   'January',
   'February',
   'March',
@@ -13,63 +13,89 @@ const months = [
   'December',
 ];
 
-function getMonthName(monthIndex: number): string {
+export function getMonthName(monthIndex: number): string {
   return months[monthIndex - 1];
 }
 
-function getMonthIndex(monthName: string): number {
+export function getMonthIndex(monthName: string): number {
   return months.findIndex(month => month === monthName) + 1;
 }
 
-interface DateState {
-  today: Date;
-  monthIndex: number;
-  month: string;
+const weekdays_long = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
+
+export const weekdays_short = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+export interface CalendarState {
+  day: number;
+  month: number;
+  monthName: string;
   year: number;
-  isLeapYear: boolean;
-  numberOfDays: number;
-  firstDayOfMonth: string;
-  firstDayOfMonthIndex: number;
+  monthLength: number;
+  firstWeekdayOfMonth: string;
+  firstWeekdayOfMonthIndex: number;
 }
 
-function getDateState(): DateState {
-  const today = new Date();
-  const monthIndex = today.getMonth() + 1;
-  const year = today.getFullYear();
-  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-  let numberOfDays = new Date(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    0,
-  ).getDate();
-  // check if feb should have 29 days
-  if (numberOfDays === 28 && isLeapYear) {
-    numberOfDays = 29;
-  }
-  const firstDayOfMonthIndex = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    1,
-  ).getDay();
+export function getCalendarState(date: Date): CalendarState {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
 
-  const firstDayOfMonth = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    1,
-  ).toLocaleTimeString('en-US', {
-    weekday: 'long',
-    month: 'long',
-  });
+  const monthLength = getNumberOfDaysInMonth(month, year);
+
+  const firstWeekdayOfMonthIndex = getFirstWeekdayOfMonthIndex(month - 1, year);
+  const firstWeekdayOfMonth = new Date(year, month, 1).toLocaleTimeString(
+    'en-US',
+    {
+      weekday: 'long',
+      month: 'long',
+    },
+  );
+
   return {
-    today,
-    monthIndex,
-    month: getMonthName(monthIndex),
+    day,
+    month,
+    monthName: getMonthName(month),
     year,
-    isLeapYear,
-    numberOfDays,
-    firstDayOfMonth,
-    firstDayOfMonthIndex,
+    monthLength,
+    firstWeekdayOfMonthIndex,
+    firstWeekdayOfMonth,
   };
 }
 
-export { getMonthName, getMonthIndex, getDateState };
+// return: 0..6
+// use: calendar cell animations
+export function getFirstWeekdayOfMonthIndex(
+  month: number,
+  year: number,
+): number {
+  return new Date(year, month, 1).getDay();
+}
+
+// return: 'Sunday'..'Saturday'
+export function getFirstWeekdayOfMonth(month: number, year: number) {
+  const firstDayOfMonth = new Date(year, month, 1)
+    .toLocaleTimeString('en-US', {
+      weekday: 'long',
+      month: 'long',
+    })
+    .split(' ')[0];
+  return firstDayOfMonth;
+}
+
+export function getNumberOfDaysInMonth(month: number, year: number): number {
+  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  let numberOfDaysInCurrentMonth = new Date(year, month + 1, 0).getDate();
+  // check if feb should have 29 days
+  if (numberOfDaysInCurrentMonth === 28 && isLeapYear) {
+    numberOfDaysInCurrentMonth = 29;
+  }
+  return numberOfDaysInCurrentMonth;
+}

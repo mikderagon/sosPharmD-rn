@@ -10,21 +10,23 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
-import { CalendarEvent } from '../../types';
+import { CalendarEvent } from '../../interfaces';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
+import { DateObject } from './CalendarView';
 import Input from './Input';
 
 interface Props {
   addCalendarEvent: (event: CalendarEvent) => void;
+  event?: CalendarEvent & DateObject;
   toggleModal: any;
   isVisible: boolean;
 }
 
 const AddEventModal = (props: Props) => {
-  const { isVisible, toggleModal, addCalendarEvent } = props;
+  const { isVisible, toggleModal, addCalendarEvent, event } = props;
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
   const [minExperience, setMinExperience] = useState('');
@@ -42,7 +44,9 @@ const AddEventModal = (props: Props) => {
           <TouchableOpacity onPress={toggleModal}>
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
-          <Text style={styles.modalHeaderTitle}>New Event</Text>
+          <Text style={styles.modalHeaderTitle}>
+            {event ? 'Edit Event' : 'New Event'}
+          </Text>
           <TouchableOpacity
             onPress={() => {
               addCalendarEvent({
@@ -58,18 +62,36 @@ const AddEventModal = (props: Props) => {
           </TouchableOpacity>
         </View>
         <View style={{ marginTop: 12 }}>
-          <Input set={val => setTitle(val)} placeholder="Title" autoFocus />
+          <Input
+            value={event?.title}
+            set={val => setTitle(val)}
+            placeholder="Title"
+            autoFocus
+          />
         </View>
-        <Input set={val => setLocation(val)} placeholder="Location" />
+        <Input
+          value={event?.location}
+          set={val => setLocation(val)}
+          placeholder="Location"
+        />
         <View style={{ marginTop: 12 }}>
           <Input
+            value={event?.minExperience}
             set={val => setMinExperience(val)}
             placeholder="Min. Experience"
           />
         </View>
         <View style={{ marginTop: 12 }}>
-          <Input set={val => setStartTime(val)} placeholder="Starts" />
-          <Input set={val => setEndTime(val)} placeholder="Ends" />
+          <Input
+            value={event?.startTime}
+            set={val => setStartTime(val)}
+            placeholder="Starts"
+          />
+          <Input
+            value={event?.endTime}
+            set={val => setEndTime(val)}
+            placeholder="Ends"
+          />
         </View>
       </View>
     </Modal>

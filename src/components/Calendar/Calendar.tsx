@@ -6,66 +6,45 @@
  * @flow strict-local
  */
 
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
-import { responsive } from '../../utils/phoneSizes';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
+import { CalendarState, weekdays_short } from '../../utils/dates';
+import { heightPercentageToDP as hp } from '../../utils/responsiveLayout';
 import { calendarDimensions } from '../Home/Calendar';
 
 interface Props {
   events: any;
   currentEvent?: number;
   previousEvent?: number;
-  currentMonth: string;
-  month: string;
-  year: number;
-  firstDayOfMonth: string;
-  firstDayOfMonthIndex: number;
-  numberOfDaysInCurrentMonth: number;
   additionalRow: boolean;
   selectionState?: boolean;
   selectedDays: any;
   onDayPress: any;
+  state: CalendarState;
 }
 
-const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 const Calendar = (props: Props) => {
-  const today = new Date().getDate();
+  const today = new Date();
   const {
+    state,
     additionalRow,
     events,
-    month,
-    currentMonth,
-    year,
-    firstDayOfMonthIndex,
-    numberOfDaysInCurrentMonth,
     selectionState,
     selectedDays,
     onDayPress,
   } = props;
-  const daysRow = days_alpha.map((day, index) => (
+  const daysRow = weekdays_short.map((day, index) => (
     <View style={[styles.cell, { height: hp(2) }]} key={index}>
       <Text style={styles.days}>{day}</Text>
     </View>
   ));
   function createDaysList() {
     let list = new Array(additionalRow ? 42 : 35);
-    list[firstDayOfMonthIndex] = 1;
-    for (let i = 2; i <= numberOfDaysInCurrentMonth; i++) {
-      list[firstDayOfMonthIndex + i - 1] = i;
+    list[state.firstWeekdayOfMonthIndex] = 1;
+    for (let i = 2; i <= state.monthLength; i++) {
+      list[state.firstWeekdayOfMonthIndex + i - 1] = i;
     }
     for (let i = 0; i < list.length; i++) {
       if (!list[i]) {
@@ -83,8 +62,8 @@ const Calendar = (props: Props) => {
       selectedDays.find(
         selectedDay =>
           selectedDay.day === day &&
-          selectedDay.month === month &&
-          selectedDay.year === year,
+          selectedDay.month === state.month &&
+          selectedDay.year === state.year,
       );
     const isLocumNotif = events
       .filter(event => event.interestedLocums.length)
@@ -97,7 +76,7 @@ const Calendar = (props: Props) => {
           style={styles.cell}
           key={index}
           onPress={() => {
-            onDayPress(day, month, year);
+            onDayPress(day, state.month, state.year);
           }}>
           <View style={styles.userSelectedHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
@@ -105,13 +84,13 @@ const Calendar = (props: Props) => {
         </TouchableOpacity>
       );
     }
-    if (day === today && isLocumNotif) {
+    if (day === today.getDate() && isLocumNotif) {
       return (
         <TouchableOpacity
           style={styles.cell}
           key={index}
           onPress={() => {
-            onDayPress(day, month, year);
+            onDayPress(day, state.month, state.year);
           }}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
@@ -120,13 +99,13 @@ const Calendar = (props: Props) => {
         </TouchableOpacity>
       );
     }
-    if (day === today && month === currentMonth) {
+    if (day === today.getDate() && state.month === today.getMonth() + 1) {
       return (
         <TouchableOpacity
           style={styles.cell}
           key={index}
           onPress={() => {
-            onDayPress(day, month, year);
+            onDayPress(day, state.month, state.year);
           }}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
@@ -140,7 +119,7 @@ const Calendar = (props: Props) => {
           style={styles.cell}
           key={index}
           onPress={() => {
-            onDayPress(day, month, year);
+            onDayPress(day, state.month, state.year);
           }}>
           <Text style={styles.day}>{day}</Text>
           <View style={styles.dayDot} />
@@ -153,7 +132,7 @@ const Calendar = (props: Props) => {
           style={styles.cell}
           key={index}
           onPress={() => {
-            onDayPress(day, month, year);
+            onDayPress(day, state.month, state.year);
           }}>
           <Text style={styles.day}>{day}</Text>
           <View
@@ -167,7 +146,7 @@ const Calendar = (props: Props) => {
         style={styles.cell}
         key={index}
         onPress={() => {
-          onDayPress(day, month, year);
+          onDayPress(day, state.month, state.year);
         }}>
         <Text style={styles.day}>{day}</Text>
       </TouchableOpacity>
@@ -185,7 +164,7 @@ const Calendar = (props: Props) => {
       ]}>
       <View style={{ marginTop: hp(2.5) }}>
         <Text style={styles.monthYear}>
-          {month} {year}
+          {state.monthName} {state.year}
         </Text>
       </View>
 

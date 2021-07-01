@@ -16,11 +16,11 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import _, { isEmpty } from 'underscore';
+import _ from 'underscore';
 import { store } from '../../store';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
-import { getDateState } from '../../utils/dates';
+import * as dates from '../../utils/dates';
 import { responsive } from '../../utils/phoneSizes';
 import {
   heightPercentageToDP as hp,
@@ -29,21 +29,13 @@ import {
 import Calendar from './Calendar';
 import Locum from './Locum';
 import CalendarEventTag from './CalendarEventTag';
+import { User } from '../../interfaces';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
 
 export interface locumTag {
-  user: {
-    city: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    id: number;
-    pictureUrl: string;
-    year: number;
-    educationalInstitution: string;
-  };
+  user: User;
   date: {
     day: number;
     month: number;
@@ -53,24 +45,27 @@ export interface locumTag {
 
 const HomeView = ({ navigation }) => {
   const { state } = useContext(store);
-  const thisState = getDateState();
+  const CalendarState = dates.getCalendarState(new Date());
+
+  // TODO: turn into api call
   const thisMonthEvents = state.events.filter(event => {
     return (
-      event.year === thisState.year && event.month === thisState.monthIndex
+      event.year === CalendarState.year && event.month === CalendarState.month
     );
   });
-  const thisEventDates = _.flatten(
+  const thisMonthEventDates = _.flatten(
     thisMonthEvents.map(e => {
       return Array.from({ length: e.interestedLocums.length }).fill(e.day);
     }),
   );
+
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [previousEventIndex, setPreviousEventIndex] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
       const nextIndex =
-        currentEventIndex === thisEventDates.length - 1 ||
-        thisEventDates.length === 0
+        currentEventIndex === thisMonthEventDates.length - 1 ||
+        thisMonthEventDates.length === 0
           ? 0
           : currentEventIndex + 1;
       setPreviousEventIndex(currentEventIndex);
@@ -88,6 +83,7 @@ const HomeView = ({ navigation }) => {
 
   const { currentUser, users } = state;
 
+  // TODO: turn into api call
   let currentLocumTags: locumTag[] = [];
   for (const event of thisMonthEvents) {
     const theLocumsAre = event.interestedLocums;
@@ -102,6 +98,7 @@ const HomeView = ({ navigation }) => {
     }
   }
 
+  // TODO: create interface and component
   const noLocumTags = [
     {
       title: 'No Locum',
@@ -164,22 +161,15 @@ const HomeView = ({ navigation }) => {
         <Text style={styles2.sectionTitle}>Calendar</Text>
         <View style={{ marginTop: responsive({ $480: hp(2), $812: hp(3) }) }}>
           <Calendar
-            events={thisEventDates}
-            currentMonth={thisState.month}
-            currentMonthIndex={thisState.monthIndex}
-            numberOfDaysInCurrentMonth={thisState.numberOfDays}
-            firstDayOfMonthIndex={thisState.firstDayOfMonthIndex}
-            firstDayOfMonth={thisState.firstDayOfMonth}
+            events={thisMonthEventDates}
+            state={CalendarState}
             openCalendar={() =>
               navigation.navigate('Calendar', {
-                currentMonth: thisState.month,
+                currentMonth: CalendarState.month,
               })
             }
-            year={thisState.year}
-            currentEvent={thisEventDates[currentEventIndex]}
-            previousEvent={thisEventDates[previousEventIndex]}
-            // give it current event which will change according to our interval in this component here
-            // the calendar will run an event on currentEvent's change, Animating the circle towards the correct position in the grid
+            currentEvent={thisMonthEventDates[currentEventIndex]}
+            previousEvent={thisMonthEventDates[previousEventIndex]}
           />
         </View>
       </View>
@@ -199,7 +189,7 @@ const HomeView = ({ navigation }) => {
           renderItem={({ item, index }) =>
             currentLocumTags.length ? (
               <Locum
-                date={thisEventDates[index]}
+                date={thisMonthEventDates[index]}
                 user={item.user}
                 onPress={() => {
                   navigation.navigate('Locums', {
@@ -211,6 +201,7 @@ const HomeView = ({ navigation }) => {
               <CalendarEventTag />
             )
           }
+          // TODO: get length and offset from renderItem's component (<Locum />)
           getItemLayout={(data, index) => ({
             length: wp(85),
             offset: wp(85 + 10) * index + wp(7.5),

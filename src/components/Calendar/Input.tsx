@@ -25,10 +25,11 @@ interface Props {
   autoFocus?: boolean;
   set: Dispatch<SetStateAction<any>>;
   placeholder: string;
+  value?: string;
 }
 
 const Input = (props: Props) => {
-  const { autoFocus = false, set, placeholder } = props;
+  const { autoFocus = false, set, placeholder, value } = props;
   return (
     <View style={styles.container}>
       <TextInput
@@ -37,6 +38,7 @@ const Input = (props: Props) => {
         onChangeText={set}
         placeholder={placeholder}
         placeholderTextColor="#aaa"
+        value={value}
         autoCapitalize="none"
         autoCompleteType="off"
         autoCorrect={false}

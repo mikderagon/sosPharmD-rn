@@ -29,84 +29,53 @@ import Calendar from './Calendar';
 import { useContext } from 'react';
 import { store } from '../../store';
 import { useEffect } from 'react';
-import { CalendarEvent } from '../../types';
+import { CalendarEvent } from '../../interfaces';
 import * as dates from '../../utils/dates';
 import colors from '../../styles/colors';
 
-// first month is the current month
-const today = new Date();
-
-function getFirstDayOfMonthIndex(year: number, monthIndex: number): number {
-  return new Date(year, monthIndex, 1).getDay();
+export interface DateObject {
+  day: number;
+  month: string;
+  year: number;
 }
-
-function getFirstDayOfMonth(year: number, monthIndex: number): string {
-  const firstDayOfMonth = new Date(
-    year,
-    monthIndex, // 0 to 11
-    1,
-  )
-    .toLocaleTimeString('en-US', {
-      weekday: 'long',
-      month: 'long',
-    })
-    .split(' ')[0];
-  return firstDayOfMonth;
-}
-
-function getNumberOfDaysInMonth(year: number, monthIndex: number): number {
-  const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-  let numberOfDaysInCurrentMonth = new Date(year, monthIndex + 1, 0).getDate();
-  // check if feb should have 29 days
-  if (numberOfDaysInCurrentMonth === 28 && isLeapYear) {
-    numberOfDaysInCurrentMonth = 29;
-  }
-  return numberOfDaysInCurrentMonth;
-}
-
-function getLongMonth(monthIndex: number): string {
-  const firstDayOfMonth = new Date(
-    today.getFullYear(),
-    monthIndex, // 0 to 11
-    1,
-  ).toLocaleTimeString('en-US', {
-    weekday: 'long',
-    month: 'long',
-  });
-  // .split(' ')[0];
-  const currentMonth = firstDayOfMonth
-    .split('(')[1]
-    .split(':')[1]
-    .split(')')[0]
-    .trim();
-  return currentMonth;
-}
-let runningYear = today.getFullYear();
-const shownMonths = [...Array(12).keys()].map(m => {
-  const firstDayIndex = getFirstDayOfMonthIndex(
-    runningYear,
-    today.getMonth() + m,
-  );
-  const firstDay = getFirstDayOfMonth(runningYear, today.getMonth() + m);
-  const numberOfDays = getNumberOfDaysInMonth(
-    runningYear,
-    today.getMonth() + m,
-  );
-  const month = getLongMonth(today.getMonth() + m);
-  if (month === 'January') {
-    runningYear += 1;
-  }
-  return {
-    month,
-    monthIndex: today.getMonth() + m + 1,
-    year: runningYear,
-    firstDayIndex,
-    firstDay,
-    numberOfDays,
-  };
-});
 
 const CalendarView = () => {
+  const { state, dispatch } = useContext(store);
+  const { currentUser } = state;
+
+  const today = new Date();
+  let runningYear = today.getFullYear();
+  let runningMonth = today.getMonth();
+  const _monthsList = dates.months.map(m => {
+    runningMonth++;
+    if (runningMonth === 13) {
+      runningMonth = 1;
+      runningYear += 1;
+    }
+    const {
+      month,
+      monthName,
+      firstWeekdayOfMonthIndex,
+      firstWeekdayOfMonth,
+      monthLength,
+    } = dates.getCalendarState(
+      new Date(
+        `${runningYear}-${
+          runningMonth < 10 ? `0${runningMonth}` : runningMonth
+        }-15`,
+      ),
+    );
+
+    return {
+      month,
+      monthName,
+      year: runningYear,
+      firstWeekdayOfMonthIndex,
+      firstWeekdayOfMonth,
+      monthLength,
+    };
+  });
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectionState, setSelectionState] = useState(false); // set true to test
   const toggleModalVisibility = () => {
@@ -115,17 +84,11 @@ const CalendarView = () => {
   const selectHours = () => {
     toggleModalVisibility();
   };
-  const { state, dispatch } = useContext(store);
-  const { currentUser } = state;
   const [userEvent, setUserEvent] = useState<CalendarEvent>();
 
-  interface DateObject {
-    day: number;
-    month: string;
-    year: number;
-  }
-
   const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
+
+  const [editedEvent, setEditedEvent] = useState<CalendarEvent & DateObject>();
 
   function onDayPress(day: number, month: string, year: number) {
     if (selectionState) {
@@ -149,14 +112,31 @@ const CalendarView = () => {
       } else {
         setSelectedDays([...selectedDays, { day, month, year }]);
       }
+    } else {
+      // if the day clicked has an event (userevent)
+      // check if array of events include it
+      // console.log(state.events);
+      // console.log(
+      //   state.events.includes(
+      //     event =>
+      //       event.day === day && event.month === month && event.year === year,
+      //   ),
+      // );
+      setEditedEvent({
+        title: userEvent?.title,
+        location: userEvent?.location,
+        minExperience: userEvent?.minExperience,
+        startTime: userEvent?.startTime,
+        endTime: userEvent?.endTime,
+        day,
+        month,
+        year,
+      });
+      setModalVisible(true);
     }
   }
 
   function deployEvents() {
-    console.log('will deploy:');
-    console.log(userEvent);
-    console.log('for these days:');
-    console.log(selectedDays);
     setSelectionState(false);
     // create an animation to show that events have been set in the calendar,
     // which are now visible by the students
@@ -176,7 +156,7 @@ const CalendarView = () => {
       };
     });
     dispatch({
-      type: 'SET_CALENDAR_EVENTS',
+      type: 'ADD_CALENDAR_EVENTS',
       events: formattedEvents,
     });
   }
@@ -222,7 +202,7 @@ const CalendarView = () => {
       </View>
       <View style={{ marginTop: 10 }}>
         <FlatList
-          data={shownMonths}
+          data={_monthsList}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{
             width: '100%',
@@ -235,16 +215,9 @@ const CalendarView = () => {
                 selectedDays={selectedDays}
                 onDayPress={onDayPress}
                 events={state.events.filter(event => {
-                  return (
-                    event.year === item.year && event.month === item.monthIndex
-                  );
+                  return event.year === item.year && event.month === item.month;
                 })}
-                currentMonth={getLongMonth(today.getMonth())}
-                month={item.month}
-                year={item.year}
-                firstDayOfMonth={item.firstDay}
-                firstDayOfMonthIndex={item.firstDayIndex}
-                numberOfDaysInCurrentMonth={item.numberOfDays}
+                state={item}
                 additionalRow={
                   (item.numberOfDays < 31 && item.firstDayIndex === 6) ||
                   (item.numberOfDays === 31 && item.firstDayIndex > 4)
@@ -273,6 +246,7 @@ const CalendarView = () => {
 
       <AddEventModal
         isVisible={modalVisible}
+        event={editedEvent}
         toggleModal={toggleModalVisibility}
         addCalendarEvent={(event: CalendarEvent) => addCalendarEvent(event)}
       />

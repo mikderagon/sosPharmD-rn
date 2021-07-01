@@ -17,6 +17,7 @@ import {
 import 'react-native-gesture-handler';
 import { store } from '../../store';
 import colors from '../../styles/colors';
+import { CalendarState, getFirstWeekdayOfMonthIndex } from '../../utils/dates';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -28,31 +29,13 @@ interface Props {
   events: number[];
   currentEvent?: number;
   previousEvent?: number;
-  currentMonth: string;
-  currentMonthIndex: number;
-  firstDayOfMonth: string;
-  firstDayOfMonthIndex: number;
-  numberOfDaysInCurrentMonth: number;
-  year: number;
+  state: CalendarState;
 }
 
 const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const Calendar = (props: Props) => {
-  const { state, dispatch } = useContext(store);
-  const today = new Date().getDate();
-  const {
-    openCalendar,
-    currentEvent,
-    previousEvent,
-    events,
-    year,
-    currentMonth,
-    currentMonthIndex,
-    firstDayOfMonth,
-    firstDayOfMonthIndex,
-    numberOfDaysInCurrentMonth,
-  } = props;
+  const { openCalendar, currentEvent, previousEvent, events, state } = props;
 
   // const events = [];
   const getIndex = (eventDate: number) =>
@@ -61,7 +44,7 @@ const Calendar = (props: Props) => {
   // first item of events will be at cell # 'events[0].date' + 1
   function createCellsList() {
     let cells = [];
-    cells.push(firstDayOfMonthIndex + events[0] - 1);
+    cells.push(state.firstWeekdayOfMonthIndex + events[0] - 1);
     for (let i = 1; i < events.length; i++) {
       cells.push(events[i] + 1);
     }
@@ -93,9 +76,9 @@ const Calendar = (props: Props) => {
     // if wednesday then start at index3,
     // etc. from sun 0 to sat 6
     let list = new Array(35);
-    list[firstDayOfMonthIndex] = 1;
-    for (let i = 2; i <= numberOfDaysInCurrentMonth; i++) {
-      list[firstDayOfMonthIndex + i - 1] = i;
+    list[state.firstWeekdayOfMonthIndex] = 1;
+    for (let i = 2; i <= state.monthLength; i++) {
+      list[state.firstWeekdayOfMonthIndex + i - 1] = i;
     }
     for (let i = 0; i < list.length; i++) {
       if (!list[i]) {
@@ -108,7 +91,7 @@ const Calendar = (props: Props) => {
   const days_num = createDaysList();
   const daysGrid = days_num.map((day, index) => {
     const isEvent = events.map(event => event.date).includes(day);
-    if (day === today && isEvent) {
+    if (day === state.day && isEvent) {
       return (
         <View style={styles.cell} key={index}>
           <View style={styles.todayHighlight}>
@@ -118,7 +101,7 @@ const Calendar = (props: Props) => {
         </View>
       );
     }
-    if (day === today) {
+    if (day === state.day) {
       return (
         <View style={styles.cell} key={index}>
           <View style={styles.todayHighlight}>
@@ -149,7 +132,7 @@ const Calendar = (props: Props) => {
         onPress={openCalendar}>
         <View style={{ marginTop: 20 }}>
           <Text style={styles.monthYear}>
-            {currentMonth} {new Date().getFullYear()}
+            {state.monthName} {new Date().getFullYear()}
           </Text>
         </View>
 
@@ -205,7 +188,7 @@ const Calendar = (props: Props) => {
       />
       <View style={{ marginTop: 20 }}>
         <Text style={styles.monthYear}>
-          {currentMonth} {new Date().getFullYear()}
+          {state.monthName} {new Date().getFullYear()}
         </Text>
       </View>
 

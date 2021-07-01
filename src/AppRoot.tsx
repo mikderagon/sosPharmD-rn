@@ -6,11 +6,11 @@
  * @flow strict-local
  */
 
-import React, { createContext, useContext, useState } from 'react';
-import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
+import React from 'react';
+import { StatusBar, useColorScheme } from 'react-native';
 import 'react-native-gesture-handler';
 import Navigator from './Navigator';
-import { StateProvider, store } from './store';
+import { StateProvider } from './store';
 
 const AppRoot = () => {
   const isDarkMode = useColorScheme() === 'dark';

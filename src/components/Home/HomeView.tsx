@@ -28,6 +28,7 @@ import {
 } from '../../utils/responsiveLayout';
 import Calendar from './Calendar';
 import Locum from './Locum';
+import CalendarEventTag from './CalendarEventTag';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
@@ -50,12 +51,13 @@ const HomeView = ({ navigation }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       const nextIndex =
-        currentEventIndex === thisEventDates.length - 1
+        currentEventIndex === thisEventDates.length - 1 ||
+        thisEventDates.length === 0
           ? 0
           : currentEventIndex + 1;
       setPreviousEventIndex(currentEventIndex);
       setCurrentEventIndex(nextIndex);
-      locumListRef.current.scrollToIndex({
+      horizontalFlatListRef.current.scrollToIndex({
         animated: true,
         index: nextIndex,
         viewPosition: 0.5,
@@ -64,7 +66,7 @@ const HomeView = ({ navigation }) => {
     return () => clearInterval(interval);
   });
 
-  const locumListRef = useRef(null);
+  const horizontalFlatListRef = useRef(null);
 
   const { currentUser, users } = state;
 
@@ -78,6 +80,13 @@ const HomeView = ({ navigation }) => {
       }
     }
   }
+
+  const noLocumTags = [
+    {
+      title: 'No Locum',
+      text: 'No interested locums yet',
+    },
+  ];
 
   return (
     <View style={styles.container}>
@@ -156,32 +165,29 @@ const HomeView = ({ navigation }) => {
 
       {/* Demands */}
       <View style={{ marginTop: hp(2) }}>
-        {thisEventDates.length ? (
-          <FlatList
-            ref={locumListRef}
-            data={currentLocumTags}
-            horizontal
-            scrollEnabled={false}
-            ItemSeparatorComponent={() => <View style={{ width: wp(10) }} />}
-            ListFooterComponent={() => <View style={{ width: wp(7.5) }} />}
-            ListHeaderComponent={() => <View style={{ width: wp(7.5) }} />}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => (
+        <FlatList
+          ref={horizontalFlatListRef}
+          data={currentLocumTags.length ? currentLocumTags : noLocumTags}
+          horizontal
+          scrollEnabled={false}
+          ItemSeparatorComponent={() => <View style={{ width: wp(10) }} />}
+          ListFooterComponent={() => <View style={{ width: wp(7.5) }} />}
+          ListHeaderComponent={() => <View style={{ width: wp(7.5) }} />}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) =>
+            currentLocumTags.length ? (
               <Locum date={thisEventDates[index]} user={item} />
-            )}
-            getItemLayout={(data, index) => ({
-              length: wp(85),
-              offset: wp(85 + 10) * index + wp(7.5),
-              index,
-            })}
-          />
-        ) : (
-          // <View style={styles3.locum}>
-          //   <Text>{events[currentEventIndex].date}</Text>
-          // </View>
-          <Text>no events sorry</Text>
-        )}
+            ) : (
+              <CalendarEventTag />
+            )
+          }
+          getItemLayout={(data, index) => ({
+            length: wp(85),
+            offset: wp(85 + 10) * index + wp(7.5),
+            index,
+          })}
+        />
       </View>
     </View>
   );

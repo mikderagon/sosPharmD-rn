@@ -141,6 +141,23 @@ const Calendar = (props: Props) => {
       </View>
     );
   });
+  if (!events.length) {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        style={styles.container}
+        onPress={openCalendar}>
+        <View style={{ marginTop: 20 }}>
+          <Text style={styles.monthYear}>
+            {currentMonth} {new Date().getFullYear()}
+          </Text>
+        </View>
+
+        <View style={styles.daysRow}>{daysRow}</View>
+        <View style={styles.gridContainer}>{daysGrid}</View>
+      </TouchableOpacity>
+    );
+  }
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -159,11 +176,12 @@ const Calendar = (props: Props) => {
                   outputRange: Array.from(
                     { length: events.length + 1 },
                     (_, i) =>
-                      date_positions.find(
-                        dp =>
+                      date_positions.find(dp => {
+                        return (
                           dp.cell ===
-                          mapToCell(events[i === events.length ? 0 : i]),
-                      ).x,
+                          mapToCell(events[i === events.length ? 0 : i])
+                        );
+                      }).x,
                   ),
                 }),
               },

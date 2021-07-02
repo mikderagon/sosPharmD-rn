@@ -6,42 +6,51 @@
  * @flow strict-local
  */
 
-import React, { Dispatch, SetStateAction, useState } from 'react';
-import { Image } from 'react-native';
+import React, { Dispatch, SetStateAction } from 'react';
 import {
+  KeyboardTypeOptions,
   StyleSheet,
   Text,
-  View,
-  ImageBackground,
   TextInput,
+  View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
+import colors from '../../styles/colors';
+import { heightPercentageToDP as hp } from '../../utils/responsiveLayout';
 
 interface Props {
   autoFocus?: boolean;
   set: Dispatch<SetStateAction<any>>;
   placeholder: string;
   value?: string;
+  keyboardType?: KeyboardTypeOptions;
+  maxLength?: number;
 }
 
 const Input = (props: Props) => {
-  const { autoFocus = false, set, placeholder, value } = props;
+  const {
+    autoFocus = false,
+    set,
+    placeholder,
+    value,
+    keyboardType = 'default',
+    maxLength = 100,
+  } = props;
   return (
     <View style={styles.container}>
+      <Text style={styles.label}>{placeholder}:</Text>
       <TextInput
         autoFocus={autoFocus}
         style={styles.input}
         onChangeText={set}
-        placeholder={placeholder}
+        // placeholder={placeholder}
         placeholderTextColor="#aaa"
         value={value}
         autoCapitalize="none"
         autoCompleteType="off"
         autoCorrect={false}
+        keyboardType={keyboardType}
+        maxLength={maxLength}
       />
     </View>
   );
@@ -49,19 +58,27 @@ const Input = (props: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ddd',
+    backgroundColor: '#fff',
     borderColor: '#494949',
     borderWidth: 0.2,
     height: hp(5),
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  label: {
+    marginLeft: 10,
+    fontSize: 14,
+    fontWeight: '200',
+    color: colors.darkerBlue,
   },
   input: {
+    marginLeft: 5,
     fontSize: 15,
     color: '#494949',
     width: '90%',
     textAlign: 'left',
+    fontWeight: '400',
   },
 });
 

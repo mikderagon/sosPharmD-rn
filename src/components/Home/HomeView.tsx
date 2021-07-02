@@ -29,38 +29,12 @@ import {
 import Calendar from './Calendar';
 import Locum from './Locum';
 import CalendarEventTag from './CalendarEventTag';
-import { User } from '../../interfaces';
+import { LocumTag } from '../../interfaces';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
 
-export interface locumTag {
-  user: User;
-  date: {
-    day: number;
-    month: number;
-    year: number;
-  };
-}
-
 const HomeView = ({ navigation }) => {
-  const { state } = useContext(store);
-  const CalendarState = dates.getCalendarState(new Date());
-
-  // TODO: turn into api call
-  const thisMonthEvents = state.events.filter(event => {
-    return (
-      event.year === CalendarState.year && event.month === CalendarState.month
-    );
-  });
-  const thisMonthEventDates = _.flatten(
-    thisMonthEvents.map(e => {
-      return Array.from({ length: e.interestedLocums.length }).fill(e.day);
-    }),
-  );
-
-  const [currentEventIndex, setCurrentEventIndex] = useState(0);
-  const [previousEventIndex, setPreviousEventIndex] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
       const nextIndex =
@@ -78,13 +52,26 @@ const HomeView = ({ navigation }) => {
     }, 3000);
     return () => clearInterval(interval);
   });
-
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  const [previousEventIndex, setPreviousEventIndex] = useState(0);
   const horizontalFlatListRef = useRef(null);
-
+  const { state } = useContext(store);
   const { currentUser, users } = state;
+  const CalendarState = dates.getCalendarState(new Date());
 
   // TODO: turn into api call
-  let currentLocumTags: locumTag[] = [];
+  const thisMonthEvents = state.events.filter(
+    event =>
+      event.year === CalendarState.year && event.month === CalendarState.month,
+  );
+  const thisMonthEventDates = _.flatten(
+    thisMonthEvents.map(e =>
+      Array.from({ length: e.interestedLocums.length }).fill(e.day),
+    ),
+  );
+
+  // TODO: turn into api call
+  let currentLocumTags: LocumTag[] = [];
   for (const event of thisMonthEvents) {
     const theLocumsAre = event.interestedLocums;
     for (const locum of theLocumsAre) {

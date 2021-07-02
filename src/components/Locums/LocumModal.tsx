@@ -15,12 +15,12 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import { locumTag } from '../Home/HomeView';
+import { LocumTag } from '../../interfaces';
 
 interface Props {
   visible?: boolean;
   setVisibility: (val: boolean) => void;
-  locum: locumTag | any;
+  locum: LocumTag | any;
 }
 
 const LocumModal = (props: Props) => {

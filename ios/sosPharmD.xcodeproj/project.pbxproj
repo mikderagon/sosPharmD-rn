@@ -490,7 +490,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = L3UL8NTQ34;
 				ENABLE_BITCODE = NO;
-				EXCLUDED_ARCHS = "arm64";
+				EXCLUDED_ARCHS = arm64;
 				INFOPLIST_FILE = sosPharmD/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -521,7 +521,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = L3UL8NTQ34;
-				EXCLUDED_ARCHS = "arm64";
+				EXCLUDED_ARCHS = arm64;
 				INFOPLIST_FILE = sosPharmD/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

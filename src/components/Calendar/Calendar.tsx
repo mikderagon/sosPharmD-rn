@@ -13,6 +13,8 @@ import colors from '../../styles/colors';
 import { CalendarState, weekdays_short } from '../../utils/dates';
 import { heightPercentageToDP as hp } from '../../utils/responsiveLayout';
 import { calendarDimensions } from '../Home/Calendar';
+import { CELLS_COUNT, CELLS_COUNT_INCREASED } from '../Home/gridMeasurements';
+import Cell from './Cells/Cell';
 
 interface Props {
   events: any;
@@ -22,12 +24,13 @@ interface Props {
   selectionState?: boolean;
   selectedDays: any;
   onDayPress: any;
+  today: Date;
   state: CalendarState;
 }
 
 const Calendar = (props: Props) => {
-  const today = new Date();
   const {
+    today,
     state,
     additionalRow,
     events,
@@ -35,13 +38,15 @@ const Calendar = (props: Props) => {
     selectedDays,
     onDayPress,
   } = props;
+
   const daysRow = weekdays_short.map((day, index) => (
     <View style={[styles.cell, { height: hp(2) }]} key={index}>
       <Text style={styles.days}>{day}</Text>
     </View>
   ));
-  function createDaysList() {
-    let list = new Array(additionalRow ? 42 : 35);
+
+  function getDaysList() {
+    let list = new Array(additionalRow ? CELLS_COUNT_INCREASED : CELLS_COUNT);
     list[state.firstWeekdayOfMonthIndex] = 1;
     for (let i = 2; i <= state.monthLength; i++) {
       list[state.firstWeekdayOfMonthIndex + i - 1] = i;
@@ -54,104 +59,101 @@ const Calendar = (props: Props) => {
     return list;
   }
 
-  const days_num = createDaysList();
-  const daysGrid = days_num.map((day, index) => {
-    // 4 types of cells right, now TODO: simplify this function to one cell taking multiple styles
-    const isSelectedForNewEvent =
-      selectionState &&
-      selectedDays.find(
-        selectedDay =>
-          selectedDay.day === day &&
-          selectedDay.month === state.month &&
-          selectedDay.year === state.year,
-      );
-    const isLocumNotif = events
-      .filter(event => event.interestedLocums.length)
-      .map(event => event.day)
-      .includes(day);
-    const isUserEvent = events.map(event => event.day).includes(day);
-    if (isSelectedForNewEvent) {
+  const daysGrid = getDaysList().map((day, index) => {
+    const CELL_STATES = {
+      selectedForNewEvent:
+        selectionState &&
+        selectedDays.find(
+          selectedDay =>
+            selectedDay.day === day &&
+            selectedDay.month === state.month &&
+            selectedDay.year === state.year,
+        ),
+      isToday: day === today.getDate() && state.month === today.getMonth() + 1,
+      isEvent: events.map(event => event.day).includes(day),
+      interestedLocum: events
+        .filter(event => event.interestedLocums.length)
+        .map(event => event.day)
+        .includes(day),
+    };
+    function _onDayPress() {
+      onDayPress(day, state.month, state.year);
+    }
+    if (CELL_STATES.selectedForNewEvent) {
       return (
-        <TouchableOpacity
-          style={styles.cell}
-          key={index}
-          onPress={() => {
-            onDayPress(day, state.month, state.year);
-          }}>
+        <Cell key={index.toString()} onDayPress={_onDayPress}>
           <View style={styles.userSelectedHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
           </View>
-        </TouchableOpacity>
+        </Cell>
       );
     }
-    if (day === today.getDate() && isLocumNotif) {
+    if (CELL_STATES.isToday && CELL_STATES.interestedLocum) {
       return (
-        <TouchableOpacity
-          style={styles.cell}
-          key={index}
-          onPress={() => {
-            onDayPress(day, state.month, state.year);
-          }}>
+        <Cell key={index.toString()} onDayPress={_onDayPress}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
             <View style={styles.todayDot} />
           </View>
-        </TouchableOpacity>
+        </Cell>
       );
     }
-    if (day === today.getDate() && state.month === today.getMonth() + 1) {
+    if (CELL_STATES.isToday && CELL_STATES.isEvent) {
       return (
-        <TouchableOpacity
-          style={styles.cell}
-          key={index}
-          onPress={() => {
-            onDayPress(day, state.month, state.year);
-          }}>
+        <Cell key={index.toString()} onDayPress={_onDayPress}>
+          <View style={styles.todayHighlight}>
+            <Text style={styles.highlightedDay}>{day}</Text>
+            <View
+              style={[styles.todayDot, { backgroundColor: colors.lightGray }]}
+            />
+          </View>
+        </Cell>
+      );
+    }
+    if (CELL_STATES.isToday) {
+      return (
+        <Cell
+          touchEnabled={false}
+          key={index.toString()}
+          onDayPress={_onDayPress}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
           </View>
-        </TouchableOpacity>
+        </Cell>
       );
     }
-    if (isLocumNotif) {
+    if (CELL_STATES.interestedLocum) {
       return (
-        <TouchableOpacity
-          style={styles.cell}
-          key={index}
-          onPress={() => {
-            onDayPress(day, state.month, state.year);
-          }}>
+        <Cell key={index.toString()} onDayPress={_onDayPress}>
           <Text style={styles.day}>{day}</Text>
           <View style={styles.dayDot} />
-        </TouchableOpacity>
+        </Cell>
       );
     }
-    if (isUserEvent) {
+    if (CELL_STATES.isEvent) {
       return (
-        <TouchableOpacity
-          style={styles.cell}
-          key={index}
-          onPress={() => {
-            onDayPress(day, state.month, state.year);
-          }}>
+        <Cell
+          touchEnabled={false}
+          key={index.toString()}
+          onDayPress={_onDayPress}>
           <Text style={styles.day}>{day}</Text>
           <View
-            style={[styles.dayDot, { backgroundColor: colors.regularBlue }]}
+            style={[styles.dayDot, { backgroundColor: colors.lightGray }]}
           />
-        </TouchableOpacity>
+        </Cell>
+      );
+    } else {
+      return (
+        <Cell
+          touchEnabled={false}
+          key={index.toString()}
+          onDayPress={_onDayPress}>
+          <Text style={styles.day}>{day}</Text>
+        </Cell>
       );
     }
-    return (
-      <TouchableOpacity
-        style={styles.cell}
-        key={index}
-        onPress={() => {
-          onDayPress(day, state.month, state.year);
-        }}>
-        <Text style={styles.day}>{day}</Text>
-      </TouchableOpacity>
-    );
   });
+
   return (
     <View
       style={[
@@ -176,10 +178,8 @@ const Calendar = (props: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    // height: hp(35),
     height: calendarDimensions.height,
     width: calendarDimensions.width,
-    // width: wp(85),
     backgroundColor: '#fff',
     borderColor: '#ddd',
     borderWidth: 1,
@@ -192,8 +192,6 @@ const styles = StyleSheet.create({
     color: '#444',
   },
   cell: {
-    // height: hp(5),
-    // width: hp(5),
     height: calendarDimensions.cell,
     width: calendarDimensions.cell,
     alignItems: 'center',
@@ -260,7 +258,7 @@ const styles = StyleSheet.create({
     height: 5,
     width: 5,
     borderRadius: 50,
-    backgroundColor: 'green',
+    backgroundColor: colors.regularBlue,
   },
   todayDot: {
     position: 'absolute',

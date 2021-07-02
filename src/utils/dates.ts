@@ -48,7 +48,7 @@ export function getCalendarState(date: Date): CalendarState {
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
 
-  const monthLength = getNumberOfDaysInMonth(month, year);
+  const monthLength = getNumberOfDaysInMonth(month - 1, year);
 
   const firstWeekdayOfMonthIndex = getFirstWeekdayOfMonthIndex(month - 1, year);
   const firstWeekdayOfMonth = new Date(year, month, 1).toLocaleTimeString(

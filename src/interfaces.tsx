@@ -1,3 +1,9 @@
+export interface DateObject {
+  day: number;
+  month: number;
+  year: number;
+}
+
 export interface CalendarEvent {
   title: string;
   location: string;
@@ -18,4 +24,13 @@ export interface User {
   year: number;
   educationalInstitution: string;
   type: string;
+}
+
+export interface LocumTag {
+  user: User;
+  date: {
+    day: number;
+    month: number;
+    year: number;
+  };
 }

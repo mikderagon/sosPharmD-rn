@@ -6,91 +6,60 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
-import { Alert, Animated } from 'react-native';
-import AddEventModal from './AddEventModal';
+import React, { useContext, useState } from 'react';
+import { Image } from 'react-native';
 import {
-  ScrollView,
-  SafeAreaView,
-  TouchableOpacity,
-  StyleSheet,
+  Alert,
   FlatList,
+  SafeAreaView,
+  StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import { CalendarEvent, DateObject } from '../../interfaces';
+import { store } from '../../store';
+import colors from '../../styles/colors';
+import * as dates from '../../utils/dates';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import Modal from 'react-native-modal';
-import Input from './Input';
+import AddEventModal from './AddEventModal';
 import Calendar from './Calendar';
-import { useContext } from 'react';
-import { store } from '../../store';
-import { useEffect } from 'react';
-import { CalendarEvent } from '../../interfaces';
-import * as dates from '../../utils/dates';
-import colors from '../../styles/colors';
 
-export interface DateObject {
-  day: number;
-  month: string;
-  year: number;
-}
+const backCaret = require('../../assets/images/backCaret.png');
 
-const CalendarView = () => {
+const CalendarView = ({ navigation }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectionState, setSelectionState] = useState(false); // set true to test
+  const toggleModalVisibility = () => setModalVisible(!modalVisible);
+  const [userEvent, setUserEvent] = useState<CalendarEvent>();
+  const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
   const { state, dispatch } = useContext(store);
   const { currentUser } = state;
 
   const today = new Date();
   let runningYear = today.getFullYear();
   let runningMonth = today.getMonth();
-  const _monthsList = dates.months.map(m => {
+  const monthsList = dates.months.map(_ => {
     runningMonth++;
     if (runningMonth === 13) {
       runningMonth = 1;
       runningYear += 1;
     }
-    const {
-      month,
-      monthName,
-      firstWeekdayOfMonthIndex,
-      firstWeekdayOfMonth,
-      monthLength,
-    } = dates.getCalendarState(
+
+    return dates.getCalendarState(
       new Date(
         `${runningYear}-${
           runningMonth < 10 ? `0${runningMonth}` : runningMonth
         }-15`,
       ),
     );
-
-    return {
-      month,
-      monthName,
-      year: runningYear,
-      firstWeekdayOfMonthIndex,
-      firstWeekdayOfMonth,
-      monthLength,
-    };
   });
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectionState, setSelectionState] = useState(false); // set true to test
-  const toggleModalVisibility = () => {
-    setModalVisible(!modalVisible);
-  };
-  const selectHours = () => {
-    toggleModalVisibility();
-  };
-  const [userEvent, setUserEvent] = useState<CalendarEvent>();
-
-  const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
-
-  const [editedEvent, setEditedEvent] = useState<CalendarEvent & DateObject>();
-
-  function onDayPress(day: number, month: string, year: number) {
+  function onDayPress(day: number, month: number, year: number) {
     if (selectionState) {
       if (
         selectedDays.find(
@@ -113,39 +82,23 @@ const CalendarView = () => {
         setSelectedDays([...selectedDays, { day, month, year }]);
       }
     } else {
-      // if the day clicked has an event (userevent)
-      // check if array of events include it
-      // console.log(state.events);
-      // console.log(
-      //   state.events.includes(
-      //     event =>
-      //       event.day === day && event.month === month && event.year === year,
-      //   ),
-      // );
-      setEditedEvent({
-        title: userEvent?.title,
-        location: userEvent?.location,
-        minExperience: userEvent?.minExperience,
-        startTime: userEvent?.startTime,
-        endTime: userEvent?.endTime,
-        day,
-        month,
-        year,
+      let clickedEvent;
+      state.events.forEach(event => {
+        if (event.day === day && event.month === month && event.year === year) {
+          clickedEvent = event;
+        }
       });
-      setModalVisible(true);
+      console.log(clickedEvent);
     }
   }
 
   function deployEvents() {
     setSelectionState(false);
-    // create an animation to show that events have been set in the calendar,
-    // which are now visible by the students
-    // first find how we want to style the cells for days that have events (need to combine well with the 'student' notif dot)
     const formattedEvents = selectedDays.map(selectedDay => {
       return {
         id: 50,
         day: selectedDay.day,
-        month: dates.getMonthIndex(selectedDay.month),
+        month: selectedDay.month,
         year: selectedDay.year,
         userId: currentUser.id,
         title: userEvent?.title,
@@ -159,50 +112,56 @@ const CalendarView = () => {
       type: 'ADD_CALENDAR_EVENTS',
       events: formattedEvents,
     });
+    // clear selectedDays
+    setSelectedDays([]);
   }
 
   function addCalendarEvent(event: CalendarEvent) {
     setUserEvent(event);
-    // trigger event to alert the user to click on wanted dates on the calendars
-    // this could be an animated view coming from the side...think creative
-    // starting with a simple native alert to get the functionality done
     Alert.alert('Click on the dates on the calendar that you want');
-    // then we need to record the clicked dates
-    // we need to know that we're in this 'selection' state
     setSelectionState(true);
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
+        <TouchableOpacity
+          style={{ left: 30 }}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          onPress={() => navigation.navigate('Home')}>
+          <Image source={backCaret} style={styles.backCaret} />
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>Calendar</Text>
-        <View style={[styles.flexRow, { marginTop: 5 }]}>
-          <View style={styles.flexRow}>
-            <View
-              style={[
-                styles.legendDot,
-                { backgroundColor: 'green', marginRight: 5 },
-              ]}
-            />
-            <Text style={[styles.legendText, { color: 'green' }]}>
-              Fulfilled
-            </Text>
-          </View>
-          <View style={[styles.flexRow, { marginLeft: 20 }]}>
-            <View
-              style={[
-                styles.legendDot,
-                { backgroundColor: colors.regularBlue, marginRight: 5 },
-              ]}
-            />
-            <Text style={[styles.legendText, { color: colors.regularBlue }]}>
-              Unfulfilled
-            </Text>
-          </View>
+        <View style={{ width: styles.backCaret.width }} />
+      </View>
+      <View style={[styles.flexRow, { marginTop: 5 }, styles.legend]}>
+        <View style={styles.flexRow}>
+          <View
+            style={[
+              styles.legendDot,
+              { backgroundColor: colors.regularBlue, marginRight: 5 },
+            ]}
+          />
+          <Text style={[styles.legendText, { color: colors.regularBlue }]}>
+            Fulfilled
+          </Text>
+        </View>
+        <View style={[styles.flexRow, { marginLeft: 20 }]}>
+          <View
+            style={[
+              styles.legendDot,
+              { backgroundColor: colors.lightGray, marginRight: 5 },
+            ]}
+          />
+          <Text style={[styles.legendText, { color: colors.lightGray }]}>
+            Unfulfilled
+          </Text>
         </View>
       </View>
+
       <View style={{ marginTop: 10 }}>
         <FlatList
-          data={_monthsList}
+          data={monthsList}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{
             width: '100%',
@@ -211,22 +170,25 @@ const CalendarView = () => {
           renderItem={({ item, index }) => {
             return (
               <Calendar
+                today={today}
                 selectionState={selectionState}
                 selectedDays={selectedDays}
                 onDayPress={onDayPress}
-                events={state.events.filter(event => {
-                  return event.year === item.year && event.month === item.month;
-                })}
+                events={state.events.filter(
+                  event =>
+                    event.year === item.year && event.month === item.month,
+                )}
                 state={item}
                 additionalRow={
-                  (item.numberOfDays < 31 && item.firstDayIndex === 6) ||
-                  (item.numberOfDays === 31 && item.firstDayIndex > 4)
+                  (item.monthLength < 31 &&
+                    item.firstWeekdayOfMonthIndex === 6) ||
+                  (item.monthLength === 31 && item.firstWeekdayOfMonthIndex > 4)
                 }
               />
             );
           }}
           ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-          ListFooterComponent={() => <View style={{ height: 70 }} />}
+          ListFooterComponent={() => <View style={{ height: 120 }} />}
           showsVerticalScrollIndicator={false}
         />
       </View>
@@ -236,7 +198,7 @@ const CalendarView = () => {
             if (selectionState) {
               deployEvents();
             } else {
-              selectHours();
+              toggleModalVisibility();
             }
           }}
           style={[styles.addButton, { marginTop: -15 }]}>
@@ -246,9 +208,8 @@ const CalendarView = () => {
 
       <AddEventModal
         isVisible={modalVisible}
-        event={editedEvent}
-        toggleModal={toggleModalVisibility}
-        addCalendarEvent={(event: CalendarEvent) => addCalendarEvent(event)}
+        closeModal={() => setModalVisible(false)}
+        addCalendarEvent={addCalendarEvent}
       />
     </SafeAreaView>
   );
@@ -263,12 +224,21 @@ const styles = StyleSheet.create({
     height: hp(5),
     width: wp(100),
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  backCaret: {
+    width: 10,
+    resizeMode: 'contain',
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: '700',
     color: '#494949',
+  },
+  legend: {
+    width: wp(100),
+    justifyContent: 'center',
   },
   flexRow: {
     flexDirection: 'row',
@@ -322,6 +292,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { height: 1, width: 1 },
+    shadowRadius: 2,
+    shadowOpacity: 0.2,
   },
   addButton: {
     height: 60,

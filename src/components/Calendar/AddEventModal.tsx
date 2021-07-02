@@ -94,7 +94,7 @@ const AddEventModal = (props: Props) => {
           />
         </View>
         <View style={{ marginTop: 12 }}>
-          <TimeInput
+          {/* <TimeInput
             value={startTime}
             set={value => setStartTime(value)}
             placeholder="Starts"
@@ -105,7 +105,7 @@ const AddEventModal = (props: Props) => {
             placeholder="Ends"
             marginLeft={16}
             maximumTime={startTime}
-          />
+          /> */}
         </View>
       </View>
     </Modal>

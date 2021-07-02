@@ -113,7 +113,7 @@ const Calendar = (props: Props) => {
     if (CELL_STATES.isToday) {
       return (
         <Cell
-          touchEnabled={false}
+          touchEnabled={selectionState}
           key={index.toString()}
           onDayPress={_onDayPress}>
           <View style={styles.todayHighlight}>
@@ -133,7 +133,7 @@ const Calendar = (props: Props) => {
     if (CELL_STATES.isEvent) {
       return (
         <Cell
-          touchEnabled={false}
+          touchEnabled={selectionState}
           key={index.toString()}
           onDayPress={_onDayPress}>
           <Text style={styles.day}>{day}</Text>
@@ -145,7 +145,7 @@ const Calendar = (props: Props) => {
     } else {
       return (
         <Cell
-          touchEnabled={false}
+          touchEnabled={selectionState}
           key={index.toString()}
           onDayPress={_onDayPress}>
           <Text style={styles.day}>{day}</Text>

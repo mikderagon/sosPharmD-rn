@@ -195,14 +195,34 @@ const CalendarView = ({ navigation }) => {
       <View style={styles.footer}>
         <TouchableOpacity
           onPress={() => {
-            if (selectionState) {
+            if (selectionState && selectedDays.length) {
               deployEvents();
             } else {
               toggleModalVisibility();
             }
           }}
-          style={[styles.addButton, { marginTop: -15 }]}>
-          <Text style={styles.addButtonText}>{selectionState ? '✔' : '+'}</Text>
+          style={[
+            styles.addButton,
+            selectionState
+              ? {
+                  backgroundColor: '#fff',
+                  borderColor: selectedDays.length ? colors.regularBlue : 'red',
+                }
+              : {},
+          ]}>
+          <Text
+            style={[
+              styles.addButtonText,
+              selectionState
+                ? { color: selectedDays.length ? colors.regularBlue : 'red' }
+                : {},
+            ]}>
+            {selectionState
+              ? selectedDays.length
+                ? 'Done'
+                : 'Cancel'
+              : 'Add Event'}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -288,28 +308,35 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: hp(10),
     width: '100%',
-    backgroundColor: colors.regularBlue,
+    // backgroundColor: colors.regularBlue,
     alignItems: 'center',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000',
-    shadowOffset: { height: 1, width: 1 },
-    shadowRadius: 2,
-    shadowOpacity: 0.2,
+    shadowRadius: 1,
+    shadowOffset: { height: -1, width: 1 },
+    shadowOpacity: 0.4,
   },
   addButton: {
-    height: 60,
-    width: 60,
+    height: 50,
+    width: 170,
     borderRadius: 50,
-    backgroundColor: '#fff',
+    backgroundColor: colors.regularBlue,
     alignItems: 'center',
     justifyContent: 'center',
-    borderColor: colors.darkerBlue,
-    borderWidth: 5,
+    borderColor: '#fff',
+    borderWidth: 2,
     shadowColor: '#000',
     shadowOpacity: 0.5,
     shadowOffset: { height: 0, width: 0 },
     shadowRadius: 1,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 20,
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
   modalView: {
     height: hp(60),
@@ -331,13 +358,6 @@ const styles = StyleSheet.create({
     color: '#f00',
     fontWeight: '300',
     fontSize: 15,
-  },
-  addButtonText: {
-    color: '#494949',
-    fontWeight: '500',
-    fontSize: 30,
-    textAlign: 'center',
-    textAlignVertical: 'center',
   },
   modalHeaderTitle: {
     color: '#fff',

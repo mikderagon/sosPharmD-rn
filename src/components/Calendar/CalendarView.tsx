@@ -326,10 +326,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: '#fff',
     borderWidth: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.5,
-    shadowOffset: { height: 0, width: 0 },
+    shadowColor: '#F3E8E7',
+    shadowOpacity: 0.7,
     shadowRadius: 1,
+    shadowOffset: { height: 1, width: 0 },
   },
   addButtonText: {
     color: '#fff',

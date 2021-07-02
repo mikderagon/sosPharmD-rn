@@ -144,9 +144,9 @@ const HomeView = ({ navigation }) => {
       </View>
 
       {/* Calendar */}
-      <View style={{ marginTop: hp(10), width: '85%' }}>
+      <View style={{ marginTop: hp(10) }}>
         <Text style={styles2.sectionTitle}>Calendar</Text>
-        <View style={{ marginTop: responsive({ $480: hp(2), $812: hp(3) }) }}>
+        <View style={{ marginTop: hp(3) }}>
           <Calendar
             events={thisMonthEventDates}
             state={CalendarState}
@@ -304,6 +304,11 @@ const styles2 = StyleSheet.create({
     color: '#494949',
     fontSize: 22,
     fontWeight: '700',
+  },
+  sectionTitle2: {
+    color: '#494949',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
 

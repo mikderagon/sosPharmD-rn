@@ -14,6 +14,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  FlatList,
 } from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
@@ -57,6 +58,10 @@ const GRADIENT_COLORS = [
   'rgba(30, 129, 206, 0.3)',
 ];
 
+function getRandomColor() {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+}
+
 const Locum = (props: Props) => {
   const { date, user, onPress } = props;
   const {
@@ -67,34 +72,35 @@ const Locum = (props: Props) => {
     year,
     educationalInstitution,
   } = user;
+  const Softwares = [1, 2, 3].map((s, index) => (
+    <View
+      style={[
+        styles.softwareTag,
+        { borderColor: getRandomColor(), marginLeft: index === 0 ? 0 : 10 },
+      ]}
+    />
+  ));
   return (
     <View style={styles.container}>
-      <LinearGradient colors={GRADIENT_COLORS} style={styles.gradient}>
-        <ImageBackground
-          source={{ uri: pictureUrl }}
-          style={styles.userPicture}>
-          <LinearGradient
-            colors={GRADIENT_COLORS}
-            style={{
-              backgroundColor: 'transparent',
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-            }}
-          />
-          <View style={styles.outsideImageContainer}>
-            <Text style={styles.name}>{firstName + ' ' + lastName}</Text>
-            <Text style={[styles.school, { marginTop: 5 }]}>
-              {`${year}nd year Pharmacy Student`}
-            </Text>
-            <Text style={[styles.school, { marginTop: 0 }]}>
-              @{educationalInstitution}
-            </Text>
-          </View>
-        </ImageBackground>
-      </LinearGradient>
+      <View style={styles.dateTag}>
+        <Text style={styles.date}>{date}</Text>
+      </View>
+      <Image source={{ uri: pictureUrl }} style={styles.userPicture} />
+      <View style={styles.outsideImageContainer}>
+        <Text style={styles.name}>{firstName + ' ' + lastName}</Text>
+        <Text style={[styles.school, { marginTop: 1 }]}>
+          {`${year}nd year Pharmacy Student`}
+        </Text>
+        <Text style={[styles.school, { marginTop: 0 }]}>
+          @{educationalInstitution}
+        </Text>
+        <View style={styles.softwaresList}>
+          <Text style={[styles.school, { marginRight: 5, fontWeight: '700' }]}>
+            Preferred {'\n'}Softwares
+          </Text>
+          {Softwares}
+        </View>
+      </View>
     </View>
   );
 };
@@ -114,14 +120,19 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOffset: { height: 2, width: 1 },
   },
-  gradient: {
+  dateTag: {
     position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'transparent',
-    borderRadius: 20,
+    top: 3,
+    right: 3,
+    backgroundColor: '#ddd',
+    height: 30,
+    width: 30,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  date: {
+    color: '#494949',
   },
   userPicture: {
     height: '100%',
@@ -131,9 +142,9 @@ const styles = StyleSheet.create({
   },
   outsideImageContainer: {
     width: wp(60),
-    position: 'absolute',
-    left: 100,
-    bottom: 5,
+    marginLeft: 8,
+    top: 8,
+    alignSelf: 'flex-start',
   },
   name: {
     fontWeight: '700',
@@ -141,9 +152,22 @@ const styles = StyleSheet.create({
     color: '#494949',
   },
   school: {
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: '500',
     color: '#494949',
+  },
+  softwaresList: {
+    marginTop: 8,
+    height: 40,
+    width: 200,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  softwareTag: {
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 35,
+    width: 35,
   },
 });
 

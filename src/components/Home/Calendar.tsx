@@ -36,9 +36,7 @@ const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const Calendar = (props: Props) => {
   const { openCalendar, currentEvent, previousEvent, events, state } = props;
-  // console.log(events);
 
-  // const events = [];
   const getIndex = (eventDate: number) =>
     events.findIndex(e => e === eventDate);
 
@@ -52,7 +50,6 @@ const Calendar = (props: Props) => {
     return cells;
   }
   const cellList = createCellsList();
-  console.log(cellList);
   function mapToCell(n: number) {
     const index = events.findIndex(e => e === n);
     return cellList[index];
@@ -84,7 +81,7 @@ const Calendar = (props: Props) => {
     }
     for (let i = 0; i < list.length; i++) {
       if (!list[i]) {
-        list[i] = ' ';
+        list[i] = '';
       }
     }
     return list;
@@ -152,8 +149,10 @@ const Calendar = (props: Props) => {
         style={[
           styles.locumHighlight,
           {
-            left: 5.5,
-            top: 74,
+            // left: 7.2,
+            // top: 73
+            left: calendarDimensions.cell * 0.18,
+            top: calendarDimensions.cell * 1.83,
             transform: [
               {
                 translateX: locumPosition.interpolate({
@@ -230,7 +229,7 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexWrap: 'wrap',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   day: {
     color: '#494949',
@@ -259,10 +258,10 @@ const styles = StyleSheet.create({
   },
   locumHighlight: {
     position: 'absolute',
-    height: 30,
-    width: 30,
+    height: calendarDimensions.cell * 0.75,
+    width: calendarDimensions.cell * 0.75,
     borderRadius: 50,
-    backgroundColor: '#ddd',
+    backgroundColor: colors.lime,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -3,7 +3,7 @@ import { calendarDimensions } from './Calendar';
 const DAYS_PER_WEEK = 7;
 export const CELLS_COUNT = DAYS_PER_WEEK * 5;
 export const CELLS_COUNT_INCREASED = CELLS_COUNT + DAYS_PER_WEEK;
-export const col_margin = calendarDimensions.cell * 1.15;
+export const col_margin = calendarDimensions.cell * 1.139;
 export const row_margin = calendarDimensions.cell * 1.0;
 // 1 2 3 4 5 6 7
 // 8 9 ...

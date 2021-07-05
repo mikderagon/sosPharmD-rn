@@ -53,7 +53,7 @@ const SignInView = ({ navigation }) => {
           useNativeDriver: true,
           easing: Easing.elastic(1),
         }),
-        Animated.delay(1000),
+        Animated.delay(400),
         Animated.timing(animatedValue, {
           toValue: 2,
           duration: 1000,

@@ -152,7 +152,7 @@ const Calendar = (props: Props) => {
             // left: 7.2,
             // top: 73
             left: calendarDimensions.cell * 0.18,
-            top: calendarDimensions.cell * 1.83,
+            top: calendarDimensions.height * 0.244,
             transform: [
               {
                 translateX: locumPosition.interpolate({
@@ -199,10 +199,11 @@ const Calendar = (props: Props) => {
   );
 };
 
+const width = wp(95);
 export const calendarDimensions = {
-  height: wp(85) * 0.85,
-  width: wp(85),
-  cell: wp(85) / 8,
+  height: width * 0.85,
+  width,
+  cell: width / 8,
 };
 
 const styles = StyleSheet.create({
@@ -260,7 +261,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: calendarDimensions.cell * 0.75,
     width: calendarDimensions.cell * 0.75,
-    borderRadius: 50,
+    borderRadius: hp(50),
     backgroundColor: colors.lime,
     alignItems: 'center',
     justifyContent: 'center',

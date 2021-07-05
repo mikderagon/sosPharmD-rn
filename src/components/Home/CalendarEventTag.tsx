@@ -30,7 +30,7 @@ const CalendarEventTag = (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     height: hp(13),
-    width: wp(85),
+    width: wp(95),
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#ddd',

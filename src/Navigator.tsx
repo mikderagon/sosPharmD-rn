@@ -43,8 +43,8 @@ const defaultTheme = {
 
 const Navigator = () => {
   const { state } = useContext(store);
-  // const initialRouteName = 'Onboarding';
-  const initialRouteName = 'Home';
+  const initialRouteName = 'Onboarding';
+  // const initialRouteName = 'Home';
   // const initialRouteName = 'SignUp';
   // const initialRouteName = 'SignIn';
   return (

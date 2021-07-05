@@ -56,23 +56,23 @@ const SettingsView = ({ navigation }) => {
             </View>
           </View>
 
-          <View style={styles.row}>
+          {/* <View style={styles.row}>
             <Text style={styles.rowText}>Favorite Softwares</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.rowText}>Account type</Text>
-          </View>
+          </View> */}
           <TouchableOpacity
             style={styles.row}
             onPress={() => {
-              Alert.alert('Confirm', '', [
+              Alert.alert('Sign Out', '', [
                 {
-                  text: 'Cancel',
+                  text: 'No',
                   onPress: () => {},
                   style: 'cancel',
                 },
                 {
-                  text: 'Sign Out',
+                  text: 'Yes',
                   onPress: () => {
                     navigation.reset({
                       index: 0,

@@ -35,6 +35,8 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
+const calendar = require('../../assets/images/calendarIcon.png');
+const locumIcon = require('../../assets/images/locumIcon.png');
 
 function hexToRgba(hex: string, opacity: number) {
   let c;
@@ -50,11 +52,11 @@ function hexToRgba(hex: string, opacity: number) {
 }
 
 const GRADIENT_COLORS = [
-  hexToRgba(colors.main, 0.6),
   hexToRgba(colors.main, 0.8),
+  hexToRgba(colors.main, 0.9),
   hexToRgba(colors.main, 1),
+  hexToRgba(colors.main, 0.9),
   hexToRgba(colors.main, 0.8),
-  hexToRgba(colors.main, 0.6),
 ];
 
 const HomeView = ({ navigation }) => {
@@ -151,7 +153,7 @@ const HomeView = ({ navigation }) => {
               <Text style={styles.location}>{currentUser.city}</Text>
             </View>
           </View> */}
-        <View style={styles.userPictureShadow}>
+        <View style={[styles.userPictureShadow, { marginTop: hp(1) }]}>
           <Image
             source={{ uri: currentUser.pictureUrl }}
             style={styles.userPicture}
@@ -168,8 +170,14 @@ const HomeView = ({ navigation }) => {
 
       {/* Calendar */}
       <View
-        style={{ marginTop: hp(2), alignItems: 'flex-start', width: '85%' }}>
+        style={{
+          marginTop: hp(2),
+          justifyContent: 'space-between',
+          width: '92%',
+          flexDirection: 'row',
+        }}>
         <Text style={styles2.sectionTitle}>Your Calendar</Text>
+        <Image source={calendar} style={styles.calendarIcon} />
       </View>
       <View style={{ marginTop: hp(2) }}>
         <Calendar
@@ -190,7 +198,18 @@ const HomeView = ({ navigation }) => {
         style={[styles2.sectionSubtitle, { width: '85%', marginTop: hp(2) }]}>
         Locums qui ont postulé
       </Text> */}
-      <View style={[styles.flatListContainer, { marginTop: hp(3) }]}>
+      <View
+        style={{
+          marginTop: hp(2),
+          justifyContent: 'space-between',
+          width: '92%',
+          flexDirection: 'row',
+        }}>
+        <Text style={styles2.sectionTitle2}>Your Locums</Text>
+        <Image source={locumIcon} style={styles.calendarIcon} />
+      </View>
+
+      <View style={{ marginTop: hp(2) }}>
         <FlatList
           ref={horizontalFlatListRef}
           data={currentLocumTags.length ? currentLocumTags : noLocumTags}
@@ -218,12 +237,31 @@ const HomeView = ({ navigation }) => {
           }
           // TODO: get length and offset from renderItem's component (<Locum />)
           getItemLayout={(data, index) => ({
-            length: wp(85),
-            offset: wp(85 + 10) * index + wp(7.5),
+            length: wp(95),
+            offset: wp(95 + 10) * index + wp(7.5),
             index,
           })}
         />
       </View>
+      {/* <View
+        style={{
+          height: hp(7),
+          width: '100%',
+          position: 'absolute',
+          bottom: 0,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text
+          style={{
+            color: '#aaa',
+            fontWeight: '600',
+            fontSize: 10,
+            textAlign: 'center',
+          }}>
+          © {CalendarState.year} SOSPharmD App. All Rights Reserved.
+        </Text>
+      </View> */}
     </View>
   );
 };
@@ -264,17 +302,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-  flatListContainer: {
-    height: hp(13),
-  },
   topLeftTitle: {
     marginTop: hp(0),
   },
   title: {
     color: '#fff',
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: '400',
     // fontFamily: fonts.Light,
+  },
+  calendarIcon: {
+    height: hp(3.3),
+    width: hp(5),
+    resizeMode: 'contain',
+    tintColor: colors.main,
   },
   pictureNameRow: {
     marginTop: hp(4),
@@ -318,12 +359,7 @@ const styles = StyleSheet.create({
     fontWeight: '300',
   },
   verticalDots: {
-    height: hp(2),
-    resizeMode: 'contain',
-  },
-  fourSquares: {
-    height: hp(2),
-    width: hp(2),
+    height: hp(2.3),
     resizeMode: 'contain',
   },
   userType: {
@@ -346,9 +382,9 @@ const styles2 = StyleSheet.create({
     fontWeight: '700',
   },
   sectionTitle2: {
-    color: '#494949',
-    fontSize: 18,
-    fontWeight: '600',
+    color: colors.main,
+    fontSize: 22,
+    fontWeight: '700',
   },
 });
 

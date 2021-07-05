@@ -95,12 +95,12 @@ const Locum = (props: Props) => {
         <Text style={[styles.school, { marginTop: 0 }]}>
           @{educationalInstitution}
         </Text>
-        <View style={styles.softwaresList}>
+        {/* <View style={styles.softwaresList}>
           <Text style={[styles.school, { marginRight: 5, fontWeight: '700' }]}>
             Preferred {'\n'}Softwares
           </Text>
           {Softwares}
-        </View>
+        </View> */}
       </View>
     </View>
   );

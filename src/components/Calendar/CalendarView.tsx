@@ -131,7 +131,7 @@ const CalendarView = ({ navigation }) => {
           onPress={() => navigation.navigate('Home')}>
           <Image source={backCaret} style={styles.backCaret} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Calendar</Text>
+        <Text style={styles.headerTitle}>Your Calendar</Text>
         <View style={{ width: styles.backCaret.width }} />
       </View>
       <View style={[styles.flexRow, { marginTop: 5 }, styles.legend]}>

@@ -28,17 +28,6 @@ import { store } from './store';
 const backCaret = require('./assets/images/backCaret.png');
 
 const Stack = createStackNavigator<StackParamList>();
-const Drawer = createDrawerNavigator();
-
-const HomeDrawer = () => {
-  return (
-    <Drawer.Navigator
-      drawerStyle={{ width: 100, backgroundColor: '#fff' }}
-      drawerContent={({ navigation }) => <Menu navigation={navigation} />}>
-      <Drawer.Screen name="Home" component={Home} />
-    </Drawer.Navigator>
-  );
-};
 
 const defaultTheme = {
   dark: false,
@@ -111,7 +100,7 @@ const Navigator = () => {
         />
         <Stack.Screen
           name="Home"
-          component={HomeDrawer}
+          component={Home}
           options={{
             headerShown: false,
           }}

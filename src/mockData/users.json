@@ -18,8 +18,10 @@
     "lastName": "Deragon",
     "email": "mikaelderagon@icloud.com",
     "password": "sospharmd",
-    "pictureUrl": "https://www.yourfreecareertest.com/wp-content/uploads/2016/07/pharmacist.jpg",
-    "city": "Montreal",
+    "pictureUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwgu1A5zgPSvfE83nurkuzNEoXs9DMNr8Ww&usqp=CAU",
+    "pharmacy": "Jean-Coutu 6200, chemin de la Côte-des-Neiges",
+    "city": "Montréal",
+    "postalCode": "H3S 2A1",
     "year": null,
     "softwares": [1, 3],
     "type": "owner"

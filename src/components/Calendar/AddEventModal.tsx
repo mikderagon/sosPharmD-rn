@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
@@ -18,7 +18,7 @@ import {
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
 import useKeyboard from '../Native/Keyboard';
-import Input from './Input';
+import InputForm from './InputForm';
 import TimeInput from './TimeInput';
 
 interface Props {
@@ -72,41 +72,25 @@ const AddEventModal = (props: Props) => {
         </View>
 
         <View style={{ marginTop: 12 }}>
-          <Input
-            value={title}
-            set={value => setTitle(value)}
-            placeholder="Title"
-            autoFocus
-          />
+          <InputForm />
         </View>
         {/* Add autocomplete feature based on an array of pharmacy locations that will be saved in our db */}
-        <Input
+        {/* <Input
+          ref={InputRef2}
           value={location}
           set={value => setLocation(value)}
           placeholder="Location"
+          nextFocus={() => InputRef3.current.focus()}
         />
         <View style={{ marginTop: 12 }}>
           <Input
+            ref={InputRef3}
             keyboardType="number-pad"
             value={minExperience}
             set={value => setMinExperience(value)}
             placeholder="Min. Experience"
           />
-        </View>
-        <View style={{ marginTop: 12 }}>
-          {/* <TimeInput
-            value={startTime}
-            set={value => setStartTime(value)}
-            placeholder="Starts"
-          />
-          <TimeInput
-            value={endTime}
-            set={value => setEndTime(value)}
-            placeholder="Ends"
-            marginLeft={16}
-            maximumTime={startTime}
-          /> */}
-        </View>
+        </View> */}
       </View>
     </Modal>
   );

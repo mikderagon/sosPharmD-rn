@@ -6,8 +6,8 @@ const useKeyboard = (): [number] => {
     Keyboard.addListener('keyboardDidShow', onKeyboardDidShow);
     Keyboard.addListener('keyboardDidHide', onKeyboardDidHide);
     return () => {
-      Keyboard.removeAllListeners('keyboardDidShow');
-      Keyboard.removeAllListeners('keyboardDidHide');
+      // Keyboard.removeAllListeners('keyboardDidShow');
+      // Keyboard.removeAllListeners('keyboardDidHide');
     };
   }, []);
   const [keyboardHeight, setKeyboardHeight] = useState(0);

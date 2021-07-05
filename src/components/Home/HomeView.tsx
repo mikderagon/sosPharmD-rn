@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import 'react-native-gesture-handler';
 import _ from 'underscore';
+import _String from 'underscore.string';
 import { store } from '../../store';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
@@ -30,9 +31,31 @@ import Calendar from './Calendar';
 import Locum from './Locum';
 import CalendarEventTag from './CalendarEventTag';
 import { LocumTag } from '../../interfaces';
+import LinearGradient from 'react-native-linear-gradient';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
+
+function hexToRgba(hex: string, opacity: number) {
+  let c;
+  if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+    c = hex.substring(1).split('');
+    if (c.length == 3) {
+      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+    }
+    c = '0x' + c.join('');
+    return `rgba(${(c >> 16) & 255},${(c >> 8) & 255},${c & 255},${opacity})`;
+  }
+  throw new Error('Bad Hex');
+}
+
+const GRADIENT_COLORS = [
+  hexToRgba(colors.main, 0.6),
+  hexToRgba(colors.main, 0.8),
+  hexToRgba(colors.main, 1),
+  hexToRgba(colors.main, 0.8),
+  hexToRgba(colors.main, 0.6),
+];
 
 const HomeView = ({ navigation }) => {
   useEffect(() => {
@@ -95,41 +118,29 @@ const HomeView = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.header, styles.headerShadow]}>
-        <View style={styles.headerInnerContainer}>
-          <View style={styles.headerBar}>
-            <View style={styles.headerBarText}>
-              <TouchableOpacity
-                hitSlop={{
-                  top: 10,
-                  bottom: 20,
-                  left: 15,
-                  right: 15,
-                }}
-                onPress={() => {
-                  navigation.openDrawer();
-                }}>
-                <Image source={fourSquares} style={styles.fourSquares} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                hitSlop={{ top: 10, bottom: 30, left: 15, right: 15 }}
-                onPress={() => {
-                  navigation.navigate('Settings');
-                }}>
-                <Image source={verticalDots} style={styles.verticalDots} />
-              </TouchableOpacity>
+      <LinearGradient
+        colors={GRADIENT_COLORS}
+        style={[styles.header, styles.headerShadow]}>
+        <View style={styles.headerBar}>
+          <View style={styles.headerBarText}>
+            <View style={styles.topLeftTitle}>
+              <Text style={styles.title}>
+                Hi,{' '}
+                <Text style={[styles.title, { fontWeight: '800' }]}>
+                  {currentUser.firstName}!
+                </Text>
+              </Text>
             </View>
+            <TouchableOpacity
+              hitSlop={{ top: 10, bottom: 30, left: 15, right: 15 }}
+              onPress={() => {
+                navigation.navigate('Settings');
+              }}>
+              <Image source={verticalDots} style={styles.verticalDots} />
+            </TouchableOpacity>
           </View>
-          <View style={styles.topLeftTitle}>
-            <Text style={styles.title}>Welcome Back!</Text>
-          </View>
-          <View style={styles.pictureNameRow}>
-            <View style={styles.userPictureShadow}>
-              <Image
-                source={{ uri: currentUser.pictureUrl }}
-                style={styles.userPicture}
-              />
-            </View>
+        </View>
+        {/* <View style={styles.pictureNameRow}>
 
             <View style={styles.userInfoContainer}>
               <Text style={styles.name} numberOfLines={1} adjustsFontSizeToFit>
@@ -139,30 +150,47 @@ const HomeView = ({ navigation }) => {
               <Text style={styles.year}>{currentUser.year || 0}</Text>
               <Text style={styles.location}>{currentUser.city}</Text>
             </View>
-          </View>
-        </View>
-      </View>
-
-      {/* Calendar */}
-      <View style={{ marginTop: hp(10) }}>
-        <Text style={styles2.sectionTitle}>Calendar</Text>
-        <View style={{ marginTop: hp(3) }}>
-          <Calendar
-            events={thisMonthEventDates}
-            state={CalendarState}
-            openCalendar={() =>
-              navigation.navigate('Calendar', {
-                currentMonth: CalendarState.month,
-              })
-            }
-            currentEvent={thisMonthEventDates[currentEventIndex]}
-            previousEvent={thisMonthEventDates[previousEventIndex]}
+          </View> */}
+        <View style={styles.userPictureShadow}>
+          <Image
+            source={{ uri: currentUser.pictureUrl }}
+            style={styles.userPicture}
           />
         </View>
+        <Text style={[styles.name, { marginTop: hp(2) }]}>
+          {currentUser.firstName + ' ' + currentUser.lastName + ', '}
+          <Text style={styles.userType}>
+            {_String.capitalize(currentUser.type)}
+          </Text>
+        </Text>
+        <Text style={styles.location}>{currentUser.pharmacy}</Text>
+      </LinearGradient>
+
+      {/* Calendar */}
+      <View
+        style={{ marginTop: hp(2), alignItems: 'flex-start', width: '85%' }}>
+        <Text style={styles2.sectionTitle}>Your Calendar</Text>
+      </View>
+      <View style={{ marginTop: hp(2) }}>
+        <Calendar
+          events={thisMonthEventDates}
+          state={CalendarState}
+          openCalendar={() =>
+            navigation.navigate('Calendar', {
+              currentMonth: CalendarState.month,
+            })
+          }
+          currentEvent={thisMonthEventDates[currentEventIndex]}
+          previousEvent={thisMonthEventDates[previousEventIndex]}
+        />
       </View>
 
       {/* Demands */}
-      <View style={{ marginTop: hp(2) }}>
+      {/* <Text
+        style={[styles2.sectionSubtitle, { width: '85%', marginTop: hp(2) }]}>
+        Locums qui ont postulé
+      </Text> */}
+      <View style={[styles.flatListContainer, { marginTop: hp(3) }]}>
         <FlatList
           ref={horizontalFlatListRef}
           data={currentLocumTags.length ? currentLocumTags : noLocumTags}
@@ -207,31 +235,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    backgroundColor: colors.main,
-    height: responsive({ $480: hp(25), $812: hp(29) }),
+    // backgroundColor: colors.main,
+    height: hp(33),
     width: '100%',
-    borderBottomLeftRadius: wp(15),
-    borderBottomRightRadius: wp(15),
+    // borderBottomLeftRadius: wp(15),
+    // borderBottomRightRadius: wp(15),
     alignItems: 'center',
     overflow: 'visible',
   },
   headerShadow: {
-    shadowColor: '#F3E8E7',
-    shadowOpacity: 0.7,
-    shadowRadius: 1,
-    shadowOffset: { height: 5, width: 2 },
-  },
-  headerInnerContainer: {
-    width: '85%',
-    height: '100%',
-    overflow: 'visible',
+    // shadowColor: '#F3E8E7',
+    // shadowOpacity: 0.7,
+    // shadowRadius: 1,
+    // shadowOffset: { height: 5, width: 2 },
   },
   headerBar: {
-    height: hp(10),
-    width: '100%',
+    height: hp(8),
+    // backgroundColor: 'red',
+    width: '92%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   headerBarText: {
     marginTop: hp(3),
@@ -239,6 +263,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
+  },
+  flatListContainer: {
+    height: hp(13),
   },
   topLeftTitle: {
     marginTop: hp(0),
@@ -257,17 +284,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   userPicture: {
-    height: responsive({ $480: hp(16), $812: hp(19) }),
-    width: responsive({ $480: wp(25), $812: wp(29) }),
-    borderRadius: 22,
+    height: hp(16),
+    width: hp(16),
+    borderRadius: hp(50),
     resizeMode: 'cover',
     backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: 'white',
   },
   userPictureShadow: {
-    shadowColor: '#F3E8E7',
-    shadowOpacity: 0.7,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
     shadowRadius: 1,
-    shadowOffset: { height: 7, width: 0 },
+    shadowOffset: { height: 1, width: 1 },
   },
   userInfoContainer: {
     width: wp(40),
@@ -297,12 +326,23 @@ const styles = StyleSheet.create({
     width: hp(2),
     resizeMode: 'contain',
   },
+  userType: {
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: 10,
+  },
 });
 
 const styles2 = StyleSheet.create({
   sectionTitle: {
-    color: '#494949',
+    // color: '#494949',
+    color: colors.main,
     fontSize: 22,
+    fontWeight: '700',
+  },
+  sectionSubtitle: {
+    color: colors.main,
+    fontSize: 14,
     fontWeight: '700',
   },
   sectionTitle2: {

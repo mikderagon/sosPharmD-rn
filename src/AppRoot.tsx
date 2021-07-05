@@ -16,7 +16,7 @@ const AppRoot = () => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <StateProvider>
-      <StatusBar animated barStyle="dark-content" showHideTransition="fade" />
+      <StatusBar animated barStyle="light-content" showHideTransition="fade" />
       <Navigator />
     </StateProvider>
   );

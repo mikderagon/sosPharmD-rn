@@ -58,6 +58,7 @@ const SignInView = ({ navigation }) => {
           toValue: 2,
           duration: 1000,
           useNativeDriver: true,
+          easing: Easing.exp,
         }),
         Animated.timing(animatedValue, {
           toValue: 0,

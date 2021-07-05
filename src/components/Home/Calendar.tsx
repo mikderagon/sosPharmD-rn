@@ -36,6 +36,7 @@ const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const Calendar = (props: Props) => {
   const { openCalendar, currentEvent, previousEvent, events, state } = props;
+  // console.log(events);
 
   // const events = [];
   const getIndex = (eventDate: number) =>
@@ -46,11 +47,12 @@ const Calendar = (props: Props) => {
     let cells = [];
     cells.push(state.firstWeekdayOfMonthIndex + events[0] - 1);
     for (let i = 1; i < events.length; i++) {
-      cells.push(events[i] + 1);
+      cells.push(events[i] + state.firstWeekdayOfMonthIndex - 1);
     }
     return cells;
   }
   const cellList = createCellsList();
+  console.log(cellList);
   function mapToCell(n: number) {
     const index = events.findIndex(e => e === n);
     return cellList[index];

@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    backgroundColor: colors.regularBlue,
+    backgroundColor: colors.main,
     height: responsive({ $480: hp(25), $812: hp(29) }),
     width: '100%',
     borderBottomLeftRadius: wp(15),
@@ -216,10 +216,10 @@ const styles = StyleSheet.create({
     overflow: 'visible',
   },
   headerShadow: {
-    shadowColor: '#000',
+    shadowColor: '#F3E8E7',
+    shadowOpacity: 0.7,
     shadowRadius: 1,
-    shadowOffset: { height: 2, width: 0 },
-    shadowOpacity: 0.6,
+    shadowOffset: { height: 5, width: 2 },
   },
   headerInnerContainer: {
     width: '85%',
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 17,
     fontWeight: '400',
-    fontFamily: fonts.Light,
+    // fontFamily: fonts.Light,
   },
   pictureNameRow: {
     marginTop: hp(4),

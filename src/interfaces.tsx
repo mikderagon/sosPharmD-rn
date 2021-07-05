@@ -1,3 +1,5 @@
+import { User } from './models/User';
+
 export interface DateObject {
   day: number;
   month: number;
@@ -13,19 +15,6 @@ export interface CalendarEvent {
   interestedLocums?: number[]; // User Ids
   acceptedLocums?: number[];
 }
-
-export interface User {
-  city: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  id: number;
-  pictureUrl: string;
-  year: number;
-  educationalInstitution: string;
-  type: string;
-}
-
 export interface LocumTag {
   user: User;
   date: {

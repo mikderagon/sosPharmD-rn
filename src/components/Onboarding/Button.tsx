@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     height: hp(5),
     width: wp(30),
     backgroundColor: '#fff',
-    borderColor: colors.regularBlue,
+    borderColor: colors.main,
     borderRadius: 20,
     borderWidth: 2,
     alignItems: 'center',

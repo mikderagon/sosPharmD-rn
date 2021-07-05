@@ -139,10 +139,10 @@ const CalendarView = ({ navigation }) => {
           <View
             style={[
               styles.legendDot,
-              { backgroundColor: colors.regularBlue, marginRight: 5 },
+              { backgroundColor: colors.main, marginRight: 5 },
             ]}
           />
-          <Text style={[styles.legendText, { color: colors.regularBlue }]}>
+          <Text style={[styles.legendText, { color: colors.main }]}>
             Fulfilled
           </Text>
         </View>
@@ -206,7 +206,7 @@ const CalendarView = ({ navigation }) => {
             selectionState
               ? {
                   backgroundColor: '#fff',
-                  borderColor: selectedDays.length ? colors.regularBlue : 'red',
+                  borderColor: selectedDays.length ? colors.main : 'red',
                 }
               : {},
           ]}>
@@ -214,7 +214,7 @@ const CalendarView = ({ navigation }) => {
             style={[
               styles.addButtonText,
               selectionState
-                ? { color: selectedDays.length ? colors.regularBlue : 'red' }
+                ? { color: selectedDays.length ? colors.main : 'red' }
                 : {},
             ]}>
             {selectionState
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: hp(10),
     width: '100%',
-    // backgroundColor: colors.regularBlue,
+    // backgroundColor: colors.main,
     alignItems: 'center',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 170,
     borderRadius: 50,
-    backgroundColor: colors.regularBlue,
+    backgroundColor: colors.main,
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: '#fff',

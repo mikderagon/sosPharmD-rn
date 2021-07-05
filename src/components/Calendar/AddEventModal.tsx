@@ -144,13 +144,13 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   add: {
-    color: colors.regularBlue,
+    color: colors.main,
     fontWeight: '600',
     fontSize: 14,
     textAlign: 'right',
   },
   modalHeaderTitle: {
-    color: colors.regularBlue,
+    color: colors.main,
     fontSize: 17,
     fontWeight: '300',
   },

@@ -74,6 +74,7 @@ const Locum = (props: Props) => {
   } = user;
   const Softwares = [1, 2, 3].map((s, index) => (
     <View
+      key={index.toString()}
       style={[
         styles.softwareTag,
         { borderColor: getRandomColor(), marginLeft: index === 0 ? 0 : 10 },

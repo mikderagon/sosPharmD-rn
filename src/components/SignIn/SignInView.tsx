@@ -173,7 +173,7 @@ const SignInView = ({ navigation }) => {
           onPress={() => {
             // navigation.navigate('forgotPassword');
           }}>
-          <Text style={[styles.boldText, { color: colors.regularBlue }]}>
+          <Text style={[styles.boldText, { color: colors.main }]}>
             {state.language === 'french'
               ? 'Mot de passe oublié?'
               : 'Forgot Password?'}
@@ -192,7 +192,7 @@ const SignInView = ({ navigation }) => {
               ? 'Pas de compte?'
               : "Don't have an account?"}
           </Text>
-          <Text style={[styles.boldText, { color: colors.regularBlue }]}>
+          <Text style={[styles.boldText, { color: colors.main }]}>
             {' '}
             {state.language === 'french' ? 'Enregistrez-vous' : 'Sign Up'}
           </Text>

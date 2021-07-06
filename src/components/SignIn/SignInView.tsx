@@ -195,7 +195,7 @@ const SignInView = ({ navigation }) => {
           </Text>
           <Text style={[styles.boldText, { color: colors.main }]}>
             {' '}
-            {state.language === 'french' ? 'Enregistrez-vous' : 'Sign Up'}
+            {state.language === 'french' ? 'Inscrivez-vous' : 'Sign Up'}
           </Text>
         </TouchableOpacity>
       </View>

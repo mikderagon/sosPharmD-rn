@@ -32,6 +32,7 @@ import Locum from './Locum';
 import CalendarEventTag from './CalendarEventTag';
 import { LocumTag } from '../../interfaces';
 import LinearGradient from 'react-native-linear-gradient';
+import { useRoute } from '@react-navigation/native';
 
 const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
@@ -52,11 +53,11 @@ function hexToRgba(hex: string, opacity: number) {
 }
 
 const GRADIENT_COLORS = [
+  hexToRgba(colors.main, 0.6),
   hexToRgba(colors.main, 0.8),
-  hexToRgba(colors.main, 0.9),
   hexToRgba(colors.main, 1),
-  hexToRgba(colors.main, 0.9),
   hexToRgba(colors.main, 0.8),
+  hexToRgba(colors.main, 0.6),
 ];
 
 const HomeView = ({ navigation }) => {
@@ -120,29 +121,28 @@ const HomeView = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={GRADIENT_COLORS}
-        style={[styles.header, styles.headerShadow]}>
-        <View style={styles.headerBar}>
-          <View style={styles.headerBarText}>
-            <View style={styles.topLeftTitle}>
-              <Text style={styles.title}>
-                Hi,{' '}
-                <Text style={[styles.title, { fontWeight: '800' }]}>
-                  {currentUser.firstName}!
+      <View style={[styles.header, styles.headerShadow]}>
+        <LinearGradient colors={GRADIENT_COLORS} style={styles.gradientView}>
+          <View style={styles.headerBar}>
+            <View style={styles.headerBarText}>
+              <View style={styles.topLeftTitle}>
+                <Text style={styles.title}>
+                  Hi,{' '}
+                  <Text style={[styles.title, { fontWeight: '800' }]}>
+                    {currentUser.firstName}!
+                  </Text>
                 </Text>
-              </Text>
+              </View>
+              <TouchableOpacity
+                hitSlop={{ top: 10, bottom: 30, left: 15, right: 15 }}
+                onPress={() => {
+                  navigation.navigate('Settings');
+                }}>
+                <Image source={verticalDots} style={styles.verticalDots} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              hitSlop={{ top: 10, bottom: 30, left: 15, right: 15 }}
-              onPress={() => {
-                navigation.navigate('Settings');
-              }}>
-              <Image source={verticalDots} style={styles.verticalDots} />
-            </TouchableOpacity>
           </View>
-        </View>
-        {/* <View style={styles.pictureNameRow}>
+          {/* <View style={styles.pictureNameRow}>
 
             <View style={styles.userInfoContainer}>
               <Text style={styles.name} numberOfLines={1} adjustsFontSizeToFit>
@@ -153,21 +153,21 @@ const HomeView = ({ navigation }) => {
               <Text style={styles.location}>{currentUser.city}</Text>
             </View>
           </View> */}
-        <View style={[styles.userPictureShadow, { marginTop: hp(1) }]}>
-          <Image
-            source={{ uri: currentUser.pictureUrl }}
-            style={styles.userPicture}
-          />
-        </View>
-        <Text style={[styles.name, { marginTop: hp(2) }]}>
-          {currentUser.firstName + ' ' + currentUser.lastName + ', '}
-          <Text style={styles.userType}>
-            {_String.capitalize(currentUser.type)}
+          <View style={[styles.userPictureShadow, { marginTop: hp(1) }]}>
+            <Image
+              source={{ uri: currentUser.pictureUrl }}
+              style={styles.userPicture}
+            />
+          </View>
+          <Text style={[styles.name, { marginTop: hp(2) }]}>
+            {currentUser.firstName + ' ' + currentUser.lastName + ', '}
+            <Text style={styles.userType}>
+              {_String.capitalize(currentUser.type)}
+            </Text>
           </Text>
-        </Text>
-        <Text style={styles.location}>{currentUser.pharmacy}</Text>
-      </LinearGradient>
-
+          <Text style={styles.location}>{currentUser.pharmacy}</Text>
+        </LinearGradient>
+      </View>
       {/* Calendar */}
       <View
         style={{
@@ -276,16 +276,21 @@ const styles = StyleSheet.create({
     // backgroundColor: colors.main,
     height: hp(33),
     width: '100%',
-    // borderBottomLeftRadius: wp(15),
-    // borderBottomRightRadius: wp(15),
+    borderBottomLeftRadius: wp(9),
+    borderBottomRightRadius: wp(9),
     alignItems: 'center',
-    overflow: 'visible',
+    overflow: 'hidden',
   },
   headerShadow: {
     // shadowColor: '#F3E8E7',
     // shadowOpacity: 0.7,
     // shadowRadius: 1,
     // shadowOffset: { height: 5, width: 2 },
+  },
+  gradientView: {
+    height: hp(33),
+    width: '100%',
+    alignItems: 'center',
   },
   headerBar: {
     height: hp(8),

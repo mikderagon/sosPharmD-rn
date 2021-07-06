@@ -45,6 +45,7 @@
     "@types/react-native": "^0.64.10",
     "@types/react-test-renderer": "^17.0.1",
     "@types/underscore": "^1.11.2",
+    "@types/underscore.string": "^0.0.38",
     "babel-jest": "^26.6.3",
     "eslint": "^7.26.0",
     "jest": "^26.6.3",

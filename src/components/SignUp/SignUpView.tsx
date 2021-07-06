@@ -99,7 +99,7 @@ const SignUpView = ({ navigation }) => {
             onPress={() => {
               navigation.navigate('Home');
             }}
-            text={state.language === 'french' ? "S'enregistrer" : 'Sign Up'}
+            text={state.language === 'french' ? "S'inscrire" : 'Sign Up'}
           />
         </View>
       </View>

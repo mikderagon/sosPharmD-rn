@@ -6,11 +6,11 @@
  * @flow strict-local
  */
 
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { StatusBar, TouchableOpacity } from 'react-native';
 import { Image, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
@@ -24,6 +24,7 @@ import SignIn from './components/SignIn/SignInView';
 import SignUp from './components/SignUp/SignUpView';
 import { StackParamList } from './types';
 import { store } from './store';
+import { StatusBarStyle } from 'react-native';
 
 const backCaret = require('./assets/images/backCaret.png');
 
@@ -43,8 +44,8 @@ const defaultTheme = {
 
 const Navigator = () => {
   const { state } = useContext(store);
-  const initialRouteName = 'Onboarding';
-  // const initialRouteName = 'Home';
+  // const initialRouteName = 'Onboarding';
+  const initialRouteName = 'Home';
   // const initialRouteName = 'SignUp';
   // const initialRouteName = 'SignIn';
   return (
@@ -68,10 +69,7 @@ const Navigator = () => {
           name="SignUp"
           component={SignUp}
           options={({ navigation }) => ({
-            title:
-              state.language === 'french'
-                ? 'Enregistrement de locum'
-                : 'Locum Registration',
+            title: state.language === 'french' ? 'Inscription' : 'Registration',
             headerStyle: {
               backgroundColor: '#fff',
               borderBottomColor: '#303D5C',

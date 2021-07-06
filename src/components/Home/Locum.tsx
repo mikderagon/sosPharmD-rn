@@ -122,12 +122,12 @@ const styles = StyleSheet.create({
   outsideImageContainer: {
     width: locumSize.width * 0.6,
     marginLeft: locumSize.width * 0.03,
-    top: locumSize.height * 0.15,
+    top: locumSize.height * 0.18,
     alignSelf: 'flex-start',
   },
   name: {
     fontWeight: '600',
-    fontSize: 20,
+    fontSize: 17,
     color: '#494949',
   },
   school: {

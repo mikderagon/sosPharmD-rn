@@ -53,11 +53,11 @@ function hexToRgba(hex: string, opacity: number) {
 }
 
 const GRADIENT_COLORS = [
-  hexToRgba(colors.main, 0.6),
-  hexToRgba(colors.main, 0.8),
   hexToRgba(colors.main, 1),
+  hexToRgba(colors.main, 0.9),
   hexToRgba(colors.main, 0.8),
-  hexToRgba(colors.main, 0.6),
+  hexToRgba(colors.main, 0.9),
+  hexToRgba(colors.main, 1),
 ];
 
 const HomeView = ({ navigation }) => {
@@ -282,9 +282,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   headerShadow: {
-    // shadowColor: '#F3E8E7',
-    // shadowOpacity: 0.7,
-    // shadowRadius: 1,
+    // shadowColor: '#000',
+    // shadowOpacity: 0.5,
+    // shadowRadius: 100,
     // shadowOffset: { height: 5, width: 2 },
   },
   gradientView: {

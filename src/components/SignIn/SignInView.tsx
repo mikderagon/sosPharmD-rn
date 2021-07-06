@@ -6,39 +6,52 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
-import { useEffect } from 'react';
-import { Alert, Easing } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import React, { useContext, useEffect, useState } from 'react';
 import {
+  Alert,
+  Animated,
+  Easing,
   Image,
-  ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Animated,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import { sharedStyles } from '../../styles/shared';
+import { store } from '../../store';
 import colors from '../../styles/colors';
-import { NavigationProps } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
 import LoginButton from './Button';
 import Input from './Input';
-import { useContext } from 'react';
-import { store } from '../../store';
 
-const logo = require('../../assets/images/logo.png');
-const backgroundSrc = require('../../assets/images/signInBackground.png');
 const usernameImage = require('../../assets/images/usernameImage.png');
 const passwordImage = require('../../assets/images/passwordImage.png');
 
 const SignInView = ({ navigation }) => {
   const { state, dispatch } = useContext(store);
-  const { users } = state;
+
+  function handleSignIn(email: string, password: string) {
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(currentUser => {
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          currentUser,
+        });
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        });
+      })
+      .catch(e => {
+        console.log(e);
+        Alert.alert('no user');
+      });
+  }
 
   const animatedValue = new Animated.Value(0);
   const [email, setEmail] = useState('');
@@ -130,21 +143,7 @@ const SignInView = ({ navigation }) => {
         <LoginButton
           onPress={() => {
             // login logic TODO: persist user connection, and refactor in store.tsx
-            const validUser = users.find(
-              user => user.email === email && user.password === password,
-            );
-            if (validUser) {
-              dispatch({
-                type: 'SET_CURRENT_USER',
-                currentUser: validUser,
-              });
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'Home' }],
-              });
-            } else {
-              Alert.alert('No user');
-            }
+            handleSignIn(email, password);
           }}
           text={state.language === 'french' ? 'Se connecter' : 'Log in'}
         />

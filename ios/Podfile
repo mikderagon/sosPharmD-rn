@@ -5,7 +5,6 @@ platform :ios, '10.0'
 
 target 'sosPharmD' do
   config = use_native_modules!
-  pod 'Firebase/Analytics'
 
   use_react_native!(
     :path => config[:reactNativePath],

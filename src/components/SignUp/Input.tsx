@@ -16,6 +16,7 @@ import {
   TextInput,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import colors from '../../styles/colors';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,

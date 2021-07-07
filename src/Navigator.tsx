@@ -6,25 +6,21 @@
  * @flow strict-local
  */
 
-import { NavigationContainer, useRoute } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { StatusBar, TouchableOpacity } from 'react-native';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
 import Calendar from './components/Calendar/CalendarView';
-import Locums from './components/Locums/LocumsView';
 import Home from './components/Home/HomeView';
-import Settings from './components/Settings/SettingsView';
-import Menu from './components/Menu/MenuView';
+import Locums from './components/Locums/LocumsView';
 import Onboarding from './components/Onboarding/OnboardingView';
+import Settings from './components/Settings/SettingsView';
 import SignIn from './components/SignIn/SignInView';
 import SignUp from './components/SignUp/SignUpView';
-import { StackParamList } from './types';
 import { store } from './store';
-import { StatusBarStyle } from 'react-native';
+import { StackParamList } from './types';
 
 const backCaret = require('./assets/images/backCaret.png');
 
@@ -45,8 +41,8 @@ const defaultTheme = {
 const Navigator = () => {
   const { state } = useContext(store);
   // const initialRouteName = 'Onboarding';
-  const initialRouteName = 'Home';
-  // const initialRouteName = 'SignUp';
+  // const initialRouteName = 'Home';
+  const initialRouteName = 'SignUp';
   // const initialRouteName = 'SignIn';
   return (
     <NavigationContainer theme={defaultTheme}>

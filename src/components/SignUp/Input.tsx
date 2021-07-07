@@ -28,6 +28,7 @@ interface Props {
   placeholder: string;
   secured?: boolean;
   autoCapitalize?: boolean;
+  autoFocus?: boolean;
 }
 
 const Input = (props: Props) => {
@@ -37,12 +38,14 @@ const Input = (props: Props) => {
     placeholder,
     secured = false,
     autoCapitalize = false,
+    autoFocus = false,
   } = props;
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{inputName}</Text>
       <View style={{ marginTop: hp(2) }}>
         <TextInput
+          autoFocus={autoFocus}
           secureTextEntry={secured}
           style={styles.input}
           onChangeText={set}

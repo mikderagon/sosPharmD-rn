@@ -84,6 +84,7 @@ const HomeView = ({ navigation }) => {
   const { state } = useContext(store);
   const { currentUser, users } = state;
   const CalendarState = dates.getCalendarState(new Date());
+  console.log('current user is', currentUser);
 
   // TODO: turn into api call
   const thisMonthEvents = state.events.filter(
@@ -162,7 +163,7 @@ const HomeView = ({ navigation }) => {
           <Text style={[styles.name, { marginTop: hp(2) }]}>
             {currentUser.firstName + ' ' + currentUser.lastName + ', '}
             <Text style={styles.userType}>
-              {_String.capitalize(currentUser.type)}
+              {_String.capitalize(currentUser.accountType)}
             </Text>
           </Text>
           <Text style={styles.location}>{currentUser.pharmacy}</Text>

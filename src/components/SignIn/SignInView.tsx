@@ -7,6 +7,7 @@
  */
 
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Alert,
@@ -37,6 +38,13 @@ const SignInView = ({ navigation }) => {
   function handleSignIn(email: string, password: string) {
     auth()
       .signInWithEmailAndPassword(email, password)
+      .then(async currentUser => {
+        const { _data } = await firestore()
+          .collection('users')
+          .doc(currentUser.user.uid)
+          .get();
+        return { email: currentUser.user.email, ..._data };
+      })
       .then(currentUser => {
         dispatch({
           type: 'SET_CURRENT_USER',

@@ -7,6 +7,7 @@
  */
 
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useContext } from 'react';
@@ -23,7 +24,7 @@ import Button from '../SignUp/Button';
 import Input from './Input';
 
 const SignUpLocumView = ({ navigation }) => {
-  const { state } = useContext(store);
+  const { state, dispatch } = useContext(store);
   const [isLocum, setIsLocum] = useState(true);
   const [userData, setUserData] = useState({});
   const [allFieldsEntered, setAllFieldsEntered] = useState(false);
@@ -33,6 +34,7 @@ const SignUpLocumView = ({ navigation }) => {
       key: 'firstName',
       value: state.language === 'french' ? 'Prénom' : 'First Name',
       autoCapitalize: true,
+      autoFocus: true,
     },
     {
       key: 'lastName',
@@ -107,12 +109,39 @@ const SignUpLocumView = ({ navigation }) => {
       console.log(userData);
       auth()
         .createUserWithEmailAndPassword(userData.email, userData.password)
-        .then(newUser => {
+        .then(async newUser => {
           console.log('new user signed up:', newUser);
+          const requiredData = {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            pictureUrl: null,
+            address: userData.city,
+            city: userData.city,
+            accountType: userData.accountType,
+          };
           // upsert into firestore
+          const eh = await firestore()
+            .collection('users')
+            .doc(newUser.user.uid)
+            .set(
+              userData.accountType === 'locum'
+                ? {
+                    ...requiredData,
+                    birthdate: userData.birthdate,
+                    educationalInstitution: userData.educationalInstitution,
+                  }
+                : {
+                    ...requiredData,
+                    pharmacy: userData.pharmacy,
+                  },
+            );
+          console.log('eh', eh);
         })
-        .then(createdUser => {
-          console.log('created this user document:', createdUser);
+        .then(() => {
+          // dispatch({
+          //   type: 'SET_CURRENT_USER',
+          //   currentUser: createdUser,
+          // });
           navigation.reset({
             index: 0,
             routes: [{ name: 'Home' }],
@@ -192,6 +221,7 @@ const SignUpLocumView = ({ navigation }) => {
                 <Input
                   inputName={item.value}
                   placeholder={item.value}
+                  autoFocus={item.autoFocus}
                   autoCapitalize={item.autoCapitalize}
                   secured={item.secured}
                   set={(value: string) =>

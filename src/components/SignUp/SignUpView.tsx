@@ -106,11 +106,9 @@ const SignUpLocumView = ({ navigation }) => {
 
   function handleSignUp(userData: any) {
     if (allFieldsEntered) {
-      console.log(userData);
       auth()
         .createUserWithEmailAndPassword(userData.email, userData.password)
         .then(async newUser => {
-          console.log('new user signed up:', newUser);
           const requiredData = {
             firstName: userData.firstName,
             lastName: userData.lastName,
@@ -120,7 +118,7 @@ const SignUpLocumView = ({ navigation }) => {
             accountType: userData.accountType,
           };
           // upsert into firestore
-          const eh = await firestore()
+          firestore()
             .collection('users')
             .doc(newUser.user.uid)
             .set(
@@ -135,13 +133,22 @@ const SignUpLocumView = ({ navigation }) => {
                     pharmacy: userData.pharmacy,
                   },
             );
-          console.log('eh', eh);
+          return newUser;
         })
-        .then(() => {
-          // dispatch({
-          //   type: 'SET_CURRENT_USER',
-          //   currentUser: createdUser,
-          // });
+        .then(() => {})
+        .then(async newUser => {
+          // retrieve from firestore
+          const { _data } = await firestore()
+            .collection('users')
+            .doc(newUser.user.uid)
+            .get();
+          return { ..._data, email: newUser.user.email };
+        })
+        .then(currentUser => {
+          dispatch({
+            type: 'SET_CURRENT_USER',
+            currentUser,
+          });
           navigation.reset({
             index: 0,
             routes: [{ name: 'Home' }],

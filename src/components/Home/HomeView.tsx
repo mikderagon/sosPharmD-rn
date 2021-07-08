@@ -38,6 +38,14 @@ const fourSquares = require('../../assets/images/fourSquares.png');
 const verticalDots = require('../../assets/images/verticalDots.png');
 const calendar = require('../../assets/images/calendarIcon.png');
 const locumIcon = require('../../assets/images/locumIcon.png');
+const defaultAvatar = {
+  owner: {
+    male: { uri: 'https://image.flaticon.com/icons/png/512/1152/1152624.png' },
+    female: {
+      uri: 'https://image.flaticon.com/icons/png/512/1152/1152623.png',
+    },
+  },
+};
 
 function hexToRgba(hex: string, opacity: number) {
   let c;
@@ -156,7 +164,11 @@ const HomeView = ({ navigation }) => {
           </View> */}
           <View style={[styles.userPictureShadow, { marginTop: hp(1) }]}>
             <Image
-              source={{ uri: currentUser.pictureUrl }}
+              source={
+                currentUser.pictureUrl
+                  ? { uri: currentUser.pictureUrl }
+                  : defaultAvatar.owner.male
+              }
               style={styles.userPicture}
             />
           </View>

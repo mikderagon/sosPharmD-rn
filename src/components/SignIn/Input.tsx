@@ -50,14 +50,18 @@ const Input = (props: Props) => {
   );
 };
 
+const ComponentSize = {
+  width: wp(80),
+};
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     borderColor: '#ddd',
     borderWidth: 2,
-    borderRadius: 50,
-    height: hp(5.5),
-    width: wp(80),
+    borderRadius: ComponentSize.width,
+    height: ComponentSize.width * 0.15,
+    width: ComponentSize.width,
     flexDirection: 'row',
     alignItems: 'center',
   },

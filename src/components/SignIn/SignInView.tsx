@@ -57,7 +57,7 @@ const SignInView = ({ navigation }) => {
       })
       .catch(e => {
         console.log(e);
-        Alert.alert('no user');
+        Alert.alert('Aucun compte trouvé sous cet identifiant');
       });
   }
 
@@ -95,7 +95,7 @@ const SignInView = ({ navigation }) => {
       {/* title */}
       <View
         style={{
-          marginTop: hp(16),
+          marginTop: hp(13),
           alignItems: 'flex-start',
           alignSelf: 'flex-start',
           marginLeft: wp(11),
@@ -156,27 +156,8 @@ const SignInView = ({ navigation }) => {
           text={state.language === 'french' ? 'Se connecter' : 'Log in'}
         />
       </View>
-      <View style={{ marginTop: hp(5) }}>
-        <Text style={styles.or}>
-          {state.language === 'french'
-            ? 'ou connectez-vous avec'
-            : 'or connect using one of these'}
-        </Text>
-      </View>
-      {/* facebook */}
-      <View style={{ marginTop: hp(2) }}>
-        <TouchableOpacity>
-          <Image source={require('../../assets/images/facebookButton.png')} />
-        </TouchableOpacity>
-      </View>
-      {/* apple */}
-      <View style={{ marginTop: hp(3) }}>
-        <TouchableOpacity>
-          <Image source={require('../../assets/images/signWithApple.png')} />
-        </TouchableOpacity>
-      </View>
       {/* forgot password */}
-      <View style={{ marginTop: hp(5) }}>
+      <View style={{ marginTop: hp(3) }}>
         <TouchableOpacity
           onPress={() => {
             // navigation.navigate('forgotPassword');
@@ -189,7 +170,7 @@ const SignInView = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       {/*  */}
-      <View style={{ marginTop: hp(4) }}>
+      <View style={{ marginTop: hp(3) }}>
         <TouchableOpacity
           style={styles.signUp}
           onPress={() => {

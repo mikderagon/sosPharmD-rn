@@ -23,15 +23,12 @@ interface Props {
 
 const Button = (props: Props) => {
   const { onPress, text = 'Log in', active = false } = props;
-  const inactiveOpacity = 0.4;
   return active ? (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   ) : (
-    <TouchableOpacity
-      activeOpacity={inactiveOpacity}
-      style={styles.inactiveContainer}>
+    <TouchableOpacity activeOpacity={1} style={styles.inactiveContainer}>
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   );

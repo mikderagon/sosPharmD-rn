@@ -25,7 +25,7 @@ import {
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
 
-const backCaret = require('../../assets/images/backCaret.png');
+const backCaret = require('assets/images/backCaret.png');
 
 const SettingsView = ({ navigation }) => {
   return (

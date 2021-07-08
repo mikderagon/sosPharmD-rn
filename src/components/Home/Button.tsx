@@ -7,13 +7,19 @@
  */
 
 import React from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
 
-const AddButton = ({ navigation }) => {
+interface Props {
+  text?: string;
+  onPress: () => void;
+}
+
+const Button = (props: Props) => {
+  const { onPress, text = 'Confirm' } = props;
   return (
-    <TouchableOpacity style={styles.container}>
-      <Text>+</Text>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      <Text>{text}</Text>
     </TouchableOpacity>
   );
 };
@@ -29,4 +35,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddButton;
+export default Button;

@@ -22,7 +22,7 @@ import SignUp from './components/SignUp/SignUpView';
 import { store } from './store';
 import { StackParamList } from './types';
 
-const backCaret = require('./assets/images/backCaret.png');
+const backCaret = require('assets/images/backCaret.png');
 
 const Stack = createStackNavigator<StackParamList>();
 

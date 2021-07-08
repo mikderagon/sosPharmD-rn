@@ -29,8 +29,8 @@ import {
 import LoginButton from './Button';
 import Input from './Input';
 
-const usernameImage = require('../../assets/images/usernameImage.png');
-const passwordImage = require('../../assets/images/passwordImage.png');
+const usernameImage = require('assets/images/usernameImage.png');
+const passwordImage = require('assets/images/passwordImage.png');
 
 const SignInView = ({ navigation }) => {
   const { state, dispatch } = useContext(store);
@@ -38,17 +38,21 @@ const SignInView = ({ navigation }) => {
   function handleSignIn(email: string, password: string) {
     auth()
       .signInWithEmailAndPassword(email, password)
-      .then(async currentUser => {
+      .then(async user => {
         const { _data } = await firestore()
           .collection('users')
-          .doc(currentUser.user.uid)
+          .doc(user.user.uid)
           .get();
-        return { email: currentUser.user.email, ..._data };
+        return {
+          email: user.user.email,
+          ..._data,
+          emailVerified: user.user.emailVerified,
+        };
       })
-      .then(currentUser => {
+      .then(user => {
         dispatch({
           type: 'SET_CURRENT_USER',
-          currentUser,
+          currentUser: user,
         });
         navigation.reset({
           index: 0,

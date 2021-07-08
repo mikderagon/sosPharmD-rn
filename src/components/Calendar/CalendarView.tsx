@@ -29,7 +29,7 @@ import {
 import AddEventModal from './AddEventModal';
 import Calendar from './Calendar';
 
-const backCaret = require('../../assets/images/backCaret.png');
+const backCaret = require('assets/images/backCaret.png');
 
 const CalendarView = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);

@@ -91,6 +91,7 @@ const SignUpLocumView = ({ navigation }) => {
     // },
   ];
 
+  // form completion verificator
   useEffect(() => {
     if (Object.keys(userData).length === fields.length) {
       let status = true;
@@ -104,11 +105,25 @@ const SignUpLocumView = ({ navigation }) => {
     }
   }, [userData, fields.length]);
 
+  function onAuthStateChanged(user) {
+    // console.log(user)
+  }
+
+  // auth state listener
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+
   function handleSignUp(userData: any) {
     if (allFieldsEntered) {
       auth()
         .createUserWithEmailAndPassword(userData.email, userData.password)
-        .then(async newUser => {
+        .then(newUser => {
+          return Promise.all([newUser, newUser.user.sendEmailVerification()]);
+        })
+        .then(async ([newUser, _]) => {
+          console.log('verification email sent');
           const requiredData = {
             firstName: userData.firstName,
             lastName: userData.lastName,
@@ -135,14 +150,17 @@ const SignUpLocumView = ({ navigation }) => {
             );
           return newUser;
         })
-        .then(() => {})
         .then(async newUser => {
           // retrieve from firestore
           const { _data } = await firestore()
             .collection('users')
             .doc(newUser.user.uid)
             .get();
-          return { ..._data, email: newUser.user.email };
+          return {
+            ..._data,
+            email: newUser.user.email,
+            emailVerified: newUser.user.emailVerified,
+          };
         })
         .then(currentUser => {
           dispatch({

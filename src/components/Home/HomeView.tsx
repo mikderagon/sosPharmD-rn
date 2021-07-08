@@ -6,6 +6,7 @@
  * @flow strict-local
  */
 
+import auth from '@react-native-firebase/auth';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   FlatList,
@@ -23,6 +24,7 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import * as dates from '../../utils/dates';
 import { responsive } from '../../utils/phoneSizes';
+import Modal from 'react-native-modal';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -33,11 +35,12 @@ import CalendarEventTag from './CalendarEventTag';
 import { LocumTag } from '../../interfaces';
 import LinearGradient from 'react-native-linear-gradient';
 import { useRoute } from '@react-navigation/native';
+import Button from './Button';
 
-const fourSquares = require('../../assets/images/fourSquares.png');
-const verticalDots = require('../../assets/images/verticalDots.png');
-const calendar = require('../../assets/images/calendarIcon.png');
-const locumIcon = require('../../assets/images/locumIcon.png');
+const fourSquares = require('assets/images/fourSquares.png');
+const verticalDots = require('assets/images/verticalDots.png');
+const calendar = require('assets/images/calendarIcon.png');
+const locumIcon = require('assets/images/locumIcon.png');
 const defaultAvatar = {
   owner: {
     male: { uri: 'https://image.flaticon.com/icons/png/512/1152/1152624.png' },
@@ -69,6 +72,25 @@ const GRADIENT_COLORS = [
 ];
 
 const HomeView = ({ navigation }) => {
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  const [previousEventIndex, setPreviousEventIndex] = useState(0);
+  const horizontalFlatListRef = useRef(null);
+  const { state } = useContext(store);
+  const { users } = state;
+  const CalendarState = dates.getCalendarState(new Date());
+  const { currentUser } = auth();
+
+  // TODO: turn into api call
+  const thisMonthEvents = state.events.filter(
+    event =>
+      event.year === CalendarState.year && event.month === CalendarState.month,
+  );
+  const thisMonthEventDates = _.flatten(
+    thisMonthEvents.map(e =>
+      Array.from({ length: e.interestedLocums.length }).fill(e.day),
+    ),
+  );
+
   useEffect(() => {
     const interval = setInterval(() => {
       const nextIndex =
@@ -86,24 +108,18 @@ const HomeView = ({ navigation }) => {
     }, 3000);
     return () => clearInterval(interval);
   });
-  const [currentEventIndex, setCurrentEventIndex] = useState(0);
-  const [previousEventIndex, setPreviousEventIndex] = useState(0);
-  const horizontalFlatListRef = useRef(null);
-  const { state } = useContext(store);
-  const { currentUser, users } = state;
-  const CalendarState = dates.getCalendarState(new Date());
-  console.log('current user is', currentUser);
 
-  // TODO: turn into api call
-  const thisMonthEvents = state.events.filter(
-    event =>
-      event.year === CalendarState.year && event.month === CalendarState.month,
-  );
-  const thisMonthEventDates = _.flatten(
-    thisMonthEvents.map(e =>
-      Array.from({ length: e.interestedLocums.length }).fill(e.day),
-    ),
-  );
+  // function onAuthStateChanged(user) {
+  //   console.log(currentUser);
+  //   console.log(user);
+  //   if (!user.emailVerified) {
+  //   }
+  // }
+
+  // useEffect(() => {
+  // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+  // return subscriber;
+  // }, []);
 
   // TODO: turn into api call
   let currentLocumTags: LocumTag[] = [];
@@ -130,6 +146,30 @@ const HomeView = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Modal
+        // onBackdropPress={() => {}}
+        isVisible={!currentUser.emailVerified}
+        animationIn="slideInUp"
+        animationInTiming={300}
+        animationOut="slideOutDown"
+        animationOutTiming={200}
+        backdropOpacity={0.5}
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <View style={styles.modalView}>
+          <Text>Verifiy your email</Text>
+          <Button
+            onPress={() => {
+              // check again currentuser to see if emailverified
+              // 1- refresh user
+              // 2- do the ssimple check
+              auth().currentUser?.reload();
+            }}
+          />
+        </View>
+      </Modal>
       <View style={[styles.header, styles.headerShadow]}>
         <LinearGradient colors={GRADIENT_COLORS} style={styles.gradientView}>
           <View style={styles.headerBar}>
@@ -205,7 +245,6 @@ const HomeView = ({ navigation }) => {
           previousEvent={thisMonthEventDates[previousEventIndex]}
         />
       </View>
-
       {/* Demands */}
       {/* <Text
         style={[styles2.sectionSubtitle, { width: '85%', marginTop: hp(2) }]}>
@@ -221,7 +260,6 @@ const HomeView = ({ navigation }) => {
         <Text style={styles2.sectionTitle2}>Your Locums</Text>
         <Image source={locumIcon} style={styles.calendarIcon} />
       </View>
-
       <View style={{ marginTop: hp(2) }}>
         <FlatList
           ref={horizontalFlatListRef}
@@ -284,6 +322,12 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     alignItems: 'center',
+  },
+  modalView: {
+    height: hp(40),
+    width: wp(70),
+    backgroundColor: '#fff',
+    borderRadius: 25,
   },
   header: {
     // backgroundColor: colors.main,

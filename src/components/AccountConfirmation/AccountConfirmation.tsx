@@ -7,19 +7,14 @@
  */
 
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
-import { sharedStyles } from '../../styles/shared';
+import LinearGradient from 'react-native-linear-gradient';
 import { NavigationProps } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import LottieView from 'lottie-react-native';
-import LinearGradient from 'react-native-linear-gradient';
-
-const spinner = require('../../assets/animations/spinner.json');
-const backgroundSrc = require('../../assets/images/signInBackground.png');
 
 const AccountConfirmation = ({ navigation }: NavigationProps) => {
   return (

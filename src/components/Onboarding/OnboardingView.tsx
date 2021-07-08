@@ -24,9 +24,9 @@ import {
 } from '../../utils/responsiveLayout';
 import Button from './Button';
 
-const OnboardingImage1 = require('../../assets/images/onboarding1.png');
-const OnboardingImage2 = require('../../assets/images/onboarding2.png');
-const OnboardingImage3 = require('../../assets/images/onboarding3.png');
+const OnboardingImage1 = require('assets/images/onboarding1.png');
+const OnboardingImage2 = require('assets/images/onboarding2.png');
+const OnboardingImage3 = require('assets/images/onboarding3.png');
 
 interface Props {}
 

@@ -17,25 +17,23 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import LinearGradient from 'react-native-linear-gradient';
+import Modal from 'react-native-modal';
 import _ from 'underscore';
 import _String from 'underscore.string';
+import { LocumTag } from '../../interfaces';
 import { store } from '../../store';
 import colors from '../../styles/colors';
-import fonts from '../../styles/fonts';
 import * as dates from '../../utils/dates';
-import { responsive } from '../../utils/phoneSizes';
-import Modal from 'react-native-modal';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import Calendar from './Calendar';
-import Locum from './Locum';
-import CalendarEventTag from './CalendarEventTag';
-import { LocumTag } from '../../interfaces';
-import LinearGradient from 'react-native-linear-gradient';
-import { useRoute } from '@react-navigation/native';
 import Button from './Button';
+import Calendar from './Calendar';
+import CalendarEventTag from './CalendarEventTag';
+import Locum from './Locum';
+import * as firestore from '../../actions/firestore';
 
 const fourSquares = require('assets/images/fourSquares.png');
 const verticalDots = require('assets/images/verticalDots.png');
@@ -76,11 +74,12 @@ const HomeView = ({ navigation }) => {
   const [previousEventIndex, setPreviousEventIndex] = useState(0);
   const horizontalFlatListRef = useRef(null);
   const { state } = useContext(store);
-  const { users } = state;
+  const { currentUser, users } = state;
   const CalendarState = dates.getCalendarState(new Date());
-  const { currentUser } = auth();
+  // const { currentUser } = auth();
 
   // TODO: turn into api call
+  console.log('what is events structure?', state.events);
   const thisMonthEvents = state.events.filter(
     event =>
       event.year === CalendarState.year && event.month === CalendarState.month,
@@ -126,8 +125,10 @@ const HomeView = ({ navigation }) => {
   for (const event of thisMonthEvents) {
     const theLocumsAre = event.interestedLocums;
     for (const locum of theLocumsAre) {
-      const userFound = users.find(user => user.id === locum);
-      if (userFound) {
+      // get user from firestore
+      // const userFound = users.find(user => user.id === locum);
+      // const userFound = firestore.findUser(locum);
+      if (false) {
         currentLocumTags.push({
           user: userFound,
           date: { day: event.day, month: event.month, year: event.year },
@@ -148,7 +149,7 @@ const HomeView = ({ navigation }) => {
     <View style={styles.container}>
       <Modal
         // onBackdropPress={() => {}}
-        isVisible={!currentUser.emailVerified}
+        // isVisible={!currentUser.emailVerified}
         animationIn="slideInUp"
         animationInTiming={300}
         animationOut="slideOutDown"

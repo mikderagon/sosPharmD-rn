@@ -1,8 +1,9 @@
-export interface User {
+export default interface User {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
-  location: string;
   pictureUrl: string;
+  city: string;
+  emailVerified?: boolean;
 }

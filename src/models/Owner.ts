@@ -1,5 +1,5 @@
-import { User } from './User';
+import { User } from '.';
 
-export interface Owner extends User {
+export default interface Owner extends User {
   pharmacy: string;
-}
+};

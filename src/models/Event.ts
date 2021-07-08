@@ -1,5 +1,11 @@
-export interface Event {
+export default interface Event {
   id: number;
   title: string;
-  OwnerId: number;
+  UserId: number;
+  address: string;
+  minExperience: string;
+  startTime: string;
+  endTime: string;
+  interestedLocums?: number[]; // User Ids
+  acceptedLocums?: number[];
 }

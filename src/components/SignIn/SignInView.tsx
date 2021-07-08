@@ -6,26 +6,26 @@
  * @flow strict-local
  */
 
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useMemo, memo } from 'react';
 import {
   Alert,
   Animated,
   Easing,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import * as firestore from '../../actions/firestore';
+import { Locum, Owner } from '../../models';
 import { store } from '../../store';
 import colors from '../../styles/colors';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
+import AnimatedTrail from './AnimatedTrail';
 import LoginButton from './Button';
 import Input from './Input';
 
@@ -36,20 +36,9 @@ const SignInView = ({ navigation }) => {
   const { state, dispatch } = useContext(store);
 
   function handleSignIn(email: string, password: string) {
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(async user => {
-        const { _data } = await firestore()
-          .collection('users')
-          .doc(user.user.uid)
-          .get();
-        return {
-          email: user.user.email,
-          ..._data,
-          emailVerified: user.user.emailVerified,
-        };
-      })
-      .then(user => {
+    firestore
+      .signIn(email, password)
+      .then((user: Locum | Owner) => {
         dispatch({
           type: 'SET_CURRENT_USER',
           currentUser: user,
@@ -60,39 +49,12 @@ const SignInView = ({ navigation }) => {
         });
       })
       .catch(e => {
-        console.log(e);
-        Alert.alert('Aucun compte trouvé sous cet identifiant');
+        Alert.alert(e);
       });
   }
 
-  const animatedValue = new Animated.Value(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(animatedValue, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-          easing: Easing.elastic(1),
-        }),
-        Animated.delay(400),
-        Animated.timing(animatedValue, {
-          toValue: 2,
-          duration: 1000,
-          useNativeDriver: true,
-          easing: Easing.exp,
-        }),
-        Animated.timing(animatedValue, {
-          toValue: 0,
-          duration: 0,
-          useNativeDriver: true,
-        }),
-      ]),
-    ).start();
-  });
 
   return (
     <View style={styles.container}>
@@ -105,24 +67,9 @@ const SignInView = ({ navigation }) => {
           marginLeft: wp(11),
         }}>
         <Text style={styles.appTitle}>
-          {state.language === 'french' ? 'Connexion' : 'Login'}
+          {state.language === 'fr' ? 'Connexion' : 'Login'}
         </Text>
-        <Animated.View
-          style={[
-            styles.customUnderline,
-            {
-              width: state.language === 'french' ? wp(50) : wp(40),
-              transform: [
-                {
-                  translateX: animatedValue.interpolate({
-                    inputRange: [0, 1, 2],
-                    outputRange: [-300, 0, 400],
-                  }),
-                },
-              ],
-            },
-          ]}
-        />
+        <AnimatedTrail language={state.language} />
       </View>
       {/* logo */}
       {/* <View style={{ marginTop: hp(1) }}>
@@ -135,7 +82,7 @@ const SignInView = ({ navigation }) => {
           set={setEmail}
           sourceImage={usernameImage}
           placeholder={
-            state.language === 'french' ? 'Addresse courrielle' : 'Email'
+            state.language === 'fr' ? 'Addresse courrielle' : 'Email'
           }
         />
       </View>
@@ -144,9 +91,7 @@ const SignInView = ({ navigation }) => {
         <Input
           set={setPassword}
           sourceImage={passwordImage}
-          placeholder={
-            state.language === 'french' ? 'Mot de passe' : 'Password'
-          }
+          placeholder={state.language === 'fr' ? 'Mot de passe' : 'Password'}
           secured
         />
       </View>
@@ -157,7 +102,7 @@ const SignInView = ({ navigation }) => {
             // login logic TODO: persist user connection, and refactor in store.tsx
             handleSignIn(email, password);
           }}
-          text={state.language === 'french' ? 'Se connecter' : 'Log in'}
+          text={state.language === 'fr' ? 'Se connecter' : 'Log in'}
         />
       </View>
       {/* forgot password */}
@@ -167,7 +112,7 @@ const SignInView = ({ navigation }) => {
             // navigation.navigate('forgotPassword');
           }}>
           <Text style={[styles.boldText, { color: colors.main }]}>
-            {state.language === 'french'
+            {state.language === 'fr'
               ? 'Mot de passe oublié?'
               : 'Forgot Password?'}
           </Text>
@@ -181,13 +126,13 @@ const SignInView = ({ navigation }) => {
             navigation.navigate('SignUp');
           }}>
           <Text style={styles.regularText}>
-            {state.language === 'french'
+            {state.language === 'fr'
               ? 'Pas de compte?'
               : "Don't have an account?"}
           </Text>
           <Text style={[styles.boldText, { color: colors.main }]}>
             {' '}
-            {state.language === 'french' ? 'Inscrivez-vous' : 'Sign Up'}
+            {state.language === 'fr' ? 'Inscrivez-vous' : 'Sign Up'}
           </Text>
         </TouchableOpacity>
       </View>

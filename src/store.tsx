@@ -1,21 +1,25 @@
 import React, { createContext, useReducer } from 'react';
 import _ from 'underscore';
-
-const users = require('./mockData/users.json');
-const events = require('./mockData/events.json');
+import firestore from '@react-native-firebase/firestore';
+import { User, Event, Locum, Owner } from './models';
 
 const initialState = {
-  users,
-  events,
-  currentUser: null,
-  language: 'french',
+  currentUser: {} as Locum | Owner,
+  language: 'fr',
 };
+
 const store = createContext(initialState);
 const { Provider } = store;
 
 const StateProvider = ({ children }) => {
   const [state, dispatch] = useReducer((state, action) => {
     switch (action.type) {
+      case 'SET_CALENDAR_EVENTS':
+        var newState = {
+          ...state,
+          events: action.events,
+        };
+        return newState;
       case 'ADD_CALENDAR_EVENTS':
         var newState = {
           ...state,

@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
-import { CalendarEvent, DateObject } from '../../interfaces';
+import { Event } from '../../models';
 import colors from '../../styles/colors';
 import {
   heightPercentageToDP as hp,
@@ -22,7 +22,7 @@ import InputForm from './InputForm';
 import TimeInput from './TimeInput';
 
 interface Props {
-  addCalendarEvent: (e: CalendarEvent) => void;
+  addCalendarEvent: (e: Event) => void;
   closeModal: any;
   isVisible: boolean;
 }

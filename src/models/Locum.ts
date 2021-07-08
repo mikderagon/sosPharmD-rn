@@ -1,6 +1,7 @@
-import { User } from './User';
+import { User } from '.';
 
-export interface Locum extends User {
+export default interface Locum extends User {
   year: number;
   educationalInstitution: string;
-}
+  address: string;
+};

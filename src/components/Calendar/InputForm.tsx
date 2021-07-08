@@ -6,14 +6,8 @@
  * @flow strict-local
  */
 
-import React, { Dispatch, SetStateAction, useRef } from 'react';
-import {
-  KeyboardTypeOptions,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
 import { heightPercentageToDP as hp } from '../../utils/responsiveLayout';

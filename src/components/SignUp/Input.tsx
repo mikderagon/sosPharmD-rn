@@ -7,7 +7,7 @@
  */
 
 import React, { Dispatch, EventHandler, SetStateAction, useState } from 'react';
-import { Image } from 'react-native';
+import { Image, KeyboardTypeOptions } from 'react-native';
 import {
   StyleSheet,
   Text,
@@ -24,11 +24,12 @@ import {
 
 interface Props {
   inputName: string;
-  set: Dispatch<SetStateAction<any>>;
+  set: (value: string) => void;
   placeholder: string;
   secured?: boolean;
   autoCapitalize?: boolean;
   autoFocus?: boolean;
+  keyboardType?: KeyboardTypeOptions;
 }
 
 const Input = (props: Props) => {
@@ -39,12 +40,14 @@ const Input = (props: Props) => {
     secured = false,
     autoCapitalize = false,
     autoFocus = false,
+    keyboardType = 'default',
   } = props;
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{inputName}</Text>
       <View style={{ marginTop: hp(2) }}>
         <TextInput
+          keyboardType={keyboardType}
           autoFocus={autoFocus}
           secureTextEntry={secured}
           style={styles.input}

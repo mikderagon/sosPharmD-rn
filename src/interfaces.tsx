@@ -1,4 +1,4 @@
-import { User } from './models/User';
+import { User } from './models';
 
 export interface DateObject {
   day: number;
@@ -6,7 +6,8 @@ export interface DateObject {
   year: number;
 }
 
-export interface CalendarEvent {
+export interface Event {
+  id: number;
   title: string;
   location: string;
   minExperience: string;

@@ -9,8 +9,10 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
+import { useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
+import { initAppWithFirestoreData } from './actions/firestore';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
 import Calendar from './components/Calendar/CalendarView';
 import Home from './components/Home/HomeView';
@@ -39,11 +41,14 @@ const defaultTheme = {
 };
 
 const Navigator = () => {
-  const { state } = useContext(store);
+  const { state, dispatch } = useContext(store);
   // const initialRouteName = 'Onboarding';
   // const initialRouteName = 'Home';
   const initialRouteName = 'SignUp';
   // const initialRouteName = 'SignIn';
+  useEffect(() => {
+    initAppWithFirestoreData(dispatch);
+  }, [dispatch]);
   return (
     <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator headerMode="screen" initialRouteName={initialRouteName}>
@@ -65,7 +70,7 @@ const Navigator = () => {
           name="SignUp"
           component={SignUp}
           options={({ navigation }) => ({
-            title: state.language === 'french' ? 'Inscription' : 'Registration',
+            title: state.language === 'fr' ? 'Inscription' : 'Registration',
             headerStyle: {
               backgroundColor: '#fff',
               borderBottomColor: '#303D5C',

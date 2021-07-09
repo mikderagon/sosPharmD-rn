@@ -33,7 +33,6 @@ import Button from './Button';
 import Calendar from './Calendar';
 import CalendarEventTag from './CalendarEventTag';
 import Locum, { locumSize } from './Locum';
-import * as firestore from '../../actions/firestore';
 
 const fourSquares = require('assets/images/fourSquares.png');
 const verticalDots = require('assets/images/verticalDots.png');
@@ -69,7 +68,7 @@ const GRADIENT_COLORS = [
   hexToRgba(colors.main, 1),
 ];
 
-const HomeView = ({ navigation }) => {
+const OwnerHomeView = ({ navigation }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [previousEventIndex, setPreviousEventIndex] = useState(0);
   const [horizontalFlatListScrolled, setHorizontalFlatListScrolled] =
@@ -153,7 +152,7 @@ const HomeView = ({ navigation }) => {
             <View style={styles.headerBarText}>
               <View style={styles.topLeftTitle}>
                 <Text style={styles.title}>
-                  Hi,{' '}
+                  Bonjour,{' '}
                   <Text style={[styles.title, { fontWeight: '800' }]}>
                     {currentUser.firstName}!
                   </Text>
@@ -192,10 +191,14 @@ const HomeView = ({ navigation }) => {
           <Text style={[styles.name, { marginTop: hp(2) }]}>
             {currentUser.firstName + ' ' + currentUser.lastName + ', '}
             <Text style={styles.userType}>
-              {_String.capitalize(currentUser.accountType)}
+              {_String.capitalize('Propriétaire')}
             </Text>
           </Text>
-          <Text style={styles.location}>{currentUser.pharmacy}</Text>
+          <Text style={styles.location}>
+            {currentUser.accountType === 'locum'
+              ? currentUser.educationalInstitution
+              : currentUser.pharmacy}
+          </Text>
         </LinearGradient>
       </View>
       {/* Calendar */}
@@ -206,13 +209,13 @@ const HomeView = ({ navigation }) => {
           width: '92%',
           flexDirection: 'row',
         }}>
-        <Text style={styles2.sectionTitle}>Your Calendar</Text>
+        <Text style={styles2.sectionTitle}>Votre Calendrier</Text>
         <Image source={calendar} style={styles.calendarIcon} />
       </View>
       <View style={{ marginTop: hp(2) }}>
         <Calendar
           events={thisMonthEventDates}
-          state={CalendarState}
+          calendarState={CalendarState}
           openCalendar={() =>
             navigation.navigate('Calendar', {
               currentMonth: CalendarState.month,
@@ -234,7 +237,9 @@ const HomeView = ({ navigation }) => {
           width: '92%',
           flexDirection: 'row',
         }}>
-        <Text style={styles2.sectionTitle2}>Your Locums</Text>
+        <Text style={styles2.sectionTitle2}>
+          Vos {currentUser.accountType === 'locum' ? 'Opportunités' : 'Locums'}
+        </Text>
         <Image source={locumIcon} style={styles.calendarIcon} />
       </View>
       <View style={{ marginTop: hp(2) }}>
@@ -401,7 +406,7 @@ const styles = StyleSheet.create({
   userType: {
     color: '#fff',
     fontWeight: '700',
-    fontSize: 10,
+    fontSize: 12,
   },
 });
 
@@ -424,4 +429,4 @@ const styles2 = StyleSheet.create({
   },
 });
 
-export default HomeView;
+export default OwnerHomeView;

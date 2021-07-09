@@ -48,6 +48,7 @@ export function createUser(userData: signUpFormData): Promise<Locum | Owner> {
           .get();
         resolve({
           ..._data,
+          id: newUser.user.uid,
           email: newUser.user.email,
           emailVerified: newUser.user.emailVerified,
         } as Locum | Owner);
@@ -72,6 +73,7 @@ export function signIn(
           .get();
         resolve({
           ..._data,
+          id: user.user.uid,
           email: user.user.email,
           emailVerified: user.user.emailVerified,
         } as Locum | Owner);
@@ -171,4 +173,36 @@ export async function getLocumTags(
     }
   }
   return locums;
+}
+
+// firestore()
+// .collection('users')
+// .doc(newUser.user.uid)
+// .set(
+//   userData.accountType === 'locum'
+//     ? {
+//         ...requiredData,
+//         educationalInstitution: userData.educationalInstitution,
+//       }
+//     : {
+//         ...requiredData,
+//         pharmacy: userData.pharmacy,
+//       },
+// );
+
+export function batchUpsertEvents(events: Event[]) {
+  return new Promise((resolve, reject) => {
+    Promise.all([
+      events.map(event => {
+        const pureObject = Object.assign({}, event);
+        return firestore()
+          .collection('events')
+          .add({
+            ...pureObject,
+          });
+      }),
+    ])
+      .then(() => resolve('success'))
+      .catch(e => reject(e));
+  });
 }

@@ -6,12 +6,10 @@
  * @flow strict-local
  */
 
-import React, { useRef, useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
-import { Event } from '../../models';
 import colors from '../../styles/colors';
 import {
   heightPercentageToDP as hp,
@@ -19,10 +17,17 @@ import {
 } from '../../utils/responsiveLayout';
 import useKeyboard from '../Native/Keyboard';
 import InputForm from './InputForm';
-import TimeInput from './TimeInput';
+
+export interface NewEvent {
+  title: string;
+  address: string;
+  minExperience: string;
+  startTime: string;
+  endTime: string;
+}
 
 interface Props {
-  addCalendarEvent: (e: Event) => void;
+  addCalendarEvent: (e: NewEvent) => void;
   closeModal: any;
   isVisible: boolean;
 }
@@ -30,7 +35,7 @@ interface Props {
 const AddEventModal = (props: Props) => {
   const { isVisible, closeModal, addCalendarEvent } = props;
   const [title, setTitle] = useState('');
-  const [location, setLocation] = useState('');
+  const [address, setAddress] = useState('');
   const [minExperience, setMinExperience] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -52,27 +57,43 @@ const AddEventModal = (props: Props) => {
       <View style={styles.modalView}>
         <View style={styles.modalHeader}>
           <TouchableOpacity onPress={closeModal} style={styles.headerLeft}>
-            <Text style={styles.cancel}>Cancel</Text>
+            <Text style={styles.cancel}>Annuler</Text>
           </TouchableOpacity>
-          <Text style={styles.modalHeaderTitle}>New Event</Text>
+          <Text style={styles.modalHeaderTitle}>Nouvel événement</Text>
           <TouchableOpacity
             style={styles.headerRight}
             onPress={() => {
               addCalendarEvent({
                 title,
-                location,
+                address,
                 minExperience,
                 startTime,
                 endTime,
               });
               closeModal();
             }}>
-            <Text style={styles.add}>Add</Text>
+            <Text style={styles.add}>Ajouter</Text>
           </TouchableOpacity>
         </View>
 
         <View style={{ marginTop: 12 }}>
-          <InputForm />
+          <InputForm
+            setTitle={setTitle}
+            setAddress={setAddress}
+            setMinExperience={setMinExperience}
+            setStartTime={setStartTime}
+            setEndTime={setEndTime}
+            onComplete={() => {
+              addCalendarEvent({
+                title,
+                address,
+                minExperience,
+                startTime,
+                endTime,
+              });
+              closeModal();
+            }}
+          />
         </View>
         {/* Add autocomplete feature based on an array of pharmacy locations that will be saved in our db */}
         {/* <Input

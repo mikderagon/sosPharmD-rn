@@ -18,7 +18,8 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import { CalendarEvent, DateObject } from '../../interfaces';
+import { DateObject } from '../../interfaces';
+import { Event } from '../../models';
 import { store } from '../../store';
 import colors from '../../styles/colors';
 import * as dates from '../../utils/dates';
@@ -26,8 +27,9 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import AddEventModal from './AddEventModal';
+import AddEventModal, { NewEvent } from './AddEventModal';
 import Calendar from './Calendar';
+import * as firestore from '../../actions/firestore';
 
 const backCaret = require('assets/images/backCaret.png');
 
@@ -35,7 +37,7 @@ const CalendarView = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectionState, setSelectionState] = useState(false); // set true to test
   const toggleModalVisibility = () => setModalVisible(!modalVisible);
-  const [userEvent, setUserEvent] = useState<CalendarEvent>();
+  const [userEvent, setUserEvent] = useState<NewEvent>();
   const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
   const { state, dispatch } = useContext(store);
   const { currentUser } = state;
@@ -96,29 +98,38 @@ const CalendarView = ({ navigation }) => {
     setSelectionState(false);
     const formattedEvents = selectedDays.map(selectedDay => {
       return {
-        id: 50,
+        UserId: currentUser.id,
+        address: userEvent?.address,
+        minExperience: userEvent?.minExperience,
         day: selectedDay.day,
         month: selectedDay.month,
         year: selectedDay.year,
-        userId: currentUser.id,
         title: userEvent?.title,
         startTime: userEvent?.startTime,
         endTime: userEvent?.endTime,
         interestedLocums: [],
         acceptedLocums: [],
-      };
+      } as Event;
     });
     dispatch({
       type: 'ADD_CALENDAR_EVENTS',
       events: formattedEvents,
     });
+    firestore
+      .batchUpsertEvents(formattedEvents)
+      .then(success => {
+        console.log(success);
+      })
+      .catch(e => {
+        console.log(e);
+      });
     // clear selectedDays
     setSelectedDays([]);
   }
 
-  function addCalendarEvent(event: CalendarEvent) {
+  function addCalendarEvent(event: NewEvent) {
     setUserEvent(event);
-    Alert.alert('Click on the dates on the calendar that you want');
+    Alert.alert("Choisissez les dates de l'événement");
     setSelectionState(true);
   }
 
@@ -131,7 +142,7 @@ const CalendarView = ({ navigation }) => {
           onPress={() => navigation.navigate('Home')}>
           <Image source={backCaret} style={styles.backCaret} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Your Calendar</Text>
+        <Text style={styles.headerTitle}>Votre Calendrier</Text>
         <View style={{ width: styles.backCaret.width }} />
       </View>
       <View style={[styles.flexRow, { marginTop: 5 }, styles.legend]}>
@@ -143,7 +154,7 @@ const CalendarView = ({ navigation }) => {
             ]}
           />
           <Text style={[styles.legendText, { color: colors.main }]}>
-            Fulfilled
+            Locums disponibles
           </Text>
         </View>
         <View style={[styles.flexRow, { marginLeft: 20 }]}>
@@ -154,7 +165,7 @@ const CalendarView = ({ navigation }) => {
             ]}
           />
           <Text style={[styles.legendText, { color: colors.lightGray }]}>
-            Unfulfilled
+            En attente de locum
           </Text>
         </View>
       </View>
@@ -178,7 +189,7 @@ const CalendarView = ({ navigation }) => {
                   event =>
                     event.year === item.year && event.month === item.month,
                 )}
-                state={item}
+                calendarState={item}
                 additionalRow={
                   (item.monthLength < 31 &&
                     item.firstWeekdayOfMonthIndex === 6) ||
@@ -221,7 +232,7 @@ const CalendarView = ({ navigation }) => {
               ? selectedDays.length
                 ? 'Done'
                 : 'Cancel'
-              : 'Add Event'}
+              : 'Ajouter un événement'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -319,7 +330,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     height: 50,
-    width: 170,
+    width: 240,
     borderRadius: 50,
     backgroundColor: colors.main,
     alignItems: 'center',

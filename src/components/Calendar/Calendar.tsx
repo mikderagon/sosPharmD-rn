@@ -10,11 +10,18 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
-import { CalendarState, weekdays_short } from '../../utils/dates';
+import {
+  CalendarState,
+  weekdays_short,
+  jours_semaines,
+} from '../../utils/dates';
 import { heightPercentageToDP as hp } from '../../utils/responsiveLayout';
 import { calendarDimensions } from '../Home/Calendar';
 import { CELLS_COUNT, CELLS_COUNT_INCREASED } from '../Home/gridMeasurements';
 import Cell from './Cells/Cell';
+import * as dates from '../../utils/dates';
+import { useContext } from 'react';
+import { store } from '../../store';
 
 interface Props {
   events: any;
@@ -25,13 +32,14 @@ interface Props {
   selectedDays: any;
   onDayPress: any;
   today: Date;
-  state: CalendarState;
+  calendarState: CalendarState;
 }
 
 const Calendar = (props: Props) => {
+  const { state } = useContext(store);
   const {
+    calendarState,
     today,
-    state,
     additionalRow,
     events,
     selectionState,
@@ -39,7 +47,9 @@ const Calendar = (props: Props) => {
     onDayPress,
   } = props;
 
-  const daysRow = weekdays_short.map((day, index) => (
+  const daysRow = (
+    state.language === 'fr' ? jours_semaines : weekdays_short
+  ).map((day, index) => (
     <View style={[styles.cell, { height: hp(2) }]} key={index}>
       <Text style={styles.days}>{day}</Text>
     </View>
@@ -47,9 +57,9 @@ const Calendar = (props: Props) => {
 
   function getDaysList() {
     let list = new Array(additionalRow ? CELLS_COUNT_INCREASED : CELLS_COUNT);
-    list[state.firstWeekdayOfMonthIndex] = 1;
-    for (let i = 2; i <= state.monthLength; i++) {
-      list[state.firstWeekdayOfMonthIndex + i - 1] = i;
+    list[calendarState.firstWeekdayOfMonthIndex] = 1;
+    for (let i = 2; i <= calendarState.monthLength; i++) {
+      list[calendarState.firstWeekdayOfMonthIndex + i - 1] = i;
     }
     for (let i = 0; i < list.length; i++) {
       if (!list[i]) {
@@ -66,10 +76,11 @@ const Calendar = (props: Props) => {
         selectedDays.find(
           selectedDay =>
             selectedDay.day === day &&
-            selectedDay.month === state.month &&
-            selectedDay.year === state.year,
+            selectedDay.month === calendarState.month &&
+            selectedDay.year === calendarState.year,
         ),
-      isToday: day === today.getDate() && state.month === today.getMonth() + 1,
+      isToday:
+        day === today.getDate() && calendarState.month === today.getMonth() + 1,
       isEvent: events.map(event => event.day).includes(day),
       interestedLocum: events
         .filter(event => event.interestedLocums.length)
@@ -77,7 +88,7 @@ const Calendar = (props: Props) => {
         .includes(day),
     };
     function _onDayPress() {
-      onDayPress(day, state.month, state.year);
+      onDayPress(day, calendarState.month, calendarState.year);
     }
     if (CELL_STATES.selectedForNewEvent) {
       return (
@@ -166,7 +177,10 @@ const Calendar = (props: Props) => {
       ]}>
       <View style={{ marginTop: hp(2.5) }}>
         <Text style={styles.monthYear}>
-          {state.monthName} {state.year}
+          {state.language === 'fr'
+            ? dates.mois[calendarState.month - 1]
+            : calendarState.monthName}{' '}
+          {calendarState.year}
         </Text>
       </View>
 

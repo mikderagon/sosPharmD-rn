@@ -17,25 +17,26 @@ import {
 import 'react-native-gesture-handler';
 import { store } from '../../store';
 import colors from '../../styles/colors';
-import { CalendarState, getFirstWeekdayOfMonthIndex } from '../../utils/dates';
+import { CalendarState } from '../../utils/dates';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
 import { date_positions } from './gridMeasurements';
+import * as dates from '../../utils/dates';
 
 interface Props {
   openCalendar?: () => {};
   events: number[];
   currentEvent?: number;
   previousEvent?: number;
-  state: CalendarState;
+  calendarState: CalendarState;
 }
 
-const days_alpha = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 const Calendar = (props: Props) => {
-  const { openCalendar, currentEvent, previousEvent, events, state } = props;
+  const { state } = useContext(store);
+  const { openCalendar, currentEvent, previousEvent, events, calendarState } =
+    props;
 
   const getIndex = (eventDate: number) =>
     events.findIndex(e => e === eventDate);
@@ -43,9 +44,9 @@ const Calendar = (props: Props) => {
   // first item of events will be at cell # 'events[0].date' + 1
   function createCellsList() {
     let cells = [];
-    cells.push(state.firstWeekdayOfMonthIndex + events[0] - 1);
+    cells.push(calendarState.firstWeekdayOfMonthIndex + events[0] - 1);
     for (let i = 1; i < events.length; i++) {
-      cells.push(events[i] + state.firstWeekdayOfMonthIndex - 1);
+      cells.push(events[i] + calendarState.firstWeekdayOfMonthIndex - 1);
     }
     return cells;
   }
@@ -65,7 +66,9 @@ const Calendar = (props: Props) => {
       useNativeDriver: true,
     }).start();
   }, [currentEvent]);
-  const daysRow = days_alpha.map((day, index) => (
+  const daysRow = (
+    state.language === 'fr' ? dates.jours_semaines : dates.weekdays_short
+  ).map((day, index) => (
     <View style={[styles.cell, { height: hp(2) }]} key={index}>
       <Text style={styles.days}>{day}</Text>
     </View>
@@ -75,9 +78,9 @@ const Calendar = (props: Props) => {
     // if wednesday then start at index3,
     // etc. from sun 0 to sat 6
     let list = new Array(35);
-    list[state.firstWeekdayOfMonthIndex] = 1;
-    for (let i = 2; i <= state.monthLength; i++) {
-      list[state.firstWeekdayOfMonthIndex + i - 1] = i;
+    list[calendarState.firstWeekdayOfMonthIndex] = 1;
+    for (let i = 2; i <= calendarState.monthLength; i++) {
+      list[calendarState.firstWeekdayOfMonthIndex + i - 1] = i;
     }
     for (let i = 0; i < list.length; i++) {
       if (!list[i]) {
@@ -90,7 +93,7 @@ const Calendar = (props: Props) => {
   const days_num = createDaysList();
   const daysGrid = days_num.map((day, index) => {
     const isEvent = events.map(event => event.date).includes(day);
-    if (day === state.day && isEvent) {
+    if (day === calendarState.day && isEvent) {
       return (
         <View style={styles.cell} key={index}>
           <View style={styles.todayHighlight}>
@@ -100,7 +103,7 @@ const Calendar = (props: Props) => {
         </View>
       );
     }
-    if (day === state.day) {
+    if (day === calendarState.day) {
       return (
         <View style={styles.cell} key={index}>
           <View style={styles.todayHighlight}>
@@ -131,7 +134,10 @@ const Calendar = (props: Props) => {
         onPress={openCalendar}>
         <View style={{ marginTop: 20 }}>
           <Text style={styles.monthYear}>
-            {state.monthName} {new Date().getFullYear()}
+            {state.language === 'fr'
+              ? dates.mois[calendarState.month - 1]
+              : calendarState.monthName}{' '}
+            {new Date().getFullYear()}
           </Text>
         </View>
 
@@ -189,7 +195,10 @@ const Calendar = (props: Props) => {
       />
       <View style={{ marginTop: 20 }}>
         <Text style={styles.monthYear}>
-          {state.monthName} {new Date().getFullYear()}
+          {state.language === 'fr'
+            ? dates.mois[calendarState.month - 1]
+            : calendarState.monthName}{' '}
+          {new Date().getFullYear()}
         </Text>
       </View>
 

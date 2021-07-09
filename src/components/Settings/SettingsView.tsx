@@ -65,14 +65,14 @@ const SettingsView = ({ navigation }) => {
           <TouchableOpacity
             style={styles.row}
             onPress={() => {
-              Alert.alert('Sign Out', '', [
+              Alert.alert('Se Déconnecter', '', [
                 {
-                  text: 'No',
+                  text: 'Non',
                   onPress: () => {},
                   style: 'cancel',
                 },
                 {
-                  text: 'Yes',
+                  text: 'Oui',
                   onPress: () => {
                     navigation.reset({
                       index: 0,
@@ -82,7 +82,7 @@ const SettingsView = ({ navigation }) => {
                 },
               ]);
             }}>
-            <Text style={styles.rowText}>Sign Out</Text>
+            <Text style={styles.rowText}>Se Déconnecter</Text>
           </TouchableOpacity>
         </View>
       </>

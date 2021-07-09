@@ -16,7 +16,8 @@ import 'react-native-gesture-handler';
 import { initAppWithFirestoreData } from './actions/firestore';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
 import Calendar from './components/Calendar/CalendarView';
-import Home from './components/Home/HomeView';
+import OwnerHome from './components/Home/OwnerHomeView';
+import LocumHome from './components/Home/LocumHomeView';
 import Locums from './components/Locums/LocumsView';
 import Onboarding from './components/Onboarding/OnboardingView';
 import Settings from './components/Settings/SettingsView';
@@ -44,10 +45,10 @@ const defaultTheme = {
 const Navigator = () => {
   const { state, dispatch } = useContext(store);
   // const initialRouteName = 'Onboarding';
-  // const initialRouteName = 'Home';
+  // const initialRouteName = 'OwnerHome';
   const { currentUser } = auth();
   // console.log(currentUser);
-  // const initialRouteName = currentUser ? 'Home' : 'SignIn';
+  // const initialRouteName = currentUser ? 'OwnerHome' : 'SignIn';
   const initialRouteName = 'SignIn';
   useEffect(() => {
     initAppWithFirestoreData(dispatch);
@@ -102,7 +103,9 @@ const Navigator = () => {
         />
         <Stack.Screen
           name="Home"
-          component={Home}
+          component={
+            state.currentUser.accountType === 'locum' ? LocumHome : OwnerHome
+          }
           options={{
             headerShown: false,
           }}

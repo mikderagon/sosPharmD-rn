@@ -235,9 +235,7 @@ const LocumHomeView = ({ navigation }) => {
           width: '92%',
           flexDirection: 'row',
         }}>
-        <Text style={styles2.sectionTitle2}>
-          Vos {currentUser.accountType === 'locum' ? 'Opportunités' : 'Locums'}
-        </Text>
+        <Text style={styles2.sectionTitle2}>Vos Opportunités</Text>
         <Image source={locumIcon} style={styles.calendarIcon} />
       </View>
       <View style={{ marginTop: hp(2) }}>
@@ -261,7 +259,7 @@ const LocumHomeView = ({ navigation }) => {
                 }
               />
             ) : (
-              <CalendarEventTag />
+              <CalendarEventTag type={currentUser.accountType} />
             )
           }
           getItemLayout={(data, index) => ({

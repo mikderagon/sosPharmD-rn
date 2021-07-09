@@ -194,11 +194,7 @@ const OwnerHomeView = ({ navigation }) => {
               {_String.capitalize('Propriétaire')}
             </Text>
           </Text>
-          <Text style={styles.location}>
-            {currentUser.accountType === 'locum'
-              ? currentUser.educationalInstitution
-              : currentUser.pharmacy}
-          </Text>
+          <Text style={styles.location}>{currentUser.pharmacy}</Text>
         </LinearGradient>
       </View>
       {/* Calendar */}
@@ -237,9 +233,7 @@ const OwnerHomeView = ({ navigation }) => {
           width: '92%',
           flexDirection: 'row',
         }}>
-        <Text style={styles2.sectionTitle2}>
-          Vos {currentUser.accountType === 'locum' ? 'Opportunités' : 'Locums'}
-        </Text>
+        <Text style={styles2.sectionTitle2}>Vos Locums</Text>
         <Image source={locumIcon} style={styles.calendarIcon} />
       </View>
       <View style={{ marginTop: hp(2) }}>
@@ -263,7 +257,7 @@ const OwnerHomeView = ({ navigation }) => {
                 }
               />
             ) : (
-              <CalendarEventTag />
+              <CalendarEventTag type={currentUser.accountType} />
             )
           }
           getItemLayout={(data, index) => ({

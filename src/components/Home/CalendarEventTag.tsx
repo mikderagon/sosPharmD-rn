@@ -14,13 +14,18 @@ import { locumSize } from './Locum';
 
 interface Props {
   date?: number;
+  type: 'locum' | 'owner';
 }
 
 const CalendarEventTag = (props: Props) => {
-  const {} = props;
+  const { type } = props;
   return (
     <TouchableOpacity style={styles.container}>
-      <Text>Calendar Event Tag</Text>
+      <Text style={styles.text}>
+        {type === 'locum'
+          ? 'Les contrats affichés par les propriétaires apparaîtront ici'
+          : 'Les locums qui appliquent pour vos événements apparaîtront ici'}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -36,6 +41,13 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontStyle: 'italic',
+    fontWeight: '600',
+    fontSize: 12,
+    textAlign: 'center',
   },
 });
 

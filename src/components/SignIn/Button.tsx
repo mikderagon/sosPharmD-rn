@@ -40,7 +40,7 @@ const Button = (props: Props) => {
         active ? onPress() : {};
       }}>
       {loading ? (
-        <ActivityIndicator />
+        <ActivityIndicator color="#fff" />
       ) : (
         <Text style={styles.text}>{text}</Text>
       )}

@@ -81,22 +81,24 @@ const HomeView = ({ navigation }) => {
   // const { currentUser } = auth();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const nextIndex =
-        currentEventIndex === thisMonthEventDates.length - 1 ||
-        thisMonthEventDates.length === 0
-          ? 0
-          : currentEventIndex + 1;
-      setPreviousEventIndex(currentEventIndex);
-      setCurrentEventIndex(nextIndex);
-      setHorizontalFlatListScrolled(true);
-      horizontalFlatListRef.current.scrollToIndex({
-        animated: true,
-        index: nextIndex,
-        viewPosition: 0.5,
-      });
-    }, 3000);
-    return () => clearInterval(interval);
+    if (locumTags.length > 1) {
+      const interval = setInterval(() => {
+        const nextIndex =
+          currentEventIndex === thisMonthEventDates.length - 1 ||
+          thisMonthEventDates.length === 0
+            ? 0
+            : currentEventIndex + 1;
+        setPreviousEventIndex(currentEventIndex);
+        setCurrentEventIndex(nextIndex);
+        setHorizontalFlatListScrolled(true);
+        horizontalFlatListRef.current.scrollToIndex({
+          animated: true,
+          index: nextIndex,
+          viewPosition: 0.5,
+        });
+      }, 3000);
+      return () => clearInterval(interval);
+    }
   });
 
   // function onAuthStateChanged(user) {
@@ -252,7 +254,7 @@ const HomeView = ({ navigation }) => {
                 date={thisMonthEventDates[index]}
                 user={item.user}
                 centerCorrection={
-                  !horizontalFlatListScrolled || locumTags.length == 1
+                  !horizontalFlatListScrolled || locumTags.length === 1
                 }
               />
             ) : (

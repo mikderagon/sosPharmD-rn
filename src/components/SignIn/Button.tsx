@@ -7,12 +7,12 @@
  */
 
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { Image } from 'react-native';
-import { TouchableOpacity } from 'react-native';
 import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
+  ActivityIndicator,
   ImageBackground,
   TextInput,
 } from 'react-native';
@@ -27,10 +27,11 @@ interface Props {
   onPress: () => void;
   text?: string;
   active?: boolean;
+  loading?: boolean;
 }
 
 const Button = (props: Props) => {
-  const { onPress, text = 'Log in', active = true } = props;
+  const { onPress, text = 'Log in', active = true, loading } = props;
   return (
     <TouchableOpacity
       activeOpacity={active ? 0.2 : 1}
@@ -38,7 +39,11 @@ const Button = (props: Props) => {
       onPress={() => {
         active ? onPress() : {};
       }}>
-      <Text style={styles.text}>{text}</Text>
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <Text style={styles.text}>{text}</Text>
+      )}
     </TouchableOpacity>
   );
 };

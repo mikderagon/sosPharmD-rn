@@ -34,8 +34,11 @@ const passwordImage = require('assets/images/passwordImage.png');
 
 const SignInView = ({ navigation }) => {
   const { state, dispatch } = useContext(store);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [spinnerActive, setSpinnerActive] = useState(false);
 
-  function handleSignIn(email: string, password: string) {
+  function handleSignIn() {
     firestore
       .signIn(email, password)
       .then((user: Locum | Owner) => {
@@ -49,12 +52,10 @@ const SignInView = ({ navigation }) => {
         });
       })
       .catch(e => {
+        setSpinnerActive(false);
         Alert.alert('No user');
       });
   }
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   return (
     <View style={styles.container}>
@@ -98,9 +99,11 @@ const SignInView = ({ navigation }) => {
       {/* login */}
       <View style={{ marginTop: hp(4) }}>
         <LoginButton
+          loading={spinnerActive}
           onPress={() => {
             // login logic TODO: persist user connection, and refactor in store.tsx
-            handleSignIn(email, password);
+            setSpinnerActive(true);
+            handleSignIn();
           }}
           text={state.language === 'fr' ? 'Se connecter' : 'Log in'}
         />

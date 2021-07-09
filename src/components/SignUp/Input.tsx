@@ -7,7 +7,7 @@
  */
 
 import React, { Dispatch, EventHandler, SetStateAction, useState } from 'react';
-import { Image, KeyboardTypeOptions } from 'react-native';
+import { Image, KeyboardTypeOptions, ReturnKeyTypeOptions } from 'react-native';
 import {
   StyleSheet,
   Text,
@@ -23,6 +23,7 @@ import {
 } from '../../utils/responsiveLayout';
 
 interface Props {
+  ref: any;
   inputName: string;
   set: (value: string) => void;
   placeholder: string;
@@ -30,10 +31,13 @@ interface Props {
   autoCapitalize?: boolean;
   autoFocus?: boolean;
   keyboardType?: KeyboardTypeOptions;
+  returnKeyType?: ReturnKeyTypeOptions;
+  onEndEditing: () => {};
 }
 
 const Input = (props: Props) => {
   const {
+    ref,
     inputName = 'input',
     set,
     placeholder,
@@ -41,12 +45,15 @@ const Input = (props: Props) => {
     autoCapitalize = false,
     autoFocus = false,
     keyboardType = 'default',
+    returnKeyType,
+    onEndEditing,
   } = props;
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{inputName}</Text>
       <View style={{ marginTop: hp(2) }}>
         <TextInput
+          ref={ref}
           keyboardType={keyboardType}
           autoFocus={autoFocus}
           secureTextEntry={secured}
@@ -57,6 +64,8 @@ const Input = (props: Props) => {
           autoCapitalize={autoCapitalize ? 'words' : 'none'}
           autoCompleteType="off"
           autoCorrect={false}
+          returnKeyType={returnKeyType}
+          onEndEditing={onEndEditing}
         />
       </View>
     </View>

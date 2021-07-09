@@ -1,4 +1,4 @@
-import { User } from './models';
+import { Locum } from './models';
 
 export interface DateObject {
   day: number;
@@ -17,7 +17,7 @@ export interface Event {
   acceptedLocums?: number[];
 }
 export interface LocumTag {
-  user: User;
+  user: Locum;
   date: {
     day: number;
     month: number;

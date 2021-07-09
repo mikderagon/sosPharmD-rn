@@ -224,6 +224,7 @@ const Form = (props: Props) => {
               onChangeText={(value: string) =>
                 setValue(fieldsList[2].key, value)
               }
+              autoCapitalize="none"
               style={inputStyles.input}
               placeholder={fieldsList[2].fr}
               placeholderTextColor="#CCCBCB"
@@ -244,6 +245,7 @@ const Form = (props: Props) => {
               onChangeText={(value: string) =>
                 setValue(fieldsList[3].key, value)
               }
+              autoCapitalize="none"
               style={inputStyles.input}
               placeholder={fieldsList[3].fr}
               placeholderTextColor="#CCCBCB"
@@ -263,6 +265,7 @@ const Form = (props: Props) => {
               onChangeText={(value: string) =>
                 setValue(fieldsList[4].key, value)
               }
+              autoCapitalize="none"
               style={inputStyles.input}
               placeholder={fieldsList[4].fr}
               placeholderTextColor="#CCCBCB"

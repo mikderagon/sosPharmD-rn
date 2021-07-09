@@ -73,22 +73,20 @@ const HomeView = ({ navigation }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [previousEventIndex, setPreviousEventIndex] = useState(0);
   const horizontalFlatListRef = useRef(null);
-  const { state } = useContext(store);
-  const { currentUser, users } = state;
+  const { state, dispatch } = useContext(store);
+  const { currentUser, users, locumTags } = state;
   const CalendarState = dates.getCalendarState(new Date());
   // const { currentUser } = auth();
 
-  // TODO: turn into api call
-  console.log('what is events structure?', state.events);
-  const thisMonthEvents = state.events.filter(
-    event =>
-      event.year === CalendarState.year && event.month === CalendarState.month,
-  );
-  const thisMonthEventDates = _.flatten(
-    thisMonthEvents.map(e =>
-      Array.from({ length: e.interestedLocums.length }).fill(e.day),
-    ),
-  );
+  const thisMonthEvents = firestore.getMonthEvents(state.events);
+  const thisMonthEventDates = firestore.getMonthEventDates(thisMonthEvents);
+  (async function () {
+    const _locumTags = await firestore.getLocumTags(thisMonthEvents);
+    dispatch({
+      type: 'SET_LOCUM_TAGS',
+      locumTags: _locumTags,
+    });
+  })();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -119,23 +117,6 @@ const HomeView = ({ navigation }) => {
   // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
   // return subscriber;
   // }, []);
-
-  // TODO: turn into api call
-  let currentLocumTags: LocumTag[] = [];
-  for (const event of thisMonthEvents) {
-    const theLocumsAre = event.interestedLocums;
-    for (const locum of theLocumsAre) {
-      // get user from firestore
-      // const userFound = users.find(user => user.id === locum);
-      // const userFound = firestore.findUser(locum);
-      if (false) {
-        currentLocumTags.push({
-          user: userFound,
-          date: { day: event.day, month: event.month, year: event.year },
-        });
-      }
-    }
-  }
 
   // TODO: create interface and component
   const noLocumTags = [
@@ -264,7 +245,7 @@ const HomeView = ({ navigation }) => {
       <View style={{ marginTop: hp(2) }}>
         <FlatList
           ref={horizontalFlatListRef}
-          data={currentLocumTags.length ? currentLocumTags : noLocumTags}
+          data={locumTags.length ? locumTags : noLocumTags}
           horizontal
           scrollEnabled={false}
           ItemSeparatorComponent={() => <View style={{ width: wp(10) }} />}
@@ -273,13 +254,13 @@ const HomeView = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) =>
-            currentLocumTags.length ? (
+            locumTags.length ? (
               <Locum
                 date={thisMonthEventDates[index]}
                 user={item.user}
                 onPress={() => {
                   navigation.navigate('Locums', {
-                    locums: currentLocumTags,
+                    locums: locumTags,
                   });
                 }}
               />

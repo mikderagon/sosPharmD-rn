@@ -6,6 +6,7 @@ import { User, Event, Locum, Owner } from './models';
 const initialState = {
   currentUser: {} as Locum | Owner,
   language: 'fr',
+  locumTags: [],
 };
 
 const store = createContext(initialState);
@@ -26,6 +27,13 @@ const StateProvider = ({ children }) => {
           events: [...state.events, ...action.events],
         };
         return newState;
+      case 'SET_LOCUM_TAGS':
+        var newState = {
+          ...state,
+          locumTags: action.locumTags,
+        };
+        return newState;
+
       case 'SET_CURRENT_USER':
         var newState = {
           ...state,

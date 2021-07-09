@@ -1,7 +1,10 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import _ from 'underscore';
 import { signUpFormData } from '../components/SignUp/Form';
+import { LocumTag } from '../interfaces';
 import { Locum, Owner, User, Event } from '../models';
+import * as dates from '../utils/dates';
 
 // change type of userData to be the correct types from the signup form and the return type to User model
 export function createUser(userData: signUpFormData): Promise<Locum | Owner> {
@@ -98,4 +101,59 @@ export async function initAppWithFirestoreData(dispatch: any) {
       events,
     });
   }
+}
+
+export async function findUser(uid: string): Promise<Locum> {
+  return new Promise((resolve, reject) => {
+    firestore()
+      .collection('users')
+      .doc(uid)
+      .get()
+      .then(user => {
+        resolve(user.data() as Locum);
+      })
+      .catch(e => {
+        reject(e);
+      });
+  });
+}
+
+export function getMonthEvents(events: Event[]) {
+  const CalendarState = dates.getCalendarState(new Date());
+  const thisMonthEvents = events.filter(
+    event =>
+      event.year === CalendarState.year && event.month === CalendarState.month,
+  );
+  return thisMonthEvents;
+}
+
+export function getMonthEventDates(thisMonthEvents: Event[]) {
+  const thisMonthEventDates = _.flatten(
+    thisMonthEvents.map(e =>
+      Array.from({ length: e.interestedLocums?.length || 0 }).fill(e.day),
+    ),
+  );
+  return thisMonthEventDates;
+}
+
+export async function getLocumTags(
+  thisMonthEvents: Event[],
+): Promise<LocumTag[]> {
+  let locums = [];
+  for (const event of thisMonthEvents) {
+    const theLocumsAre = event.interestedLocums;
+    if (theLocumsAre?.length) {
+      for (const locum of theLocumsAre) {
+        // const userFound = users.find(user => user.id === locum);
+        const userFound = await findUser(locum.toString());
+        if (userFound) {
+          locums.push({
+            user: userFound,
+            date: { day: event.day, month: event.month, year: event.year },
+          });
+        }
+      }
+    }
+  }
+  return locums;
 }

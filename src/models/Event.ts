@@ -8,4 +8,7 @@ export default interface Event {
   endTime: string;
   interestedLocums?: number[]; // User Ids
   acceptedLocums?: number[];
-}
+  year: number;
+  month: number;
+  day: number;
+};

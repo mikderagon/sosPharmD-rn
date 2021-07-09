@@ -49,7 +49,7 @@ const SignInView = ({ navigation }) => {
         });
       })
       .catch(e => {
-        Alert.alert(e);
+        Alert.alert('No user');
       });
   }
 

@@ -7,6 +7,7 @@ const initialState = {
   currentUser: {} as Locum | Owner,
   language: 'fr',
   locumTags: [],
+  contracts: [],
   events: [],
   thisMonthEvents: [],
   thisMonthEventDates: [],
@@ -46,6 +47,12 @@ const StateProvider = ({ children }) => {
         var newState = {
           ...state,
           locumTags: action.locumTags,
+        };
+        return newState;
+      case 'SET_CONTRACTS':
+        var newState = {
+          ...state,
+          contracts: action.contracts,
         };
         return newState;
       case 'SET_CURRENT_USER':

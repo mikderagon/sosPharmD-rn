@@ -13,7 +13,7 @@ import React, { useContext } from 'react';
 import { useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
-import { initAppWithFirestoreData } from './actions/firestore';
+import { initOwnerData, initLocumData } from './actions/firestore';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
 import Calendar from './components/Calendar/CalendarView';
 import OwnerHome from './components/Home/OwnerHomeView';
@@ -51,8 +51,12 @@ const Navigator = () => {
   // const initialRouteName = currentUser ? 'OwnerHome' : 'SignIn';
   const initialRouteName = 'SignIn';
   useEffect(() => {
-    initAppWithFirestoreData(dispatch);
-  }, [dispatch]);
+    if (state.currentUser.accountType === 'locum') {
+      initLocumData(dispatch);
+    } else {
+      initOwnerData(dispatch);
+    }
+  }, [state.currentUser.accountType, dispatch]);
   return (
     <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator headerMode="screen" initialRouteName={initialRouteName}>

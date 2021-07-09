@@ -2,7 +2,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import _ from 'underscore';
 import { signUpFormData } from '../components/SignUp/Form';
-import { LocumTag } from '../interfaces';
+import { ContractTag, LocumTag } from '../interfaces';
 import { Locum, Owner, User, Event } from '../models';
 import * as dates from '../utils/dates';
 
@@ -84,7 +84,7 @@ export function signIn(
   });
 }
 
-export async function initAppWithFirestoreData(dispatch: any) {
+export async function initOwnerData(dispatch: any) {
   const { docs } = await firestore()
     .collection('events')
     .where('UserId', '==', auth().currentUser.uid)
@@ -120,14 +120,47 @@ export async function initAppWithFirestoreData(dispatch: any) {
   }
 }
 
-export async function findUser(uid: string): Promise<Locum> {
+export async function initLocumData(dispatch: any) {
+  const { docs } = await firestore().collection('events').get();
+  if (docs.length) {
+    const events = docs.map(doc => {
+      const data = doc.data();
+      const UserId = data.UserId;
+      return {
+        ...data,
+        UserId,
+      } as Event;
+    });
+    dispatch({
+      type: 'SET_CALENDAR_EVENTS',
+      events,
+    });
+    const thisMonthEvents = getMonthEvents(events);
+    const thisMonthEventDates = thisMonthEvents.map(event => event.day).sort();
+    const contracts = await getContractTags(thisMonthEvents);
+    dispatch({
+      type: 'SET_THIS_MONTH_EVENTS',
+      thisMonthEvents,
+    });
+    dispatch({
+      type: 'SET_THIS_MONTH_EVENT_DATES',
+      thisMonthEventDates,
+    });
+    dispatch({
+      type: 'SET_CONTRACTS',
+      contracts,
+    });
+  }
+}
+
+export async function findUser<T>(uid: string): Promise<T> {
   return new Promise((resolve, reject) => {
     firestore()
       .collection('users')
       .doc(uid)
       .get()
       .then(user => {
-        resolve(user.data() as Locum);
+        resolve(user.data() as T);
       })
       .catch(e => {
         reject(e);
@@ -150,7 +183,7 @@ export function getMonthEventDates(thisMonthEvents: Event[]) {
       Array.from({ length: e.interestedLocums?.length || 0 }).fill(e.day),
     ),
   );
-  return thisMonthEventDates;
+  return thisMonthEventDates.sort();
 }
 
 export async function getLocumTags(
@@ -161,13 +194,12 @@ export async function getLocumTags(
     const theLocumsAre = event.interestedLocums;
     if (theLocumsAre?.length) {
       for (const locum of theLocumsAre) {
-        // const userFound = users.find(user => user.id === locum);
-        const userFound = await findUser(locum.toString());
-        if (userFound) {
+        const locumFound = await findUser<Locum>(locum.toString());
+        if (locumFound) {
           locums.push({
-            user: userFound,
+            user: locumFound,
             date: { day: event.day, month: event.month, year: event.year },
-          });
+          } as LocumTag);
         }
       }
     }
@@ -175,20 +207,21 @@ export async function getLocumTags(
   return locums;
 }
 
-// firestore()
-// .collection('users')
-// .doc(newUser.user.uid)
-// .set(
-//   userData.accountType === 'locum'
-//     ? {
-//         ...requiredData,
-//         educationalInstitution: userData.educationalInstitution,
-//       }
-//     : {
-//         ...requiredData,
-//         pharmacy: userData.pharmacy,
-//       },
-// );
+export async function getContractTags(
+  thisMonthEvents: Event[],
+): Promise<ContractTag[]> {
+  let contracts = [];
+  for (const event of thisMonthEvents) {
+    const owner = await findUser<Owner>(event.UserId);
+    if (owner) {
+      contracts.push({
+        user: owner,
+        date: { day: event.day, month: event.month, year: event.year },
+      } as ContractTag);
+    }
+  }
+  return contracts;
+}
 
 export function batchUpsertEvents(events: Event[]) {
   return new Promise((resolve, reject) => {

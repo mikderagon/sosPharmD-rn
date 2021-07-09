@@ -1,6 +1,6 @@
 export default interface Event {
   title: string;
-  UserId: number;
+  UserId: string;
   address: string;
   minExperience: string;
   startTime: string;
@@ -10,4 +10,4 @@ export default interface Event {
   year: number;
   month: number;
   day: number;
-};
+}

@@ -1,4 +1,4 @@
-import { Locum } from './models';
+import { Locum, Owner } from './models';
 
 export interface DateObject {
   day: number;
@@ -7,9 +7,10 @@ export interface DateObject {
 }
 export interface LocumTag {
   user: Locum;
-  date: {
-    day: number;
-    month: number;
-    year: number;
-  };
+  date: DateObject;
+}
+
+export interface ContractTag {
+  user: Owner;
+  date: DateObject;
 }

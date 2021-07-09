@@ -111,7 +111,7 @@ const InputForm = (props: Props) => {
       </View>
 
       <View style={styles.container}>
-        <Text style={styles.label}>À:</Text>
+        <Text style={styles.label}>Jusqu'à:</Text>
         <TextInput
           ref={ref5}
           style={styles.input}

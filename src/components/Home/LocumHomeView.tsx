@@ -32,7 +32,8 @@ import {
 import Button from './Button';
 import Calendar from './Calendar';
 import CalendarEventTag from './CalendarEventTag';
-import Locum, { locumSize } from './Locum';
+import { locumSize } from './Locum';
+import Contract from './Contract';
 
 const fourSquares = require('assets/images/fourSquares.png');
 const verticalDots = require('assets/images/verticalDots.png');
@@ -75,13 +76,15 @@ const LocumHomeView = ({ navigation }) => {
     useState(false);
   const horizontalFlatListRef = useRef(null);
   const { state, dispatch } = useContext(store);
-  const { currentUser, users, locumTags, thisMonthEventDates } = state;
+  const { currentUser, contracts, thisMonthEventDates } = state;
   const CalendarState = dates.getCalendarState(new Date());
-  // const { currentUser } = auth();
+
+  console.log(contracts);
 
   useEffect(() => {
-    if (locumTags.length > 1) {
+    if (contracts.length > 1) {
       const interval = setInterval(() => {
+        console.log(currentEventIndex, thisMonthEventDates.length);
         const nextIndex =
           currentEventIndex === thisMonthEventDates.length - 1 ||
           thisMonthEventDates.length === 0
@@ -113,7 +116,7 @@ const LocumHomeView = ({ navigation }) => {
   // }, []);
 
   // TODO: create interface and component
-  const noLocumTags = [
+  const noContracts = [
     {
       title: 'No Locum',
       text: 'No interested locums yet',
@@ -193,9 +196,7 @@ const LocumHomeView = ({ navigation }) => {
             <Text style={styles.userType}>{_String.capitalize('Locum')}</Text>
           </Text>
           <Text style={styles.location}>
-            {currentUser.accountType === 'locum'
-              ? currentUser.educationalInstitution
-              : currentUser.pharmacy}
+            {currentUser.educationalInstitution}
           </Text>
         </LinearGradient>
       </View>
@@ -241,7 +242,7 @@ const LocumHomeView = ({ navigation }) => {
       <View style={{ marginTop: hp(2) }}>
         <FlatList
           ref={horizontalFlatListRef}
-          data={locumTags.length ? locumTags : noLocumTags}
+          data={contracts.length ? contracts : noContracts}
           horizontal
           scrollEnabled={false}
           ItemSeparatorComponent={() => <View style={{ width: wp(10) }} />}
@@ -250,12 +251,12 @@ const LocumHomeView = ({ navigation }) => {
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) =>
-            locumTags.length ? (
-              <Locum
+            contracts.length ? (
+              <Contract
                 date={thisMonthEventDates[index]}
                 user={item.user}
                 centerCorrection={
-                  !horizontalFlatListScrolled || locumTags.length === 1
+                  !horizontalFlatListScrolled || contracts.length === 1
                 }
               />
             ) : (

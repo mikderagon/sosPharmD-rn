@@ -133,7 +133,18 @@ const Calendar = (props: Props) => {
         </Cell>
       );
     }
-    if (CELL_STATES.interestedLocum) {
+    if (state.currentUser.accountType === 'locum' && CELL_STATES.isEvent) {
+      return (
+        <Cell key={index.toString()} onDayPress={_onDayPress}>
+          <Text style={styles.day}>{day}</Text>
+          <View style={styles.dayDot} />
+        </Cell>
+      );
+    }
+    if (
+      state.currentUser.accountType === 'owner' &&
+      CELL_STATES.interestedLocum
+    ) {
       return (
         <Cell key={index.toString()} onDayPress={_onDayPress}>
           <Text style={styles.day}>{day}</Text>

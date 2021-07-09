@@ -38,14 +38,7 @@ const fourSquares = require('assets/images/fourSquares.png');
 const verticalDots = require('assets/images/verticalDots.png');
 const calendar = require('assets/images/calendarIcon.png');
 const locumIcon = require('assets/images/locumIcon.png');
-const defaultAvatar = {
-  owner: {
-    male: { uri: 'https://image.flaticon.com/icons/png/512/1152/1152624.png' },
-    female: {
-      uri: 'https://image.flaticon.com/icons/png/512/1152/1152623.png',
-    },
-  },
-};
+const defaultAvatar = require('assets/images/defaultAvatar.png');
 
 function hexToRgba(hex: string, opacity: number) {
   let c;
@@ -81,7 +74,7 @@ const OwnerHomeView = ({ navigation }) => {
 
   useEffect(() => {
     if (locumTags.length > 1) {
-      const interval = setInterval(() => {
+      const timeout = setTimeout(() => {
         const nextIndex =
           currentEventIndex === thisMonthEventDates.length - 1 ||
           thisMonthEventDates.length === 0
@@ -96,7 +89,7 @@ const OwnerHomeView = ({ navigation }) => {
           viewPosition: 0.5,
         });
       }, 3000);
-      return () => clearInterval(interval);
+      return () => clearTimeout(timeout);
     }
   });
 
@@ -183,7 +176,7 @@ const OwnerHomeView = ({ navigation }) => {
               source={
                 currentUser.pictureUrl
                   ? { uri: currentUser.pictureUrl }
-                  : defaultAvatar.owner.male
+                  : defaultAvatar
               }
               style={styles.userPicture}
             />

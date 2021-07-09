@@ -28,8 +28,8 @@ import * as dates from '../../utils/dates';
 interface Props {
   openCalendar?: () => {};
   events: number[];
-  currentEvent?: number;
-  previousEvent?: number;
+  currentEvent: number;
+  previousEvent: number;
   calendarState: CalendarState;
 }
 
@@ -65,7 +65,7 @@ const Calendar = (props: Props) => {
       duration: 300,
       useNativeDriver: true,
     }).start();
-  }, [currentEvent]);
+  });
   const daysRow = (
     state.language === 'fr' ? dates.jours_semaines : dates.weekdays_short
   ).map((day, index) => (

@@ -46,11 +46,11 @@ const SettingsView = ({ navigation }) => {
                     width: wp(16),
                   }}>
                   <Image source={backCaret} style={styles.backCaret} />
-                  <Text style={styles.leftHeaderText}>Home</Text>
+                  <Text style={styles.leftHeaderText}>Retour</Text>
                 </View>
               </TouchableOpacity>
               <Text style={[styles.headerTitle, { width: '30%' }]}>
-                Settings
+                Paramètres
               </Text>
               <View style={{ width: '35%' }} />
             </View>
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '500',
     fontSize: 14,
+    marginLeft: 5,
   },
 });
 

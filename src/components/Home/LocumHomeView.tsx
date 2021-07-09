@@ -39,14 +39,7 @@ const fourSquares = require('assets/images/fourSquares.png');
 const verticalDots = require('assets/images/verticalDots.png');
 const calendar = require('assets/images/calendarIcon.png');
 const locumIcon = require('assets/images/locumIcon.png');
-const defaultAvatar = {
-  owner: {
-    male: { uri: 'https://image.flaticon.com/icons/png/512/1152/1152624.png' },
-    female: {
-      uri: 'https://image.flaticon.com/icons/png/512/1152/1152623.png',
-    },
-  },
-};
+const defaultAvatar = require('assets/images/defaultAvatar.png');
 
 function hexToRgba(hex: string, opacity: number) {
   let c;
@@ -79,12 +72,9 @@ const LocumHomeView = ({ navigation }) => {
   const { currentUser, contracts, thisMonthEventDates } = state;
   const CalendarState = dates.getCalendarState(new Date());
 
-  console.log(contracts);
-
   useEffect(() => {
     if (contracts.length > 1) {
-      const interval = setInterval(() => {
-        console.log(currentEventIndex, thisMonthEventDates.length);
+      const timeout = setTimeout(() => {
         const nextIndex =
           currentEventIndex === thisMonthEventDates.length - 1 ||
           thisMonthEventDates.length === 0
@@ -99,7 +89,7 @@ const LocumHomeView = ({ navigation }) => {
           viewPosition: 0.5,
         });
       }, 3000);
-      return () => clearInterval(interval);
+      return () => clearTimeout(timeout);
     }
   });
 
@@ -186,7 +176,7 @@ const LocumHomeView = ({ navigation }) => {
               source={
                 currentUser.pictureUrl
                   ? { uri: currentUser.pictureUrl }
-                  : defaultAvatar.owner.male
+                  : defaultAvatar
               }
               style={styles.userPicture}
             />
@@ -208,7 +198,7 @@ const LocumHomeView = ({ navigation }) => {
           width: '92%',
           flexDirection: 'row',
         }}>
-        <Text style={styles2.sectionTitle}>Votre Calendrier</Text>
+        <Text style={styles2.sectionTitle}>Calendrier</Text>
         <Image source={calendar} style={styles.calendarIcon} />
       </View>
       <View style={{ marginTop: hp(2) }}>

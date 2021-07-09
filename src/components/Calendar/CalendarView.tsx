@@ -142,7 +142,9 @@ const CalendarView = ({ navigation }) => {
           onPress={() => navigation.navigate('Home')}>
           <Image source={backCaret} style={styles.backCaret} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Votre Calendrier</Text>
+        <Text style={styles.headerTitle}>
+          {currentUser.accountType === 'locum' ? '' : 'Votre'}Calendrier
+        </Text>
         <View style={{ width: styles.backCaret.width }} />
       </View>
       <View style={[styles.flexRow, { marginTop: 5 }, styles.legend]}>
@@ -154,20 +156,23 @@ const CalendarView = ({ navigation }) => {
             ]}
           />
           <Text style={[styles.legendText, { color: colors.main }]}>
-            Locums disponibles
+            {currentUser.accountType === 'locum' ? 'Contrats' : 'Locums'}{' '}
+            disponibles
           </Text>
         </View>
-        <View style={[styles.flexRow, { marginLeft: 20 }]}>
-          <View
-            style={[
-              styles.legendDot,
-              { backgroundColor: colors.lightGray, marginRight: 5 },
-            ]}
-          />
-          <Text style={[styles.legendText, { color: colors.lightGray }]}>
-            En attente de locum
-          </Text>
-        </View>
+        {currentUser.accountType === 'owner' && (
+          <View style={[styles.flexRow, { marginLeft: 20 }]}>
+            <View
+              style={[
+                styles.legendDot,
+                { backgroundColor: colors.lightGray, marginRight: 5 },
+              ]}
+            />
+            <Text style={[styles.legendText, { color: colors.lightGray }]}>
+              En attente de locum
+            </Text>
+          </View>
+        )}
       </View>
 
       <View style={{ marginTop: 10 }}>
@@ -203,45 +208,49 @@ const CalendarView = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
         />
       </View>
-      <View style={styles.footer}>
-        <TouchableOpacity
-          onPress={() => {
-            if (selectionState && selectedDays.length) {
-              deployEvents();
-            } else {
-              toggleModalVisibility();
-            }
-          }}
-          style={[
-            styles.addButton,
-            selectionState
-              ? {
-                  backgroundColor: '#fff',
-                  borderColor: selectedDays.length ? colors.main : 'red',
+      {currentUser.accountType === 'owner' && (
+        <>
+          <View style={styles.footer}>
+            <TouchableOpacity
+              onPress={() => {
+                if (selectionState && selectedDays.length) {
+                  deployEvents();
+                } else {
+                  toggleModalVisibility();
                 }
-              : {},
-          ]}>
-          <Text
-            style={[
-              styles.addButtonText,
-              selectionState
-                ? { color: selectedDays.length ? colors.main : 'red' }
-                : {},
-            ]}>
-            {selectionState
-              ? selectedDays.length
-                ? 'Done'
-                : 'Cancel'
-              : 'Ajouter un événement'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+              }}
+              style={[
+                styles.addButton,
+                selectionState
+                  ? {
+                      backgroundColor: '#fff',
+                      borderColor: selectedDays.length ? colors.main : 'red',
+                    }
+                  : {},
+              ]}>
+              <Text
+                style={[
+                  styles.addButtonText,
+                  selectionState
+                    ? { color: selectedDays.length ? colors.main : 'red' }
+                    : {},
+                ]}>
+                {selectionState
+                  ? selectedDays.length
+                    ? 'Done'
+                    : 'Cancel'
+                  : 'Ajouter un événement'}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-      <AddEventModal
-        isVisible={modalVisible}
-        closeModal={() => setModalVisible(false)}
-        addCalendarEvent={addCalendarEvent}
-      />
+          <AddEventModal
+            isVisible={modalVisible}
+            closeModal={() => setModalVisible(false)}
+            addCalendarEvent={addCalendarEvent}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 };

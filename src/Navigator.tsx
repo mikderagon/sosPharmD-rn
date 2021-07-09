@@ -45,18 +45,8 @@ const defaultTheme = {
 const Navigator = () => {
   const { state, dispatch } = useContext(store);
   // const initialRouteName = 'Onboarding';
-  // const initialRouteName = 'OwnerHome';
-  const { currentUser } = auth();
-  // console.log(currentUser);
-  // const initialRouteName = currentUser ? 'OwnerHome' : 'SignIn';
+  // const initialRouteName = 'Home';
   const initialRouteName = 'SignIn';
-  useEffect(() => {
-    if (state.currentUser.accountType === 'locum') {
-      initLocumData(dispatch);
-    } else {
-      initOwnerData(dispatch);
-    }
-  }, [state.currentUser.accountType, dispatch]);
   return (
     <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator headerMode="screen" initialRouteName={initialRouteName}>

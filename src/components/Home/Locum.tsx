@@ -37,10 +37,11 @@ interface Props {
     educationalInstitution: string;
   };
   onPress?: () => void;
+  centerCorrection?: boolean;
 }
 
 const Locum = (props: Props) => {
-  const { date, user, onPress } = props;
+  const { date, user, centerCorrection } = props;
   const {
     firstName,
     lastName,
@@ -50,7 +51,7 @@ const Locum = (props: Props) => {
     educationalInstitution,
   } = user;
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, centerCorrection ? { left: wp(-5) } : {}]}>
       <View style={styles.dateTag}>
         <Text style={styles.date}>{date}</Text>
       </View>
@@ -75,7 +76,7 @@ const Locum = (props: Props) => {
   );
 };
 
-const locumSize = {
+export const locumSize = {
   height: hp(11),
   width: wp(95),
 };

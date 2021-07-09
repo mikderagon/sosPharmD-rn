@@ -6,6 +6,7 @@
  * @flow strict-local
  */
 
+import auth from '@react-native-firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
@@ -44,8 +45,10 @@ const Navigator = () => {
   const { state, dispatch } = useContext(store);
   // const initialRouteName = 'Onboarding';
   // const initialRouteName = 'Home';
-  const initialRouteName = 'SignUp';
-  // const initialRouteName = 'SignIn';
+  const { currentUser } = auth();
+  // console.log(currentUser);
+  // const initialRouteName = currentUser ? 'Home' : 'SignIn';
+  const initialRouteName = 'SignIn';
   useEffect(() => {
     initAppWithFirestoreData(dispatch);
   }, [dispatch]);

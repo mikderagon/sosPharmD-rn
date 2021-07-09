@@ -100,6 +100,21 @@ export async function initAppWithFirestoreData(dispatch: any) {
       type: 'SET_CALENDAR_EVENTS',
       events,
     });
+    const thisMonthEvents = getMonthEvents(events);
+    const thisMonthEventDates = getMonthEventDates(thisMonthEvents);
+    const locumTags = await getLocumTags(thisMonthEvents);
+    dispatch({
+      type: 'SET_THIS_MONTH_EVENTS',
+      thisMonthEvents,
+    });
+    dispatch({
+      type: 'SET_THIS_MONTH_EVENT_DATES',
+      thisMonthEventDates,
+    });
+    dispatch({
+      type: 'SET_LOCUM_TAGS',
+      locumTags,
+    });
   }
 }
 

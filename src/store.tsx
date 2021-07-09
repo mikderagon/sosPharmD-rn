@@ -7,6 +7,9 @@ const initialState = {
   currentUser: {} as Locum | Owner,
   language: 'fr',
   locumTags: [],
+  events: [],
+  thisMonthEvents: [],
+  thisMonthEventDates: [],
 };
 
 const store = createContext(initialState);
@@ -21,6 +24,18 @@ const StateProvider = ({ children }) => {
           events: action.events,
         };
         return newState;
+      case 'SET_THIS_MONTH_EVENTS':
+        var newState = {
+          ...state,
+          thisMonthEvents: action.thisMonthEvents,
+        };
+        return newState;
+      case 'SET_THIS_MONTH_EVENT_DATES':
+        var newState = {
+          ...state,
+          thisMonthEventDates: action.thisMonthEventDates,
+        };
+        return newState;
       case 'ADD_CALENDAR_EVENTS':
         var newState = {
           ...state,
@@ -33,7 +48,6 @@ const StateProvider = ({ children }) => {
           locumTags: action.locumTags,
         };
         return newState;
-
       case 'SET_CURRENT_USER':
         var newState = {
           ...state,

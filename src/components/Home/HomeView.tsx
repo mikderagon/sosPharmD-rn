@@ -32,7 +32,7 @@ import {
 import Button from './Button';
 import Calendar from './Calendar';
 import CalendarEventTag from './CalendarEventTag';
-import Locum from './Locum';
+import Locum, { locumSize } from './Locum';
 import * as firestore from '../../actions/firestore';
 
 const fourSquares = require('assets/images/fourSquares.png');
@@ -72,21 +72,13 @@ const GRADIENT_COLORS = [
 const HomeView = ({ navigation }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [previousEventIndex, setPreviousEventIndex] = useState(0);
+  const [horizontalFlatListScrolled, setHorizontalFlatListScrolled] =
+    useState(false);
   const horizontalFlatListRef = useRef(null);
   const { state, dispatch } = useContext(store);
-  const { currentUser, users, locumTags } = state;
+  const { currentUser, users, locumTags, thisMonthEventDates } = state;
   const CalendarState = dates.getCalendarState(new Date());
   // const { currentUser } = auth();
-
-  const thisMonthEvents = firestore.getMonthEvents(state.events);
-  const thisMonthEventDates = firestore.getMonthEventDates(thisMonthEvents);
-  (async function () {
-    const _locumTags = await firestore.getLocumTags(thisMonthEvents);
-    dispatch({
-      type: 'SET_LOCUM_TAGS',
-      locumTags: _locumTags,
-    });
-  })();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -97,6 +89,7 @@ const HomeView = ({ navigation }) => {
           : currentEventIndex + 1;
       setPreviousEventIndex(currentEventIndex);
       setCurrentEventIndex(nextIndex);
+      setHorizontalFlatListScrolled(true);
       horizontalFlatListRef.current.scrollToIndex({
         animated: true,
         index: nextIndex,
@@ -258,20 +251,17 @@ const HomeView = ({ navigation }) => {
               <Locum
                 date={thisMonthEventDates[index]}
                 user={item.user}
-                onPress={() => {
-                  navigation.navigate('Locums', {
-                    locums: locumTags,
-                  });
-                }}
+                centerCorrection={
+                  !horizontalFlatListScrolled || locumTags.length == 1
+                }
               />
             ) : (
               <CalendarEventTag />
             )
           }
-          // TODO: get length and offset from renderItem's component (<Locum />)
           getItemLayout={(data, index) => ({
-            length: wp(95),
-            offset: wp(95 + 10) * index + wp(7.5),
+            length: locumSize.width,
+            offset: (locumSize.width + wp(10)) * index + wp(7.5),
             index,
           })}
         />

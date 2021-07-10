@@ -30,13 +30,17 @@ import {
 import AddEventModal, { NewEvent } from './AddEventModal';
 import Calendar from './Calendar';
 import * as firestore from '../../actions/firestore';
+import EventModal from './EventModal';
 
 const backCaret = require('assets/images/backCaret.png');
 
 const CalendarView = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [addEventModalVisible, setAddEventModalVisible] = useState(false);
+  const [eventModalVisible, setEventModalVisible] = useState(false);
   const [selectionState, setSelectionState] = useState(false); // set true to test
-  const toggleModalVisibility = () => setModalVisible(!modalVisible);
+  const toggleAddEventModal = () =>
+    setAddEventModalVisible(!addEventModalVisible);
+  const toggleEventModal = () => setEventModalVisible(!eventModalVisible);
   const [userEvent, setUserEvent] = useState<NewEvent>();
   const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
   const { state, dispatch } = useContext(store);
@@ -90,7 +94,11 @@ const CalendarView = ({ navigation }) => {
           clickedEvent = event;
         }
       });
-      console.log(clickedEvent);
+      if (clickedEvent) {
+        // open a modal
+        console.log(clickedEvent);
+        toggleEventModal();
+      }
     }
   }
 
@@ -132,6 +140,8 @@ const CalendarView = ({ navigation }) => {
     Alert.alert("Choisissez les dates de l'événement");
     setSelectionState(true);
   }
+
+  console.log(eventModalVisible);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -216,7 +226,7 @@ const CalendarView = ({ navigation }) => {
                 if (selectionState && selectedDays.length) {
                   deployEvents();
                 } else {
-                  toggleModalVisibility();
+                  toggleAddEventModal();
                 }
               }}
               style={[
@@ -245,12 +255,16 @@ const CalendarView = ({ navigation }) => {
           </View>
 
           <AddEventModal
-            isVisible={modalVisible}
-            closeModal={() => setModalVisible(false)}
+            isVisible={addEventModalVisible}
+            closeModal={() => setAddEventModalVisible(false)}
             addCalendarEvent={addCalendarEvent}
           />
         </>
       )}
+      <EventModal
+        isVisible={eventModalVisible}
+        closeModal={() => setEventModalVisible(false)}
+      />
     </SafeAreaView>
   );
 };

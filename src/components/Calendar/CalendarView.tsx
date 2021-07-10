@@ -92,13 +92,9 @@ const CalendarView = ({ navigation }) => {
       state.events.forEach(event => {
         if (event.day === day && event.month === month && event.year === year) {
           setClickedEvent(event);
+          toggleEventModal();
         }
       });
-      if (clickedEvent) {
-        // open a modal
-        console.log(clickedEvent);
-        toggleEventModal();
-      }
     }
   }
 
@@ -153,7 +149,7 @@ const CalendarView = ({ navigation }) => {
           <Image source={backCaret} style={styles.backCaret} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>
-          {currentUser.accountType === 'locum' ? '' : 'Votre'}Calendrier
+          {currentUser.accountType === 'locum' ? '' : 'Votre '}Calendrier
         </Text>
         <View style={{ width: styles.backCaret.width }} />
       </View>

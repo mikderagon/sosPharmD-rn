@@ -49,7 +49,12 @@ const Contract = (props: Props) => {
         <Image source={{ uri: pictureUrl }} style={styles.userPicture} />
         <View style={styles.outsideImageContainer}>
           <Text style={styles.name}>{firstName + ' ' + lastName}</Text>
-          <Text style={[styles.school, { marginTop: 1 }]}>Owner</Text>
+          <Text style={[styles.school, { marginTop: 1 }]}>
+            Propriétaire, Jean Coutu, 450 boul des Laurentides
+          </Text>
+          <Text style={[styles.school, { marginTop: 1, color: colors.main }]}>
+            8:30 - 16:30
+          </Text>
         </View>
       </View>
       {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

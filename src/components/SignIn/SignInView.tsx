@@ -6,13 +6,23 @@
  * @flow strict-local
  */
 
-import React, { useContext, useEffect, useState, useMemo, memo } from 'react';
+import auth from '@react-native-firebase/auth';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  memo,
+  useRef,
+} from 'react';
 import {
   Alert,
+  TextInput,
   Animated,
   Easing,
   StyleSheet,
   Text,
+  Image,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -37,10 +47,19 @@ const SignInView = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [spinnerActive, setSpinnerActive] = useState(false);
+  const inputRef1 = useRef(null);
+  const inputRef2 = useRef(null);
 
-  function handleSignIn() {
+  // (DEV ENV ONLY) autologin
+  // const [iter, setIter] = useState(0);
+  // if (auth().currentUser && iter === 0) {
+  //   setIter(iter + 1);
+  //   handleSignIn(auth().currentUser.email, 'sospharmd');
+  // }
+
+  function handleSignIn(_email?: string, _password?: string) {
     firestore
-      .signIn(email, password)
+      .signIn(_email || email, _password || password)
       .then((user: Locum | Owner) => {
         dispatch({
           type: 'SET_CURRENT_USER',
@@ -67,7 +86,7 @@ const SignInView = ({ navigation }) => {
       {/* title */}
       <View
         style={{
-          marginTop: hp(13),
+          marginTop: hp(10),
           alignItems: 'flex-start',
           alignSelf: 'flex-start',
           marginLeft: wp(11),
@@ -82,24 +101,43 @@ const SignInView = ({ navigation }) => {
         <Image source={logo} style={styles.logo} />
       </View> */}
       {/* identifier */}
-      <View style={{ marginTop: hp(8) }}>
-        <Input
-          autoFocus
-          set={setEmail}
-          sourceImage={usernameImage}
-          placeholder={
-            state.language === 'fr' ? 'Addresse courrielle' : 'Email'
-          }
-        />
+      <View style={{ marginTop: hp(6) }}>
+        <View style={styles.inputContainer}>
+          <Image source={usernameImage} style={styles.usernameImage} />
+          <TextInput
+            ref={inputRef1}
+            autoFocus
+            style={styles.input}
+            onChangeText={setEmail}
+            placeholder={
+              state.language === 'fr' ? 'Addresse courrielle' : 'Email'
+            }
+            placeholderTextColor="#bbb"
+            autoCapitalize="none"
+            autoCompleteType="off"
+            autoCorrect={false}
+            onEndEditing={() => inputRef2.current.focus()}
+            // maxLength={20}
+          />
+        </View>
       </View>
       {/* password */}
       <View style={{ marginTop: hp(4) }}>
-        <Input
-          set={setPassword}
-          sourceImage={passwordImage}
-          placeholder={state.language === 'fr' ? 'Mot de passe' : 'Password'}
-          secured
-        />
+        <View style={styles.inputContainer}>
+          <Image source={passwordImage} style={styles.usernameImage} />
+          <TextInput
+            ref={inputRef2}
+            secureTextEntry
+            style={styles.input}
+            onChangeText={setPassword}
+            placeholder={state.language === 'fr' ? 'Mot de passe' : 'Password'}
+            placeholderTextColor="#bbb"
+            autoCapitalize="none"
+            autoCompleteType="off"
+            autoCorrect={false}
+            // maxLength={20}
+          />
+        </View>
       </View>
       {/* login */}
       <View style={{ marginTop: hp(4) }}>
@@ -185,6 +223,27 @@ const styles = StyleSheet.create({
   regularText: {
     fontWeight: '300',
     fontSize: 14,
+  },
+  usernameImage: {
+    right: wp(1.2),
+    resizeMode: 'contain',
+    height: '100%',
+  },
+  input: {
+    fontSize: 19,
+    color: '#494949',
+    width: '70%',
+    textAlign: 'center',
+  },
+  inputContainer: {
+    backgroundColor: '#fff',
+    borderColor: '#ddd',
+    borderWidth: 2,
+    borderRadius: wp(80),
+    height: wp(80) * 0.15,
+    width: wp(80),
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

@@ -6,7 +6,6 @@
  * @flow strict-local
  */
 
-import auth from '@react-native-firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
@@ -44,9 +43,10 @@ const defaultTheme = {
 
 const Navigator = () => {
   const { state, dispatch } = useContext(store);
-  // const initialRouteName = 'Onboarding';
+  const initialRouteName = 'Onboarding';
   // const initialRouteName = 'Home';
-  const initialRouteName = 'SignIn';
+  // const initialRouteName = 'SignIn';
+  // const initialRouteName = 'Calendar';
   return (
     <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator headerMode="screen" initialRouteName={initialRouteName}>

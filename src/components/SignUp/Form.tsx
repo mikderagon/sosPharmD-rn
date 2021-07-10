@@ -118,8 +118,8 @@ const Form = (props: Props) => {
   return (
     <KeyboardAwareScrollView
       style={styles.container}
-      contentContainerStyle={{ alignItems: 'center' }}
-      contentInset={{ bottom: hp(10) }}>
+      contentContainerStyle={{ alignItems: 'center', paddingBottom: 30 }}
+      extraHeight={200}>
       <View style={{ width: wp(80), marginTop: hp(3) }}>
         <Text
           style={{

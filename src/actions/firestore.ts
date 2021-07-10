@@ -19,7 +19,7 @@ export function createUser(userData: signUpFormData): Promise<Locum | Owner> {
           firstName: userData.firstName,
           lastName: userData.lastName,
           pictureUrl: null,
-          address: userData.city,
+          address: userData.address,
           city: userData.city,
           accountType: userData.accountType,
         };

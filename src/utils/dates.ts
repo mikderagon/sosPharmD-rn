@@ -36,6 +36,17 @@ export function getMonthIndex(monthName: string): number {
   return months.findIndex(month => month === monthName) + 1;
 }
 
+// french version
+export function formatDay(day: number | undefined): string {
+  if (typeof day === 'undefined') {
+    return '';
+  }
+  if (day === 1) {
+    return '1er';
+  }
+  return day.toString();
+}
+
 const weekdays_long = [
   'Sunday',
   'Monday',

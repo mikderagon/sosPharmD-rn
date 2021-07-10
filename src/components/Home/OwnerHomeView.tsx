@@ -187,7 +187,11 @@ const OwnerHomeView = ({ navigation }) => {
               {_String.capitalize('Propriétaire')}
             </Text>
           </Text>
-          <Text style={styles.location}>{currentUser.pharmacy}</Text>
+          <Text style={styles.location}>
+            {currentUser.pharmacy}
+            {', '}
+            {currentUser.address}
+          </Text>
         </LinearGradient>
       </View>
       {/* Calendar */}

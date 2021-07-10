@@ -41,6 +41,7 @@ const CalendarView = ({ navigation }) => {
   const toggleAddEventModal = () =>
     setAddEventModalVisible(!addEventModalVisible);
   const toggleEventModal = () => setEventModalVisible(!eventModalVisible);
+  const [clickedEvent, setClickedEvent] = useState(null);
   const [userEvent, setUserEvent] = useState<NewEvent>();
   const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
   const { state, dispatch } = useContext(store);
@@ -88,10 +89,9 @@ const CalendarView = ({ navigation }) => {
         setSelectedDays([...selectedDays, { day, month, year }]);
       }
     } else {
-      let clickedEvent;
       state.events.forEach(event => {
         if (event.day === day && event.month === month && event.year === year) {
-          clickedEvent = event;
+          setClickedEvent(event);
         }
       });
       if (clickedEvent) {
@@ -263,6 +263,7 @@ const CalendarView = ({ navigation }) => {
       )}
       <EventModal
         isVisible={eventModalVisible}
+        event={clickedEvent}
         closeModal={() => setEventModalVisible(false)}
       />
     </SafeAreaView>

@@ -12,6 +12,7 @@ const initialState = {
   events: [] as Event[],
   thisMonthEvents: [],
   thisMonthEventDates: [],
+  interestedLocums: [],
   pharmacies: [] as Pharmacy[],
   schools: [] as School[],
 };

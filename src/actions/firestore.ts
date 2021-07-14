@@ -198,6 +198,32 @@ export async function getContractTags(
   return contracts;
 }
 
+export async function getLocumDemands(events: Event[]) {
+  // TODO: put this in initOwnerData so we can access them via our store
+  const interestedLocums = _.flatten(
+    events.map(event => {
+      return event.interestedLocums.map(id => {
+        return {
+          id,
+          startTime: event.startTime,
+          endTime: event.endTime,
+        };
+      });
+    }),
+  );
+  const locums = await Promise.all(
+    interestedLocums.map(async ({ startTime, endTime, id }) => {
+      const interestedLocum = await findUser(id.toString());
+      return {
+        interestedLocum,
+        startTime,
+        endTime,
+      };
+    }),
+  );
+  return locums;
+}
+
 export function batchUpsertEvents(events: Event[]) {
   return new Promise((resolve, reject) => {
     Promise.all([

@@ -72,8 +72,6 @@ const OwnerHomeView = ({ navigation }) => {
   const CalendarState = dates.getCalendarState(new Date());
   // const { currentUser } = auth();
 
-  console.log(currentUser);
-
   useEffect(() => {
     if (locumTags.length > 1) {
       const timeout = setTimeout(() => {
@@ -107,7 +105,6 @@ const OwnerHomeView = ({ navigation }) => {
   // return subscriber;
   // }, []);
 
-  // TODO: create interface and component
   const noLocumTags = [
     {
       title: 'No Locum',

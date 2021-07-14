@@ -151,7 +151,6 @@ const Form = (props: Props) => {
       return;
     }
     if (key === 'school') {
-      // TODO: import from db
       var choices = schools.map(school => school.name);
       const matches = choices.filter(choice => {
         if (string_cleanup(choice).includes(string_cleanup(value))) {
@@ -161,7 +160,6 @@ const Form = (props: Props) => {
       setAutocompleteChoice(matches[0] || '');
     } else {
       // key === 'pharmacy'
-      // TODO: import from db
       var choices = pharmacies.map(pharmacy => pharmacy.address);
       const matches = choices.filter(choice => {
         if (string_cleanup(choice).includes(string_cleanup(value))) {

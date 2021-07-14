@@ -6,6 +6,7 @@
  * @flow strict-local
  */
 
+import _ from 'underscore';
 import React from 'react';
 import {
   TouchableOpacity,
@@ -24,17 +25,25 @@ import {
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
 import { EventOwnerPharmacy } from './CalendarView';
-import { Event } from '../../models';
+import { Event, Locum } from '../../models';
+import * as firestore from '../../actions/firestore';
 
 interface Props {
   closeModal: any;
   isVisible: boolean;
   events: EventOwnerPharmacy[];
   applyForContract: (event: Event) => void;
+  isLocum: boolean;
+}
+
+interface interestedLocum {
+  interestedLocum: Locum;
+  startTime: string;
+  endTime: string;
 }
 
 const EventModal = (props: Props) => {
-  const { isVisible, closeModal, events, applyForContract } = props;
+  const { isVisible, isLocum, closeModal, events, applyForContract } = props;
   return (
     <Modal
       onBackdropPress={closeModal}
@@ -68,7 +77,13 @@ const EventModal = (props: Props) => {
           {mois[events[0]?.event.month - 1]}
         </Text>
         <FlatList
-          data={events}
+          data={
+            isLocum
+              ? events
+              : async () => {
+                  await firestore.getLocumDemands(events.map(e => e.event));
+                }
+          }
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <View style={styles.component}>

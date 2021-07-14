@@ -105,7 +105,6 @@ const LocumHomeView = ({ navigation }) => {
   // return subscriber;
   // }, []);
 
-  // TODO: create interface and component
   const noContracts = [
     {
       title: 'No Locum',

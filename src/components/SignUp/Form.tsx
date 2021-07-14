@@ -24,13 +24,16 @@ import {
 import Input from './Input';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useEffect } from 'react';
+import { School, Pharmacy } from '../../models';
 
 type field = {
   key: string;
   fr: string;
   eng: string;
+  placeholder?: string;
   autoCapitalize?: boolean;
   secured?: boolean;
+  autoComplete?: boolean;
 };
 
 export const fields: field[] = [
@@ -57,11 +60,7 @@ export const fields: field[] = [
     eng: 'Password',
     secured: true,
   },
-  {
-    key: 'address',
-    fr: 'Addresse',
-    eng: 'Address',
-  },
+  { key: 'address', fr: 'Addresse', eng: 'Address' },
 ];
 
 export interface signUpFormData {
@@ -73,6 +72,7 @@ export interface signUpFormData {
   accountType: 'locum' | 'owner';
   school?: string;
   pharmacy?: string;
+  pharmacyId?: string;
 }
 
 export const locumFields: field[] = [
@@ -80,6 +80,8 @@ export const locumFields: field[] = [
     key: 'school',
     fr: 'Institution académique',
     eng: 'Educational Institution',
+    placeholder: 'ex: Université de Montréal',
+    autoComplete: true,
   },
 ];
 
@@ -88,6 +90,8 @@ export const ownerFields: field[] = [
     key: 'pharmacy',
     fr: 'Pharmacie',
     eng: 'Pharmacy',
+    placeholder: 'ex: 450 Boulevard de Montmagny',
+    autoComplete: true,
   },
 ];
 
@@ -96,10 +100,21 @@ interface Props {
   setIsLocum: Dispatch<SetStateAction<boolean>>;
   language?: string;
   setValue: (key: string, value: string) => void;
+  schools: School[];
+  pharmacies: Pharmacy[];
 }
 
 const Form = (props: Props) => {
-  const { isLocum, setIsLocum, language = 'fr', setValue } = props;
+  const {
+    isLocum,
+    setIsLocum,
+    language = 'fr',
+    setValue,
+    schools,
+    pharmacies,
+  } = props;
+  const [autocompleteValue, setAutocompleteValue] = useState('');
+  const [autocompleteChoice, setAutocompleteChoice] = useState('');
   // the whole way this component is written is very dirty, but had no time to find how to use refs in an array
   // TODO: find a library for react forms. eg https://formik.org
   const input1 = useRef(null);
@@ -108,7 +123,6 @@ const Form = (props: Props) => {
   const input4 = useRef(null);
   const input5 = useRef(null);
   const input6 = useRef(null);
-  const input7 = useRef(null);
   const fieldsList = [...fields, ...(isLocum ? locumFields : ownerFields)];
 
   // autofocus alternative
@@ -117,11 +131,52 @@ const Form = (props: Props) => {
       input1.current.focus();
     }, 100);
   }, []);
+
+  function onAccountTypeSwitch(_isLocum: boolean) {
+    setIsLocum(_isLocum);
+    setAutocompleteChoice('');
+    setAutocompleteValue('');
+  }
+
+  function string_cleanup(str: string) {
+    let new_str = str.toLowerCase();
+    new_str = new_str.replace(new RegExp(/[èéêë]/g), 'e');
+    return new_str;
+  }
+
+  function autocomplete(key: string, value: string) {
+    setAutocompleteValue(value);
+    if (value === '') {
+      setAutocompleteChoice('');
+      return;
+    }
+    if (key === 'school') {
+      // TODO: import from db
+      var choices = schools.map(school => school.name);
+      const matches = choices.filter(choice => {
+        if (string_cleanup(choice).includes(string_cleanup(value))) {
+          return choice;
+        }
+      });
+      setAutocompleteChoice(matches[0] || '');
+    } else {
+      // key === 'pharmacy'
+      // TODO: import from db
+      var choices = pharmacies.map(pharmacy => pharmacy.address);
+      const matches = choices.filter(choice => {
+        if (string_cleanup(choice).includes(string_cleanup(value))) {
+          return choice;
+        }
+      });
+      setAutocompleteChoice(matches[0] || '');
+    }
+  }
   return (
     <KeyboardAwareScrollView
       style={styles.container}
       contentContainerStyle={{ alignItems: 'center', paddingBottom: 30 }}
-      extraHeight={200}>
+      // contentInset={{ bottom: 20 }}
+      extraHeight={400}>
       <View style={{ width: wp(80), marginTop: hp(3) }}>
         <Text
           style={{
@@ -139,48 +194,18 @@ const Form = (props: Props) => {
                 marginTop: hp(0),
               },
             ]}>
-            <TouchableOpacity
-              onPress={() => {
-                setIsLocum(true);
-                input7.current.focus();
-              }}>
+            <TouchableOpacity onPress={() => onAccountTypeSwitch(true)}>
               {isLocum && <Text style={styles.chosenType}>Locum</Text>}
               {!isLocum && <Text style={styles.unchosenType}>Locum</Text>}
             </TouchableOpacity>
             <View style={{ width: wp(5) }} />
-            <TouchableOpacity
-              onPress={() => {
-                setIsLocum(false);
-                input7.current.focus();
-              }}>
+            <TouchableOpacity onPress={() => onAccountTypeSwitch(false)}>
               {!isLocum && <Text style={styles.chosenType}>Propriétaire</Text>}
               {isLocum && <Text style={styles.unchosenType}>Propriétaire</Text>}
             </TouchableOpacity>
           </View>
         </View>
       </View>
-      {/* {[...fields, ...(isLocum ? locumFields : ownerFields)].map(
-        ({ key, fr, eng, autoCapitalize, secured }, index) => (
-          <View key={index} style={{ marginTop: hp(3) }}>
-            <Input
-              ref={input1}
-              autoFocus={index === 0}
-              autoCapitalize={autoCapitalize}
-              secured={secured}
-              inputName={language === 'fr' ? fr : eng}
-              placeholder={language === 'fr' ? fr : eng}
-              set={(value: string) => setValue(key, value)}
-              returnKeyType={
-                index ===
-                [...fields, ...(isLocum ? locumFields : ownerFields)].length - 1
-                  ? 'done'
-                  : 'next'
-              }
-              onEndEditing={() => inputRefs[index + 1].current.focus()}
-            />
-          </View>
-        ),
-      )} */}
       <View style={{ marginTop: hp(3) }}>
         <View style={inputStyles.container}>
           <Text style={inputStyles.title}>{fieldsList[0].fr}</Text>
@@ -292,35 +317,39 @@ const Form = (props: Props) => {
             <TextInput
               ref={input6}
               onChangeText={(value: string) =>
-                setValue(fieldsList[5].key, value)
+                autocomplete(fieldsList[5].key, value)
               }
+              value={autocompleteValue}
               style={inputStyles.input}
-              placeholder={fieldsList[5].fr}
-              placeholderTextColor="#CCCBCB"
-              autoCorrect={false}
-              autoCapitalize={'words'}
-              returnKeyType={'next'}
-              onSubmitEditing={() => input7.current.focus()}
-            />
-          </View>
-        </View>
-      </View>
-
-      <View style={{ marginTop: hp(3) }}>
-        <View style={inputStyles.container}>
-          <Text style={inputStyles.title}>{fieldsList[6].fr}</Text>
-          <View style={{ marginTop: hp(2) }}>
-            <TextInput
-              ref={input7}
-              onChangeText={(value: string) =>
-                setValue(fieldsList[6].key, value)
-              }
-              style={inputStyles.input}
-              placeholder={fieldsList[6].fr}
+              placeholder={fieldsList[5].placeholder}
               placeholderTextColor="#CCCBCB"
               autoCapitalize={'words'}
               returnKeyType={'next'}
             />
+            {autocompleteChoice.length > 0 && (
+              <TouchableOpacity
+                style={{
+                  top: 5,
+                  right: 0,
+                  height: 27,
+                  // width: '70%',
+                  paddingHorizontal: 10,
+                  alignSelf: 'center',
+                  backgroundColor: colors.main,
+                  borderRadius: 15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() => {
+                  setValue(fieldsList[5].key, autocompleteChoice);
+                  setAutocompleteChoice('');
+                  setAutocompleteValue(autocompleteChoice);
+                }}>
+                <Text style={{ color: '#fff', fontWeight: '800' }}>
+                  {autocompleteChoice}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>

@@ -30,7 +30,7 @@ export function createUser(userData: signUpFormData): Promise<Locum | Owner> {
                 }
               : {
                   ...requiredData,
-                  pharmacy: userData.pharmacy,
+                  pharmacyId: userData.pharmacyId,
                 },
           );
         return newUser;

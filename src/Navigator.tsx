@@ -9,14 +9,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
-import { initOwnerData, initLocumData } from './actions/firestore';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
 import Calendar from './components/Calendar/CalendarView';
-import OwnerHome from './components/Home/OwnerHomeView';
 import LocumHome from './components/Home/LocumHomeView';
+import OwnerHome from './components/Home/OwnerHomeView';
 import Locums from './components/Locums/LocumsView';
 import Onboarding from './components/Onboarding/OnboardingView';
 import Settings from './components/Settings/SettingsView';

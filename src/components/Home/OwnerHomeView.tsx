@@ -68,9 +68,11 @@ const OwnerHomeView = ({ navigation }) => {
     useState(false);
   const horizontalFlatListRef = useRef(null);
   const { state, dispatch } = useContext(store);
-  const { currentUser, users, locumTags, thisMonthEventDates } = state;
+  const { currentUser, locumTags, thisMonthEventDates } = state;
   const CalendarState = dates.getCalendarState(new Date());
   // const { currentUser } = auth();
+
+  console.log(currentUser);
 
   useEffect(() => {
     if (locumTags.length > 1) {
@@ -188,9 +190,9 @@ const OwnerHomeView = ({ navigation }) => {
             </Text>
           </Text>
           <Text style={styles.location}>
-            {currentUser.pharmacy}
+            {currentUser.pharmacyAffiliation}
             {', '}
-            {currentUser.address}
+            {currentUser.pharmacyAddress}
           </Text>
         </LinearGradient>
       </View>

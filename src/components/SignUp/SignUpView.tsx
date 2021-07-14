@@ -17,7 +17,7 @@ import {
 } from '../../utils/responsiveLayout';
 import Button from '../SignUp/Button';
 import Form, { fields, locumFields, ownerFields, signUpFormData } from './Form';
-import { User, Locum, Owner } from '../../models';
+import { User, Locum, Owner, Pharmacy } from '../../models';
 
 const SignUpLocumView = ({ navigation }) => {
   const { state, dispatch } = useContext(store);
@@ -42,7 +42,13 @@ const SignUpLocumView = ({ navigation }) => {
     }
   }, [userData, fields.length]);
 
+  useEffect(() => {
+    // feed schools and pharmacies arrays for signup form autocompletes
+    firestore.getSignupData(dispatch);
+  }, [dispatch]);
+
   function handleSignUp(data: signUpFormData) {
+    // state .pharmacies
     if (allFieldsEntered) {
       firestore
         .createUser(data)
@@ -54,9 +60,8 @@ const SignUpLocumView = ({ navigation }) => {
           if (user.accountType === 'locum') {
             firestore.initLocumData(dispatch);
           } else {
-            firestore.initOwnerData(dispatch);
+            firestore.initOwnerData(user, dispatch);
           }
-
           navigation.reset({
             index: 0,
             routes: [{ name: 'Home' }],
@@ -77,6 +82,8 @@ const SignUpLocumView = ({ navigation }) => {
           setValue={(key: string, value: string) => {
             setUserData({ ...userData, [key]: value });
           }}
+          schools={state.schools}
+          pharmacies={state.pharmacies}
         />
       </View>
 

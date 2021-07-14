@@ -1,10 +1,11 @@
 import React, { createContext, useReducer } from 'react';
 import _ from 'underscore';
 import firestore from '@react-native-firebase/firestore';
-import { User, Event, Locum, Owner, Pharmacy } from './models';
+import { User, Event, Locum, Owner, Pharmacy, School } from './models';
 
 const initialState = {
   currentUser: {} as Locum | Owner,
+  currentUserPharmacy: {} as Pharmacy,
   language: 'fr',
   locumTags: [],
   contracts: [],
@@ -12,6 +13,7 @@ const initialState = {
   thisMonthEvents: [],
   thisMonthEventDates: [],
   pharmacies: [] as Pharmacy[],
+  schools: [] as School[],
 };
 
 const store = createContext(initialState);
@@ -62,10 +64,28 @@ const StateProvider = ({ children }) => {
           currentUser: action.currentUser,
         };
         return newState;
+      case 'SET_CURRENT_USER_PHARMACY':
+        var newState = {
+          ...state,
+          currentUserPharmacy: action.currentUserPharmacy,
+        };
+        return newState;
       case 'SET_APP_LANGUAGE':
         var newState = {
           ...state,
           language: action.language,
+        };
+        return newState;
+      case 'SET_SCHOOLS':
+        var newState = {
+          ...state,
+          schools: action.schools,
+        };
+        return newState;
+      case 'SET_PHARMACIES':
+        var newState = {
+          ...state,
+          pharmacies: action.pharmacies,
         };
         return newState;
       default:

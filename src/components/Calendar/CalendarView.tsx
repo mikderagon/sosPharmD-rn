@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import 'react-native-gesture-handler';
 import { DateObject } from '../../interfaces';
-import { Event } from '../../models';
+import { Event, Owner, Pharmacy } from '../../models';
 import { store } from '../../store';
 import colors from '../../styles/colors';
 import * as dates from '../../utils/dates';
@@ -34,6 +34,12 @@ import EventModal from './EventModal';
 
 const backCaret = require('assets/images/backCaret.png');
 
+export interface EventOwnerPharmacy {
+  event: Event;
+  owner: Owner;
+  pharmacy: Pharmacy;
+}
+
 const CalendarView = ({ navigation }) => {
   const [addEventModalVisible, setAddEventModalVisible] = useState(false);
   const [eventModalVisible, setEventModalVisible] = useState(false);
@@ -41,7 +47,7 @@ const CalendarView = ({ navigation }) => {
   const toggleAddEventModal = () =>
     setAddEventModalVisible(!addEventModalVisible);
   const toggleEventModal = () => setEventModalVisible(!eventModalVisible);
-  const [clickedEvents, setClickedEvents] = useState<Event[]>([]);
+  const [clickedEvents, setClickedEvents] = useState<EventOwnerPharmacy[]>([]);
   const [userEvent, setUserEvent] = useState<NewEvent>();
   const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
   const { state, dispatch } = useContext(store);
@@ -66,7 +72,7 @@ const CalendarView = ({ navigation }) => {
     );
   });
 
-  function onDayPress(day: number, month: number, year: number) {
+  async function onDayPress(day: number, month: number, year: number) {
     if (selectionState) {
       if (
         selectedDays.find(
@@ -89,9 +95,18 @@ const CalendarView = ({ navigation }) => {
         setSelectedDays([...selectedDays, { day, month, year }]);
       }
     } else {
-      const _clickedEvents = state.events.filter(
+      let _clickedEvents = state.events.filter(
         (event: Event) =>
           event.day === day && event.month === month && event.year === year,
+      );
+      _clickedEvents = await Promise.all(
+        _clickedEvents.map(async (event: Event) => {
+          const owner: Owner = await firestore.findUser(event.UserId);
+          const pharmacy: Pharmacy = await firestore.findPharmacy(
+            owner.pharmacyId,
+          );
+          return { event, owner, pharmacy };
+        }),
       );
       setClickedEvents(_clickedEvents);
       toggleEventModal();
@@ -195,7 +210,7 @@ const CalendarView = ({ navigation }) => {
                 selectedDays={selectedDays}
                 onDayPress={onDayPress}
                 events={state.events.filter(
-                  event =>
+                  (event: Event) =>
                     event.year === item.year && event.month === item.month,
                 )}
                 calendarState={item}
@@ -258,6 +273,9 @@ const CalendarView = ({ navigation }) => {
       <EventModal
         isVisible={eventModalVisible}
         events={clickedEvents}
+        applyForContract={(event: Event) =>
+          firestore.applyForContract(event, currentUser.id)
+        }
         closeModal={() => setEventModalVisible(false)}
       />
     </SafeAreaView>

@@ -22,19 +22,17 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import LinearGradient from 'react-native-linear-gradient';
 import { calendarDimensions } from './Calendar';
 
 interface Props {
   date: number;
   user: {
-    city: string;
     firstName: string;
     lastName: string;
     id: number;
     pictureUrl: string;
     year: number;
-    educationalInstitution: string;
+    school: string;
   };
   onPress?: () => void;
   centerCorrection?: boolean;
@@ -42,14 +40,7 @@ interface Props {
 
 const Locum = (props: Props) => {
   const { date, user, centerCorrection } = props;
-  const {
-    firstName,
-    lastName,
-    pictureUrl,
-    city,
-    year,
-    educationalInstitution,
-  } = user;
+  const { firstName, lastName, pictureUrl, city, year, school } = user;
   return (
     <View style={[styles.container, centerCorrection ? { left: wp(-5) } : {}]}>
       <View style={styles.dateTag}>
@@ -60,7 +51,7 @@ const Locum = (props: Props) => {
         <View style={styles.outsideImageContainer}>
           <Text style={styles.name}>{firstName + ' ' + lastName}</Text>
           <Text style={[styles.school, { marginTop: 1 }]}>
-            {`${year}nd year Pharmacy Student, ${educationalInstitution}`}
+            {`${year}nd year Pharmacy Student, ${school}`}
           </Text>
         </View>
       </View>

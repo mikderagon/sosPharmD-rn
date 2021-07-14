@@ -4,6 +4,5 @@ export default interface User {
   lastName: string;
   email: string;
   pictureUrl: string;
-  city: string;
   emailVerified?: boolean;
-}
+};

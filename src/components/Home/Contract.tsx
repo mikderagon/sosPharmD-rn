@@ -28,7 +28,6 @@ import { calendarDimensions } from './Calendar';
 interface Props {
   date: number;
   user: {
-    city: string;
     firstName: string;
     lastName: string;
     pictureUrl: string;

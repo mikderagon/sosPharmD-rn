@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, { Dispatch, SetStateAction, createRef, useRef } from 'react';
+import React, { Dispatch, SetStateAction, useState, useRef } from 'react';
 import {
   TouchableOpacity,
   ScrollView,
@@ -23,6 +23,7 @@ import {
 } from '../../utils/responsiveLayout';
 import Input from './Input';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useEffect } from 'react';
 
 type field = {
   key: string;
@@ -61,11 +62,6 @@ export const fields: field[] = [
     fr: 'Addresse',
     eng: 'Address',
   },
-  {
-    key: 'city',
-    fr: 'Ville',
-    eng: 'City',
-  },
 ];
 
 export interface signUpFormData {
@@ -74,15 +70,14 @@ export interface signUpFormData {
   email: string;
   password: string;
   address: string;
-  city: string;
   accountType: 'locum' | 'owner';
-  educationalInstitution?: string;
+  school?: string;
   pharmacy?: string;
 }
 
 export const locumFields: field[] = [
   {
-    key: 'educationalInstitution',
+    key: 'school',
     fr: 'Institution académique',
     eng: 'Educational Institution',
   },
@@ -115,6 +110,13 @@ const Form = (props: Props) => {
   const input6 = useRef(null);
   const input7 = useRef(null);
   const fieldsList = [...fields, ...(isLocum ? locumFields : ownerFields)];
+
+  // autofocus alternative
+  useEffect(() => {
+    setTimeout(() => {
+      input1.current.focus();
+    }, 100);
+  }, []);
   return (
     <KeyboardAwareScrollView
       style={styles.container}
@@ -137,12 +139,20 @@ const Form = (props: Props) => {
                 marginTop: hp(0),
               },
             ]}>
-            <TouchableOpacity onPress={() => setIsLocum(true)}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsLocum(true);
+                input7.current.focus();
+              }}>
               {isLocum && <Text style={styles.chosenType}>Locum</Text>}
               {!isLocum && <Text style={styles.unchosenType}>Locum</Text>}
             </TouchableOpacity>
             <View style={{ width: wp(5) }} />
-            <TouchableOpacity onPress={() => setIsLocum(false)}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsLocum(false);
+                input7.current.focus();
+              }}>
               {!isLocum && <Text style={styles.chosenType}>Propriétaire</Text>}
               {isLocum && <Text style={styles.unchosenType}>Propriétaire</Text>}
             </TouchableOpacity>
@@ -177,7 +187,6 @@ const Form = (props: Props) => {
           <View style={{ marginTop: hp(2) }}>
             <TextInput
               ref={input1}
-              autoFocus
               onChangeText={(value: string) =>
                 setValue(fieldsList[0].key, value)
               }
@@ -288,6 +297,7 @@ const Form = (props: Props) => {
               style={inputStyles.input}
               placeholder={fieldsList[5].fr}
               placeholderTextColor="#CCCBCB"
+              autoCorrect={false}
               autoCapitalize={'words'}
               returnKeyType={'next'}
               onSubmitEditing={() => input7.current.focus()}

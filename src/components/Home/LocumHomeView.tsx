@@ -185,9 +185,7 @@ const LocumHomeView = ({ navigation }) => {
             {currentUser.firstName + ' ' + currentUser.lastName + ', '}
             <Text style={styles.userType}>{_String.capitalize('Locum')}</Text>
           </Text>
-          <Text style={styles.location}>
-            {currentUser.educationalInstitution}
-          </Text>
+          <Text style={styles.location}>{currentUser.school}</Text>
         </LinearGradient>
       </View>
       {/* Calendar */}

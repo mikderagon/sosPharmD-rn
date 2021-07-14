@@ -1,16 +1,17 @@
 import React, { createContext, useReducer } from 'react';
 import _ from 'underscore';
 import firestore from '@react-native-firebase/firestore';
-import { User, Event, Locum, Owner } from './models';
+import { User, Event, Locum, Owner, Pharmacy } from './models';
 
 const initialState = {
   currentUser: {} as Locum | Owner,
   language: 'fr',
   locumTags: [],
   contracts: [],
-  events: [],
+  events: [] as Event[],
   thisMonthEvents: [],
   thisMonthEventDates: [],
+  pharmacies: [] as Pharmacy[],
 };
 
 const store = createContext(initialState);

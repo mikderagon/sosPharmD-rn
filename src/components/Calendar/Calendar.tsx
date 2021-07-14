@@ -114,9 +114,7 @@ const Calendar = (props: Props) => {
         <Cell key={index.toString()} onDayPress={_onDayPress}>
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
-            <View
-              style={[styles.todayDot, { backgroundColor: colors.lightGray }]}
-            />
+            <View style={styles.todayDot} />
           </View>
         </Cell>
       );

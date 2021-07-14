@@ -65,7 +65,7 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
     {
       component: OnboardingSlideFactory(
         OnboardingImage3,
-        'Restez assurés',
+        'Soyez rassurés',
         "Chaque locum passe par un examen qui assure la qualité et l'authenticité de son expérience",
       ),
       buttonText: 'Suivant',

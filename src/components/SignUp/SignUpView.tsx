@@ -7,7 +7,7 @@
  */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
 import * as firestore from '../../actions/firestore';
 import { store } from '../../store';
@@ -68,7 +68,9 @@ const SignUpLocumView = ({ navigation }) => {
           });
         })
         .catch((e: Error) => {
+          setSpinnerActive(false);
           console.error('error trying to signup:', e);
+          Alert.alert(e.message.split(']')[1]);
         });
     }
   }
@@ -82,9 +84,11 @@ const SignUpLocumView = ({ navigation }) => {
           setValue={(key: string, value: string) => {
             setUserData({ ...userData, [key]: value });
           }}
-          deleteKey={(key: string) => {
+          deleteKeys={(keys: string[]) => {
             const newUserData = { ...userData };
-            delete newUserData[key];
+            for (const key of keys) {
+              delete newUserData[key];
+            }
             setUserData({ ...newUserData });
           }}
           setUntouchable={() => setAllFieldsEntered(false)}

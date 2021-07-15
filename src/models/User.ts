@@ -5,4 +5,5 @@ export default interface User {
   email: string;
   pictureUrl: string;
   emailVerified?: boolean;
+  address: string;
 };

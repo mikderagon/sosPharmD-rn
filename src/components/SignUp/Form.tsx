@@ -71,6 +71,7 @@ export interface signUpFormData {
   address: string;
   accountType: 'locum' | 'owner';
   school?: string;
+  schoolYear?: string;
   pharmacy?: string;
 }
 
@@ -81,6 +82,12 @@ export const locumFields: field[] = [
     eng: 'Educational Institution',
     placeholder: 'ex: Université de Montréal',
     autoComplete: true,
+  },
+  {
+    key: 'schoolYear',
+    fr: "Année d'études",
+    eng: 'School year',
+    placeholder: 'ex: 2',
   },
 ];
 
@@ -99,7 +106,7 @@ interface Props {
   setIsLocum: Dispatch<SetStateAction<boolean>>;
   language?: string;
   setValue: (key: string, value: string) => void;
-  deleteKey: (key: string) => void;
+  deleteKeys: (keys: string[]) => void;
   setUntouchable: () => void;
   schools: School[];
   pharmacies: Pharmacy[];
@@ -111,7 +118,7 @@ const Form = (props: Props) => {
     setIsLocum,
     language = 'fr',
     setValue,
-    deleteKey,
+    deleteKeys,
     setUntouchable,
     schools,
     pharmacies,
@@ -126,6 +133,7 @@ const Form = (props: Props) => {
   const input4 = useRef(null);
   const input5 = useRef(null);
   const input6 = useRef(null);
+  const input7 = useRef(null);
   const fieldsList = [...fields, ...(isLocum ? locumFields : ownerFields)];
 
   // autofocus alternative
@@ -139,7 +147,12 @@ const Form = (props: Props) => {
     setIsLocum(_isLocum);
     setAutocompleteChoice('');
     setAutocompleteValue('');
-    deleteKey(fieldsList[5].key);
+    if (_isLocum) {
+      deleteKeys(['pharmacy']);
+    }
+    if (!_isLocum) {
+      deleteKeys(['school', 'schoolYear']);
+    }
     setUntouchable();
   }
 
@@ -328,6 +341,7 @@ const Form = (props: Props) => {
               placeholderTextColor="#CCCBCB"
               autoCapitalize={'words'}
               returnKeyType={'next'}
+              onSubmitEditing={() => (isLocum ? input7.current.focus() : {})}
             />
             {autocompleteChoice.length > 0 && (
               <TouchableOpacity
@@ -356,6 +370,30 @@ const Form = (props: Props) => {
           </View>
         </View>
       </View>
+
+      {isLocum && (
+        <View style={{ marginTop: hp(3) }}>
+          <View style={inputStyles.container}>
+            <Text style={inputStyles.title}>{fieldsList[6].fr}</Text>
+            <View style={{ marginTop: hp(2) }}>
+              <TextInput
+                ref={input7}
+                onChangeText={(value: string) =>
+                  setValue(fieldsList[6].key, value)
+                }
+                autoCapitalize="none"
+                style={inputStyles.input}
+                placeholder={fieldsList[6].placeholder}
+                placeholderTextColor="#CCCBCB"
+                returnKeyType={'next'}
+                keyboardType="number-pad"
+                maxLength={1}
+                // onSubmitEditing={() => input6.current.focus()}
+              />
+            </View>
+          </View>
+        </View>
+      )}
     </KeyboardAwareScrollView>
   );
 };

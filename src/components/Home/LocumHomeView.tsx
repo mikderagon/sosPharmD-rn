@@ -34,6 +34,7 @@ import Calendar from './Calendar';
 import CalendarEventTag from './CalendarEventTag';
 import { locumSize } from './Locum';
 import Contract from './Contract';
+import { toSchoolYear } from '../../utils/school';
 
 const fourSquares = require('assets/images/fourSquares.png');
 const verticalDots = require('assets/images/verticalDots.png');
@@ -182,7 +183,14 @@ const LocumHomeView = ({ navigation }) => {
             {currentUser.firstName + ' ' + currentUser.lastName + ', '}
             <Text style={styles.userType}>{_String.capitalize('Locum')}</Text>
           </Text>
-          <Text style={styles.location}>{currentUser.school}</Text>
+          <Text style={styles.location}>
+            {currentUser.schoolYear
+              ? 'Étudiant(e) de ' +
+                toSchoolYear(currentUser.schoolYear) +
+                ' année, ' +
+                currentUser.school
+              : currentUser.school}
+          </Text>
         </LinearGradient>
       </View>
       {/* Calendar */}

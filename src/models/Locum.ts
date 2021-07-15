@@ -1,7 +1,6 @@
 import { User } from '.';
 
 export default interface Locum extends User {
-  year: number;
+  schoolYear: string;
   school: string;
-  address: string;
-};
+}

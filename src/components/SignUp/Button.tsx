@@ -32,7 +32,7 @@ const Button = (props: Props) => {
   return active ? (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       {loading ? (
-        <ActivityIndicator />
+        <ActivityIndicator color="#fff" />
       ) : (
         <Text style={styles.text}>{text}</Text>
       )}

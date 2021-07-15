@@ -34,6 +34,7 @@ interface Props {
   events: EventOwnerPharmacy[];
   applyForContract: (event: Event) => void;
   isLocum: boolean;
+  interestedLocums?: [];
 }
 
 interface interestedLocum {
@@ -43,7 +44,14 @@ interface interestedLocum {
 }
 
 const EventModal = (props: Props) => {
-  const { isVisible, isLocum, closeModal, events, applyForContract } = props;
+  const {
+    isVisible,
+    isLocum,
+    closeModal,
+    events,
+    applyForContract,
+    interestedLocums,
+  } = props;
   return (
     <Modal
       onBackdropPress={closeModal}
@@ -77,13 +85,7 @@ const EventModal = (props: Props) => {
           {mois[events[0]?.event.month - 1]}
         </Text>
         <FlatList
-          data={
-            isLocum
-              ? events
-              : async () => {
-                  await firestore.getLocumDemands(events.map(e => e.event));
-                }
-          }
+          data={isLocum ? events : interestedLocums}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <View style={styles.component}>

@@ -276,6 +276,7 @@ const CalendarView = ({ navigation }) => {
         applyForContract={(event: Event) =>
           firestore.applyForContract(event, currentUser.id)
         }
+        interestedLocums={state.interestedLocums}
         isLocum={currentUser.accountType === 'locum'}
         closeModal={() => setEventModalVisible(false)}
       />

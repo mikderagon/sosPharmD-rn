@@ -100,6 +100,8 @@ interface Props {
   setIsLocum: Dispatch<SetStateAction<boolean>>;
   language?: string;
   setValue: (key: string, value: string) => void;
+  deleteKey: (key: string) => void;
+  setUntouchable: () => void;
   schools: School[];
   pharmacies: Pharmacy[];
 }
@@ -110,6 +112,8 @@ const Form = (props: Props) => {
     setIsLocum,
     language = 'fr',
     setValue,
+    deleteKey,
+    setUntouchable,
     schools,
     pharmacies,
   } = props;
@@ -136,6 +140,8 @@ const Form = (props: Props) => {
     setIsLocum(_isLocum);
     setAutocompleteChoice('');
     setAutocompleteValue('');
+    deleteKey(fieldsList[5].key);
+    setUntouchable();
   }
 
   function string_cleanup(str: string) {
@@ -340,8 +346,8 @@ const Form = (props: Props) => {
                 }}
                 onPress={() => {
                   setValue(fieldsList[5].key, autocompleteChoice);
-                  setAutocompleteChoice('');
                   setAutocompleteValue(autocompleteChoice);
+                  setAutocompleteChoice('');
                 }}>
                 <Text style={{ color: '#fff', fontWeight: '800' }}>
                   {autocompleteChoice}

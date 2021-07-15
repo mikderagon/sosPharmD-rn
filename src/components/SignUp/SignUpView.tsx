@@ -27,6 +27,7 @@ const SignUpLocumView = ({ navigation }) => {
 
   // form completion verificator
   useEffect(() => {
+    console.log(userData);
     if (
       Object.keys(userData).length ===
       fields.length + (isLocum ? locumFields.length : ownerFields.length)
@@ -40,7 +41,7 @@ const SignUpLocumView = ({ navigation }) => {
       }
       setAllFieldsEntered(status);
     }
-  }, [userData, fields.length]);
+  }, [userData, isLocum]);
 
   useEffect(() => {
     // feed schools and pharmacies arrays for signup form autocompletes
@@ -48,7 +49,6 @@ const SignUpLocumView = ({ navigation }) => {
   }, [dispatch]);
 
   function handleSignUp(data: signUpFormData) {
-    // state .pharmacies
     if (allFieldsEntered) {
       firestore
         .createUser(data)
@@ -60,7 +60,7 @@ const SignUpLocumView = ({ navigation }) => {
           if (user.accountType === 'locum') {
             firestore.initLocumData(dispatch);
           } else {
-            firestore.initOwnerData(user, dispatch);
+            firestore.initOwnerData(user as Owner, dispatch);
           }
           navigation.reset({
             index: 0,
@@ -82,6 +82,12 @@ const SignUpLocumView = ({ navigation }) => {
           setValue={(key: string, value: string) => {
             setUserData({ ...userData, [key]: value });
           }}
+          deleteKey={(key: string) => {
+            const newUserData = { ...userData };
+            delete newUserData[key];
+            setUserData({ ...newUserData });
+          }}
+          setUntouchable={() => setAllFieldsEntered(false)}
           schools={state.schools}
           pharmacies={state.pharmacies}
         />

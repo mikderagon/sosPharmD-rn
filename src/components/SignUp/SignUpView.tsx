@@ -24,6 +24,7 @@ const SignUpLocumView = ({ navigation }) => {
   const [isLocum, setIsLocum] = useState(true);
   const [userData, setUserData] = useState({} as signUpFormData);
   const [allFieldsEntered, setAllFieldsEntered] = useState(false);
+  const [spinnerActive, setSpinnerActive] = useState(false);
 
   // form completion verificator
   useEffect(() => {
@@ -95,8 +96,10 @@ const SignUpLocumView = ({ navigation }) => {
       <View style={styles.footer}>
         <View style={{ marginTop: hp(2) }}>
           <Button
+            loading={spinnerActive}
             active={allFieldsEntered}
             onPress={() => {
+              setSpinnerActive(true);
               handleSignUp({
                 ...userData,
                 accountType: isLocum ? 'locum' : 'owner',

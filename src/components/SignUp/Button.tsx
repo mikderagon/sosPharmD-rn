@@ -7,7 +7,12 @@
  */
 
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../styles/colors';
 import {
@@ -19,13 +24,18 @@ interface Props {
   onPress: () => void;
   text?: string;
   active?: boolean;
+  loading?: boolean;
 }
 
 const Button = (props: Props) => {
-  const { onPress, text = 'Log in', active = false } = props;
+  const { onPress, text = 'Log in', active = false, loading } = props;
   return active ? (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Text style={styles.text}>{text}</Text>
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <Text style={styles.text}>{text}</Text>
+      )}
     </TouchableOpacity>
   ) : (
     <TouchableOpacity activeOpacity={1} style={styles.inactiveContainer}>

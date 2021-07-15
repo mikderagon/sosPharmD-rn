@@ -27,7 +27,6 @@ const SignUpLocumView = ({ navigation }) => {
 
   // form completion verificator
   useEffect(() => {
-    console.log(userData);
     if (
       Object.keys(userData).length ===
       fields.length + (isLocum ? locumFields.length : ownerFields.length)
@@ -68,7 +67,7 @@ const SignUpLocumView = ({ navigation }) => {
           });
         })
         .catch((e: Error) => {
-          console.log('error trying to signup:', e);
+          console.error('error trying to signup:', e);
         });
     }
   }

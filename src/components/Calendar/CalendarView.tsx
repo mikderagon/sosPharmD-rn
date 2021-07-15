@@ -137,10 +137,10 @@ const CalendarView = ({ navigation }) => {
     firestore
       .batchUpsertEvents(formattedEvents)
       .then(success => {
-        console.log(success);
+        // success
       })
       .catch(e => {
-        console.log(e);
+        console.error(e);
       });
     // clear selectedDays
     setSelectedDays([]);

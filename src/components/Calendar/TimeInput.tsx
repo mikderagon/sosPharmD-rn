@@ -34,14 +34,10 @@ const TimeInput = (props: Props) => {
   const [_hours, _minutes] = value?.split(':');
   const [hours, setHours] = useState(_hours);
   const [minutes, setMinutes] = useState(_minutes);
-  function onChange(event, selectedTime) {
-    console.log(selectedTime);
-  }
-  console.log(maximumTime);
+  function onChange(event, selectedTime) {}
   const maximumDate = () => {
     if (maximumTime) {
       const [h, m] = maximumTime?.split('');
-      console.log(h, m);
       return new Date();
     }
     return new Date();

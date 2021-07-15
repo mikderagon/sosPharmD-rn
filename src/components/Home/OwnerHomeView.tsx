@@ -94,8 +94,6 @@ const OwnerHomeView = ({ navigation }) => {
   });
 
   // function onAuthStateChanged(user) {
-  //   console.log(currentUser);
-  //   console.log(user);
   //   if (!user.emailVerified) {
   //   }
   // }

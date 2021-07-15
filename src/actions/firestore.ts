@@ -258,7 +258,7 @@ export function applyForContract(event: Event, uid: string) {
         resolve('ok');
       })
       .catch(e => {
-        console.log('error', e);
+        console.error('error', e);
         reject(e);
       });
   });

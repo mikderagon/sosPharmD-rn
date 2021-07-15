@@ -72,7 +72,6 @@ export interface signUpFormData {
   accountType: 'locum' | 'owner';
   school?: string;
   pharmacy?: string;
-  pharmacyId?: string;
 }
 
 export const locumFields: field[] = [

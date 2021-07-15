@@ -5,20 +5,27 @@
  * @format
  * @flow strict-local
  */
-
-import React from 'react';
-import { StatusBar, useColorScheme } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import React, { useContext } from 'react';
 import 'react-native-gesture-handler';
 import Navigator from './Navigator';
-import { StateProvider } from './store';
+import { store } from './store';
+import { StackParamList } from './types';
 
 const AppRoot = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  const { state, dispatch } = useContext(store);
+  let initialRouteName = 'Onboarding';
+  if (auth().currentUser) {
+    // rehydrate app with user's data, then navigate to home
+
+    // then
+    initialRouteName = 'Home';
+  }
+
   return (
-    <StateProvider>
-      <StatusBar animated barStyle="dark-content" showHideTransition="fade" />
-      <Navigator />
-    </StateProvider>
+    <>
+      <Navigator initialRouteName={initialRouteName as keyof StackParamList} />
+    </>
   );
 };
 

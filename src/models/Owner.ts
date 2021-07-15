@@ -1,7 +1,6 @@
 import { User } from '.';
+import Pharmacy from './Pharmacy';
 
 export default interface Owner extends User {
-  pharmacyId: string;
-  pharmacyAddress?: string;
-  pharmacyAffiliation?: string;
-}
+  pharmacy: Pharmacy;
+};

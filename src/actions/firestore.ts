@@ -36,15 +36,6 @@ export async function getSignupData(dispatch: any) {
 }
 
 export async function initOwnerData(currentUser: Owner, dispatch: any) {
-  const userPharmacy = await findPharmacy(currentUser.pharmacyId);
-  dispatch({
-    type: 'SET_CURRENT_USER',
-    currentUser: {
-      ...currentUser,
-      pharmacyAddress: userPharmacy.address,
-      pharmacyAffiliation: userPharmacy.affiliation,
-    },
-  });
   var { docs } = await firestore()
     .collection('events')
     .where('UserId', '==', currentUser.id)
@@ -79,38 +70,45 @@ export async function initOwnerData(currentUser: Owner, dispatch: any) {
   });
 }
 
-export async function initLocumData(dispatch: any) {
-  const { docs } = await firestore().collection('events').get();
-  if (docs.length) {
-    const events = docs.map(doc => {
-      const data = doc.data();
-      const UserId = data.UserId;
-      return {
-        ...data,
-        id: doc.id,
-        UserId,
-      } as Event;
+export async function initLocumData(currentUser: Locum, dispatch: any) {
+  // const { docs } = await firestore()
+  //   .collection('events')
+  //   .where('minExperience', '<=', currentUser.schoolYear)
+  //   .get();
+  firestore()
+    .collection('events')
+    .where('minExperience', '<=', currentUser.schoolYear)
+    .onSnapshot(doc => {
+      console.log('current data', doc.docs);
     });
-    dispatch({
-      type: 'SET_CALENDAR_EVENTS',
-      events,
-    });
-    const thisMonthEvents = getMonthEvents(events);
-    const thisMonthEventDates = thisMonthEvents.map(event => event.day).sort();
-    const contracts = await getContractTags(thisMonthEvents);
-    dispatch({
-      type: 'SET_THIS_MONTH_EVENTS',
-      thisMonthEvents,
-    });
-    dispatch({
-      type: 'SET_THIS_MONTH_EVENT_DATES',
-      thisMonthEventDates,
-    });
-    dispatch({
-      type: 'SET_CONTRACTS',
-      contracts,
-    });
-  }
+  // const events = docs.map(doc => {
+  //   const data = doc.data();
+  //   const UserId = data.UserId;
+  //   return {
+  //     ...data,
+  //     id: doc.id,
+  //     UserId,
+  //   } as Event;
+  // });
+  // dispatch({
+  //   type: 'SET_CALENDAR_EVENTS',
+  //   events,
+  // });
+  // const thisMonthEvents = getMonthEvents(events);
+  // const thisMonthEventDates = thisMonthEvents.map(event => event.day).sort();
+  // const contracts = await getContractTags(thisMonthEvents);
+  // dispatch({
+  //   type: 'SET_THIS_MONTH_EVENTS',
+  //   thisMonthEvents,
+  // });
+  // dispatch({
+  //   type: 'SET_THIS_MONTH_EVENT_DATES',
+  //   thisMonthEventDates,
+  // });
+  // dispatch({
+  //   type: 'SET_CONTRACTS',
+  //   contracts,
+  // });
 }
 
 export async function findUser<T>(uid: string): Promise<T> {
@@ -192,6 +190,7 @@ export async function getContractTags(
       contracts.push({
         user: owner,
         date: { day: event.day, month: event.month, year: event.year },
+        event,
       } as ContractTag);
     }
   }

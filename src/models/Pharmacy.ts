@@ -4,4 +4,4 @@ export default interface Pharmacy {
   affiliation: string;
   OwnerId: string;
   pictureUrl: string;
-}
+};

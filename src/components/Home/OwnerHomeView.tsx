@@ -33,33 +33,13 @@ import Button from './Button';
 import Calendar from './Calendar';
 import CalendarEventTag from './CalendarEventTag';
 import Locum, { locumSize } from './Locum';
-
-const fourSquares = require('assets/images/fourSquares.png');
-const verticalDots = require('assets/images/verticalDots.png');
-const calendar = require('assets/images/calendarIcon.png');
-const locumIcon = require('assets/images/locumIcon.png');
-const defaultAvatar = require('assets/images/defaultAvatar.png');
-
-function hexToRgba(hex: string, opacity: number) {
-  let c;
-  if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-    c = hex.substring(1).split('');
-    if (c.length == 3) {
-      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-    }
-    c = '0x' + c.join('');
-    return `rgba(${(c >> 16) & 255},${(c >> 8) & 255},${c & 255},${opacity})`;
-  }
-  throw new Error('Bad Hex');
-}
-
-const GRADIENT_COLORS = [
-  hexToRgba(colors.main, 1),
-  hexToRgba(colors.main, 0.9),
-  hexToRgba(colors.main, 0.8),
-  hexToRgba(colors.main, 0.9),
-  hexToRgba(colors.main, 1),
-];
+import {
+  defaultAvatar,
+  GRADIENT_COLORS,
+  verticalDots,
+  calendar,
+  locumIcon,
+} from './shared';
 
 const OwnerHomeView = ({ navigation }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
@@ -70,7 +50,6 @@ const OwnerHomeView = ({ navigation }) => {
   const { state, dispatch } = useContext(store);
   const { currentUser, locumTags, thisMonthEventDates } = state;
   const CalendarState = dates.getCalendarState(new Date());
-  // const { currentUser } = auth();
 
   useEffect(() => {
     if (locumTags.length > 1) {
@@ -92,16 +71,6 @@ const OwnerHomeView = ({ navigation }) => {
       return () => clearTimeout(timeout);
     }
   });
-
-  // function onAuthStateChanged(user) {
-  //   if (!user.emailVerified) {
-  //   }
-  // }
-
-  // useEffect(() => {
-  // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-  // return subscriber;
-  // }, []);
 
   const noLocumTags = [
     {
@@ -185,9 +154,9 @@ const OwnerHomeView = ({ navigation }) => {
             </Text>
           </Text>
           <Text style={styles.location}>
-            {currentUser.pharmacyAffiliation}
+            {currentUser.pharmacy.affiliation}
             {', '}
-            {currentUser.pharmacyAddress}
+            {currentUser.pharmacy.address}
           </Text>
         </LinearGradient>
       </View>

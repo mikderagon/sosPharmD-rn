@@ -20,7 +20,6 @@ import InputForm from './InputForm';
 
 export interface NewEvent {
   title: string;
-  address: string;
   minExperience: string;
   startTime: string;
   endTime: string;
@@ -35,7 +34,6 @@ interface Props {
 const AddEventModal = (props: Props) => {
   const { isVisible, closeModal, addCalendarEvent } = props;
   const [title, setTitle] = useState('');
-  const [address, setAddress] = useState('');
   const [minExperience, setMinExperience] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -65,7 +63,6 @@ const AddEventModal = (props: Props) => {
             onPress={() => {
               addCalendarEvent({
                 title,
-                address,
                 minExperience,
                 startTime,
                 endTime,
@@ -79,14 +76,12 @@ const AddEventModal = (props: Props) => {
         <View style={{ marginTop: 12 }}>
           <InputForm
             setTitle={setTitle}
-            setAddress={setAddress}
             setMinExperience={setMinExperience}
             setStartTime={setStartTime}
             setEndTime={setEndTime}
             onComplete={() => {
               addCalendarEvent({
                 title,
-                address,
                 minExperience,
                 startTime,
                 endTime,

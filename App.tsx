@@ -7,12 +7,19 @@
  */
 
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StatusBar, useColorScheme } from 'react-native';
 import 'react-native-gesture-handler';
 import AppRoot from './src/AppRoot';
+import { StateProvider } from './src/store';
 
 const App = () => {
-  return <AppRoot />;
+  const isDarkMode = useColorScheme() === 'dark';
+  return (
+    <StateProvider>
+      <StatusBar animated barStyle="dark-content" showHideTransition="fade" />
+      <AppRoot />
+    </StateProvider>
+  );
 };
 
 export default App;

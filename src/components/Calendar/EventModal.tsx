@@ -24,14 +24,14 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import { EventOwnerPharmacy } from './CalendarView';
+import { EventAndOwner } from './CalendarView';
 import { Event, Locum } from '../../models';
 import * as firestore from '../../actions/firestore';
 
 interface Props {
   closeModal: any;
   isVisible: boolean;
-  events: EventOwnerPharmacy[];
+  events: EventAndOwner[];
   applyForContract: (event: Event) => void;
   isLocum: boolean;
   interestedLocums?: [];
@@ -91,7 +91,7 @@ const EventModal = (props: Props) => {
             <View style={styles.component}>
               <Image
                 source={{
-                  uri: item.pharmacy.pictureUrl,
+                  uri: item.owner.pharmacy.pictureUrl,
                 }}
                 style={styles.pharmacyPicture}
               />

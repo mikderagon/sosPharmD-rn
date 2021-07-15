@@ -39,12 +39,14 @@ const defaultTheme = {
   },
 };
 
-const Navigator = () => {
+interface Props {
+  initialRouteName: keyof StackParamList;
+}
+
+const Navigator = (props: Props) => {
+  const { initialRouteName } = props;
+  console.log(initialRouteName);
   const { state, dispatch } = useContext(store);
-  const initialRouteName = 'Onboarding';
-  // const initialRouteName = 'Home';
-  // const initialRouteName = 'SignIn';
-  // const initialRouteName = 'Calendar';
   return (
     <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator headerMode="screen" initialRouteName={initialRouteName}>

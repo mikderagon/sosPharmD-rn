@@ -58,7 +58,7 @@ const SignUpLocumView = ({ navigation }) => {
             currentUser: user,
           });
           if (user.accountType === 'locum') {
-            firestore.initLocumData(dispatch);
+            firestore.initLocumData(user as Locum, dispatch);
           } else {
             firestore.initOwnerData(user as Owner, dispatch);
           }

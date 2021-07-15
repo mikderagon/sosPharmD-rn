@@ -19,15 +19,15 @@ export function createUser(userData: signUpFormData): Promise<Locum | Owner> {
           accountType: userData.accountType,
         };
         // get pharmacyId
-        const pharmacyId =
+        const pharmacy =
           userData.accountType === 'locum'
-            ? ''
+            ? null
             : (
                 await firestore()
                   .collection('pharmacies')
                   .where('address', '==', userData.pharmacy)
                   .get()
-              ).docs[0].id;
+              ).docs[0].data();
 
         // upsert into firestore
         firestore()
@@ -42,7 +42,7 @@ export function createUser(userData: signUpFormData): Promise<Locum | Owner> {
                 }
               : {
                   ...requiredData,
-                  pharmacyId,
+                  pharmacy,
                 },
           );
         return newUser;

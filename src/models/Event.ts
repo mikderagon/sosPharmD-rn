@@ -1,8 +1,7 @@
 export default interface Event {
-  id: string;
+  id?: string;
   title: string;
   UserId: string;
-  address: string;
   minExperience: string;
   startTime: string;
   endTime: string;

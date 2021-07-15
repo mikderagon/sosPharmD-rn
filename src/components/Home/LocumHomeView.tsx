@@ -35,33 +35,13 @@ import CalendarEventTag from './CalendarEventTag';
 import { locumSize } from './Locum';
 import Contract from './Contract';
 import { toSchoolYear } from '../../utils/school';
-
-const fourSquares = require('assets/images/fourSquares.png');
-const verticalDots = require('assets/images/verticalDots.png');
-const calendar = require('assets/images/calendarIcon.png');
-const locumIcon = require('assets/images/locumIcon.png');
-const defaultAvatar = require('assets/images/defaultAvatar.png');
-
-function hexToRgba(hex: string, opacity: number) {
-  let c;
-  if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-    c = hex.substring(1).split('');
-    if (c.length == 3) {
-      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-    }
-    c = '0x' + c.join('');
-    return `rgba(${(c >> 16) & 255},${(c >> 8) & 255},${c & 255},${opacity})`;
-  }
-  throw new Error('Bad Hex');
-}
-
-const GRADIENT_COLORS = [
-  hexToRgba(colors.main, 1),
-  hexToRgba(colors.main, 0.9),
-  hexToRgba(colors.main, 0.8),
-  hexToRgba(colors.main, 0.9),
-  hexToRgba(colors.main, 1),
-];
+import {
+  GRADIENT_COLORS,
+  calendar,
+  defaultAvatar,
+  locumIcon,
+  verticalDots,
+} from './shared';
 
 const LocumHomeView = ({ navigation }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
@@ -93,16 +73,6 @@ const LocumHomeView = ({ navigation }) => {
       return () => clearTimeout(timeout);
     }
   });
-
-  // function onAuthStateChanged(user) {
-  //   if (!user.emailVerified) {
-  //   }
-  // }
-
-  // useEffect(() => {
-  // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-  // return subscriber;
-  // }, []);
 
   const noContracts = [
     {
@@ -247,7 +217,8 @@ const LocumHomeView = ({ navigation }) => {
             contracts.length ? (
               <Contract
                 date={thisMonthEventDates[index]}
-                user={item.user}
+                event={item.event}
+                owner={item.user}
                 centerCorrection={
                   !horizontalFlatListScrolled || contracts.length === 1
                 }

@@ -24,35 +24,43 @@ import {
 } from '../../utils/responsiveLayout';
 import LinearGradient from 'react-native-linear-gradient';
 import { calendarDimensions } from './Calendar';
+import { defaultAvatar } from './shared';
+import * as firestore from '../../actions/firestore';
+import { Event, Pharmacy } from '../../models';
 
 interface Props {
   date: number;
-  user: {
+  owner: {
     firstName: string;
     lastName: string;
     pictureUrl: string;
+    pharmacy: Pharmacy;
   };
   onPress?: () => void;
+  event: Event;
   centerCorrection?: boolean;
 }
 
 const Contract = (props: Props) => {
-  const { date, user, centerCorrection } = props;
-  const { firstName, lastName, pictureUrl, city } = user;
+  const { date, owner, centerCorrection, event } = props;
+  const { firstName, lastName, pictureUrl, pharmacy } = owner;
   return (
     <View style={[styles.container, centerCorrection ? { left: wp(-5) } : {}]}>
       <View style={styles.dateTag}>
         <Text style={styles.date}>{date}</Text>
       </View>
       <View style={styles.topDiv}>
-        <Image source={{ uri: pictureUrl }} style={styles.userPicture} />
+        <Image
+          source={pictureUrl ? { uri: pictureUrl } : defaultAvatar}
+          style={styles.userPicture}
+        />
         <View style={styles.outsideImageContainer}>
-          <Text style={styles.name}>{firstName + ' ' + lastName}</Text>
+          <Text style={styles.name}>{event.title}</Text>
           <Text style={[styles.school, { marginTop: 1 }]}>
-            Propriétaire, Jean Coutu, 450 boul des Laurentides
+            {pharmacy.affiliation}, {pharmacy.address}
           </Text>
           <Text style={[styles.school, { marginTop: 1, color: colors.main }]}>
-            8:30 - 16:30
+            {event.startTime} - {event.endTime}
           </Text>
         </View>
       </View>
@@ -115,7 +123,7 @@ const styles = StyleSheet.create({
   outsideImageContainer: {
     width: locumSize.width * 0.6,
     marginLeft: locumSize.width * 0.03,
-    top: locumSize.height * 0.18,
+    top: locumSize.height * 0.1,
     alignSelf: 'flex-start',
   },
   name: {

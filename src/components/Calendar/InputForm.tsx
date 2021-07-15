@@ -15,21 +15,14 @@ import { heightPercentageToDP as hp } from '../../utils/responsiveLayout';
 interface Props {
   onComplete: () => void;
   setTitle: Dispatch<SetStateAction<string>>;
-  setAddress: Dispatch<SetStateAction<string>>;
   setMinExperience: Dispatch<SetStateAction<string>>;
   setStartTime: Dispatch<SetStateAction<string>>;
   setEndTime: Dispatch<SetStateAction<string>>;
 }
 
 const InputForm = (props: Props) => {
-  const {
-    setTitle,
-    setAddress,
-    setMinExperience,
-    setStartTime,
-    setEndTime,
-    onComplete,
-  } = props;
+  const { setTitle, setMinExperience, setStartTime, setEndTime, onComplete } =
+    props;
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
@@ -54,24 +47,6 @@ const InputForm = (props: Props) => {
           autoCorrect={false}
           keyboardType="default"
           maxLength={30}
-        />
-      </View>
-      <View style={styles.container}>
-        <Text style={styles.label}>Addresse:</Text>
-        <TextInput
-          ref={ref2}
-          onSubmitEditing={() => ref3.current.focus()}
-          style={styles.input}
-          returnKeyType="next"
-          onChangeText={setAddress}
-          // placeholder={placeholder}
-          placeholderTextColor="#aaa"
-          // value={value}
-          autoCapitalize="none"
-          autoCompleteType="off"
-          autoCorrect={false}
-          // keyboardType={keyboardType}
-          // maxLength={maxLength}
         />
       </View>
       <View style={styles.container}>

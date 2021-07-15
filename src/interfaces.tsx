@@ -1,4 +1,4 @@
-import { Locum, Owner } from './models';
+import { Event, Locum, Owner } from './models';
 
 export interface DateObject {
   day: number;
@@ -13,4 +13,5 @@ export interface LocumTag {
 export interface ContractTag {
   user: Owner;
   date: DateObject;
+  event: Event;
 }

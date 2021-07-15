@@ -34,10 +34,9 @@ import EventModal from './EventModal';
 
 const backCaret = require('assets/images/backCaret.png');
 
-export interface EventOwnerPharmacy {
+export interface EventAndOwner {
   event: Event;
   owner: Owner;
-  pharmacy: Pharmacy;
 }
 
 const CalendarView = ({ navigation }) => {
@@ -47,7 +46,7 @@ const CalendarView = ({ navigation }) => {
   const toggleAddEventModal = () =>
     setAddEventModalVisible(!addEventModalVisible);
   const toggleEventModal = () => setEventModalVisible(!eventModalVisible);
-  const [clickedEvents, setClickedEvents] = useState<EventOwnerPharmacy[]>([]);
+  const [clickedEvents, setClickedEvents] = useState<EventAndOwner[]>([]);
   const [userEvent, setUserEvent] = useState<NewEvent>();
   const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
   const { state, dispatch } = useContext(store);
@@ -102,10 +101,7 @@ const CalendarView = ({ navigation }) => {
       _clickedEvents = await Promise.all(
         _clickedEvents.map(async (event: Event) => {
           const owner: Owner = await firestore.findUser(event.UserId);
-          const pharmacy: Pharmacy = await firestore.findPharmacy(
-            owner.pharmacyId,
-          );
-          return { event, owner, pharmacy };
+          return { event, owner };
         }),
       );
       setClickedEvents(_clickedEvents);
@@ -118,7 +114,6 @@ const CalendarView = ({ navigation }) => {
     const formattedEvents = selectedDays.map(selectedDay => {
       return {
         UserId: currentUser.id,
-        address: userEvent?.address,
         minExperience: userEvent?.minExperience,
         day: selectedDay.day,
         month: selectedDay.month,

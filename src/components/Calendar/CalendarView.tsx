@@ -171,7 +171,11 @@ const CalendarView = ({ navigation }) => {
           />
           <Text style={[styles.legendText, { color: colors.main }]}>
             {currentUser.accountType === 'locum' ? 'Contrats' : 'Locums'}{' '}
-            disponibles
+            disponibles (
+            {currentUser.accountType === 'locum'
+              ? state.events.length
+              : state.interestedLocums.length}
+            )
           </Text>
         </View>
         {currentUser.accountType === 'owner' && (
@@ -183,7 +187,8 @@ const CalendarView = ({ navigation }) => {
               ]}
             />
             <Text style={[styles.legendText, { color: colors.lightGray }]}>
-              En attente de locum
+              En attente de locum (
+              {state.events.length - state.interestedLocums.length})
             </Text>
           </View>
         )}

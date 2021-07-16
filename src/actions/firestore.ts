@@ -5,10 +5,10 @@ import { signUpFormData } from '../components/SignUp/Form';
 import { ContractTag, LocumTag } from '../interfaces';
 import { Locum, Owner, User, Event, Pharmacy, School } from '../models';
 import * as dates from '../utils/dates';
-import { signIn, createUser } from './auth';
+import { signIn, createUser, getUser, signOut } from './auth';
 
 // change type of userData to be the correct types from the signup form and the return type to User model
-export { signIn, createUser };
+export { signIn, createUser, getUser, signOut };
 
 export async function getSignupData(dispatch: any) {
   var { docs } = await firestore().collection('pharmacies').get();

@@ -24,10 +24,21 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
+import * as firestore from '../../actions/firestore';
 
 const backCaret = require('assets/images/backCaret.png');
 
 const SettingsView = ({ navigation }) => {
+  function handleSignOut() {
+    firestore
+      .signOut()
+      .then(success => {
+        // success
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }
   return (
     <View style={[styles.container]}>
       <>
@@ -74,6 +85,7 @@ const SettingsView = ({ navigation }) => {
                 {
                   text: 'Oui',
                   onPress: () => {
+                    handleSignOut();
                     navigation.reset({
                       index: 0,
                       routes: [{ name: 'SignIn' }],

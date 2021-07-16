@@ -1,4 +1,4 @@
-import auth from '@react-native-firebase/auth';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { signUpFormData } from '../components/SignUp/Form';
 import { Locum, Owner } from '../models';
@@ -88,6 +88,41 @@ export function signIn(
       })
       .catch(e => {
         reject(e);
+      });
+  });
+}
+
+export function getUser(
+  firebaseUser: FirebaseAuthTypes.User,
+): Promise<Locum | Owner> {
+  return new Promise(async (resolve, reject) => {
+    firestore()
+      .collection('users')
+      .doc(firebaseUser.uid)
+      .get()
+      .then(user => {
+        resolve({
+          ...user.data(),
+          id: user.id,
+          email: firebaseUser.email,
+          emailVerified: firebaseUser.emailVerified,
+        } as Locum | Owner);
+      })
+      .catch(e => {
+        reject(e);
+      });
+  });
+}
+
+export function signOut() {
+  return new Promise((resolve, reject) => {
+    auth()
+      .signOut()
+      .then(() => {
+        resolve('signed out');
+      })
+      .catch(e => {
+        reject('error trying to signout' + e);
       });
   });
 }

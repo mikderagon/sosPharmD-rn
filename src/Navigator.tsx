@@ -45,7 +45,6 @@ interface Props {
 
 const Navigator = (props: Props) => {
   const { initialRouteName } = props;
-  console.log(initialRouteName);
   const { state, dispatch } = useContext(store);
   return (
     <NavigationContainer theme={defaultTheme}>

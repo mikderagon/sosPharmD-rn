@@ -6,25 +6,47 @@
  * @flow strict-local
  */
 import auth from '@react-native-firebase/auth';
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
 import Navigator from './Navigator';
 import { store } from './store';
 import { StackParamList } from './types';
+import * as firestore from './actions/firestore';
 
 const AppRoot = () => {
   const { state, dispatch } = useContext(store);
-  let initialRouteName = 'Onboarding';
-  if (auth().currentUser) {
-    // rehydrate app with user's data, then navigate to home
+  const [readyToMount, setReadyToMount] = useState(false);
+  let initialRouteName = useRef('Onboarding');
 
-    // then
-    initialRouteName = 'Home';
+  useEffect(() => {
+    const unsubscribe = auth().onAuthStateChanged(user => {
+      if (user) {
+        firestore.getUser(user).then(signedUser => {
+          dispatch({
+            type: 'SET_CURRENT_USER',
+            currentUser: signedUser,
+          });
+          initialRouteName.current = 'Home';
+          setReadyToMount(true);
+        });
+      } else {
+        setReadyToMount(true);
+      }
+    });
+
+    return unsubscribe;
+  }, [dispatch]);
+
+  if (!readyToMount) {
+    // data not rehydrated yet
+    return null;
   }
 
   return (
     <>
-      <Navigator initialRouteName={initialRouteName as keyof StackParamList} />
+      <Navigator
+        initialRouteName={initialRouteName.current as keyof StackParamList}
+      />
     </>
   );
 };

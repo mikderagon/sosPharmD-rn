@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import _ from 'underscore';
+import _, { times } from 'underscore';
 import React from 'react';
 import {
   TouchableOpacity,
@@ -15,6 +15,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
 } from 'react-native';
 import 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
@@ -34,13 +35,14 @@ interface Props {
   events: EventAndOwner[];
   applyForContract: (event: Event) => void;
   isLocum: boolean;
-  interestedLocums?: [];
-}
-
-interface interestedLocum {
-  interestedLocum: Locum;
-  startTime: string;
-  endTime: string;
+  interestedLocums: {
+    day: number;
+    month: number;
+    year: number;
+    startTime: string;
+    endTime: string;
+    interestedLocums: Locum[];
+  };
 }
 
 const EventModal = (props: Props) => {
@@ -52,6 +54,7 @@ const EventModal = (props: Props) => {
     applyForContract,
     interestedLocums,
   } = props;
+
   return (
     <Modal
       onBackdropPress={closeModal}
@@ -85,32 +88,37 @@ const EventModal = (props: Props) => {
           {mois[events[0]?.event.month - 1]}
         </Text>
         <FlatList
-          data={isLocum ? events : interestedLocums}
+          data={events}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <View style={styles.component}>
-              <Image
-                source={{
-                  uri: item.owner.pharmacy.pictureUrl,
-                }}
-                style={styles.pharmacyPicture}
-              />
-              <View style={{ marginLeft: 10 }}>
-                <Text style={{ marginTop: 4 }}>{item.event.title}</Text>
-                <View style={{ flexDirection: 'row' }}>
-                  {/* <Text>{event?.UserId}</Text> */}
-                  <Text style={{ color: '#494949', fontSize: 12 }}>
-                    Affiché par {item.owner.firstName} {item.owner.lastName}
+          renderItem={({ item, index }) =>
+            isLocum ? (
+              <View style={styles.component}>
+                <View style={styles.textOverPicture}>
+                  <Text style={styles.address}>
+                    {item.owner.pharmacy.address}
                   </Text>
                 </View>
+                <Image
+                  source={{
+                    uri: item.owner.pharmacy.pictureUrl,
+                  }}
+                  style={styles.pharmacyPicture}
+                />
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={{ marginTop: 4 }}>{item.event.title}</Text>
+                  <View style={{ flexDirection: 'row' }}>
+                    {/* <Text>{event?.UserId}</Text> */}
+                    <Text style={{ color: '#494949', fontSize: 12 }}>
+                      Affiché par {item.owner.firstName} {item.owner.lastName}
+                    </Text>
+                  </View>
 
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ color: colors.main, fontWeight: '600' }}>
-                    {item.event.startTime} - {item.event.endTime}
-                  </Text>
-                </View>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Text style={{ color: colors.main, fontWeight: '600' }}>
+                      {item.event.startTime} - {item.event.endTime}
+                    </Text>
+                  </View>
 
-                {!item.event.interested && (
                   <View
                     style={{
                       flexDirection: 'row',
@@ -121,28 +129,51 @@ const EventModal = (props: Props) => {
                       right: 40,
                     }}>
                     <TouchableOpacity
+                      activeOpacity={item.event.interested ? 1 : 0.2}
                       onPress={() => {
-                        closeModal();
-                        // give time for the close modal animation to finish
-                        setTimeout(() => {
-                          applyForContract(item.event);
-                        }, 1000);
+                        if (!item.event.interested) {
+                          closeModal();
+                          // give time for the close modal animation to finish
+                          Alert.alert(
+                            'Nous envoyons vos informations au propriétaire',
+                          );
+                          setTimeout(() => {
+                            applyForContract(item.event);
+                          }, 1000);
+                        }
                       }}
                       style={{
-                        backgroundColor: colors.darkLime,
+                        backgroundColor: item.event.interested
+                          ? 'transparent'
+                          : colors.main,
                         height: 45,
                         width: 100,
-                        borderRadius: 10,
+                        borderRadius: item.event.interested ? 0 : 10,
+                        borderWidth: item.event.interested ? 1 : 0,
+                        borderColor: colors.darkLime,
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}>
-                      <Text style={{ color: 'white' }}>Postuler</Text>
+                      <Text
+                        style={{
+                          color: item.event.interested
+                            ? colors.darkLime
+                            : '#fff',
+                        }}>
+                        {item.event.interested ? 'Postulé' : 'Postuler'}
+                      </Text>
                     </TouchableOpacity>
                   </View>
-                )}
+                </View>
               </View>
-            </View>
-          )}
+            ) : (
+              <View style={styles.component}>
+                <Text>
+                  {interestedLocums.interestedLocums[index].firstName}
+                </Text>
+              </View>
+            )
+          }
         />
       </View>
     </Modal>
@@ -168,8 +199,22 @@ const styles = StyleSheet.create({
   },
   pharmacyPicture: {
     height: '100%',
-    width: '33%',
+    width: '37%',
     borderRadius: 10,
+  },
+  textOverPicture: {
+    position: 'absolute',
+    bottom: 3,
+    left: 5,
+    zIndex: 1,
+    height: '30%',
+    width: '37%',
+    justifyContent: 'flex-end',
+  },
+  address: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '400',
   },
 });
 

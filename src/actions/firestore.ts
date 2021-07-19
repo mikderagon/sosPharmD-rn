@@ -36,38 +36,44 @@ export async function getSignupData(dispatch: any) {
 }
 
 export async function initOwnerData(currentUser: Owner, dispatch: any) {
-  var { docs } = await firestore()
+  firestore()
     .collection('events')
     .where('UserId', '==', currentUser.id)
-    .get();
-  const events = docs.map(doc => {
-    const data = doc.data();
-    const UserId = data.UserId;
-    return {
-      ...data,
-      id: doc.id,
-      UserId,
-    } as Event;
-  });
-  dispatch({
-    type: 'SET_CALENDAR_EVENTS',
-    events,
-  });
-  const thisMonthEvents = getMonthEvents(events);
-  const thisMonthEventDates = getMonthEventDates(thisMonthEvents);
-  const locumTags = await getLocumTags(thisMonthEvents);
-  dispatch({
-    type: 'SET_THIS_MONTH_EVENTS',
-    thisMonthEvents,
-  });
-  dispatch({
-    type: 'SET_THIS_MONTH_EVENT_DATES',
-    thisMonthEventDates,
-  });
-  dispatch({
-    type: 'SET_LOCUM_TAGS',
-    locumTags,
-  });
+    .onSnapshot(async doc => {
+      const events = doc.docs.map(_doc => {
+        const data = _doc.data();
+        const UserId = data.UserId;
+        return {
+          ...data,
+          id: _doc.id,
+          UserId,
+        } as Event;
+      });
+      dispatch({
+        type: 'SET_CALENDAR_EVENTS',
+        events,
+      });
+      const thisMonthEvents = getMonthEvents(events);
+      const thisMonthEventDates = getMonthEventDates(thisMonthEvents);
+      const interestedLocums = await getInterestedLocums(events);
+      const locumTags = await getLocumTags(thisMonthEvents);
+      dispatch({
+        type: 'SET_THIS_MONTH_EVENTS',
+        thisMonthEvents,
+      });
+      dispatch({
+        type: 'SET_THIS_MONTH_EVENT_DATES',
+        thisMonthEventDates,
+      });
+      dispatch({
+        type: 'SET_LOCUM_TAGS',
+        locumTags,
+      });
+      dispatch({
+        type: 'SET_INTERESTED_LOCUMS',
+        interestedLocums,
+      });
+    });
 }
 
 export async function initLocumData(currentUser: Locum, dispatch: any) {
@@ -75,26 +81,24 @@ export async function initLocumData(currentUser: Locum, dispatch: any) {
     .collection('events')
     .where('minExperience', '<=', currentUser.schoolYear)
     .onSnapshot(async doc => {
-      const events = doc.docs
-        // .filter(_doc => {
-        //   const data = _doc.data();
-        //   return !data.interestedLocums.includes(currentUser.id);
-        // })
-        .map(_doc => {
-          const data = _doc.data();
-          const UserId = data.UserId;
-          return {
-            ...data,
-            id: _doc.id,
-            UserId,
-            interested: data.interestedLocums.includes(currentUser.id),
-          } as Event;
-        });
+      const events = doc.docs.map(_doc => {
+        const data = _doc.data();
+        const UserId = data.UserId;
+        return {
+          ...data,
+          id: _doc.id,
+          UserId,
+          interested: data.interestedLocums.includes(currentUser.id),
+        } as Event;
+      });
       dispatch({
         type: 'SET_CALENDAR_EVENTS',
         events,
       });
-      const thisMonthEvents = getMonthEvents(events);
+      const availableEvents = events.filter(
+        (event: Event) => !event.interestedLocums.includes(currentUser.id),
+      );
+      const thisMonthEvents = getMonthEvents(availableEvents);
       const thisMonthEventDates = thisMonthEvents
         .map(event => event.day)
         .sort();
@@ -198,6 +202,24 @@ export async function getContractTags(
     }
   }
   return contracts;
+}
+
+export async function getInterestedLocums(events: Event[]) {
+  const interestedLocums = await Promise.all(
+    events.map(async (event: Event) => {
+      return {
+        day: event.day,
+        year: event.year,
+        month: event.month,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        interestedLocums: await Promise.all(
+          event.interestedLocums.map(locum => findUser<Locum>(locum)),
+        ),
+      };
+    }),
+  );
+  return interestedLocums;
 }
 
 export async function getLocumDemands(events: Event[]) {

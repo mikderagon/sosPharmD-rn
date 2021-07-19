@@ -2,6 +2,7 @@ import React, { createContext, useReducer } from 'react';
 import _ from 'underscore';
 import firestore from '@react-native-firebase/firestore';
 import { User, Event, Locum, Owner, Pharmacy, School } from './models';
+import { DateObject } from './interfaces';
 
 const initialState = {
   currentUser: {} as Locum | Owner,
@@ -87,6 +88,12 @@ const StateProvider = ({ children }) => {
         var newState = {
           ...state,
           pharmacies: action.pharmacies,
+        };
+        return newState;
+      case 'SET_INTERESTED_LOCUMS':
+        var newState = {
+          ...state,
+          interestedLocums: action.interestedLocums,
         };
         return newState;
       default:

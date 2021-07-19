@@ -31,6 +31,7 @@ import AddEventModal, { NewEvent } from './AddEventModal';
 import Calendar from './Calendar';
 import * as firestore from '../../actions/firestore';
 import EventModal from './EventModal';
+import _ from 'underscore';
 
 const backCaret = require('assets/images/backCaret.png');
 
@@ -147,6 +148,8 @@ const CalendarView = ({ navigation }) => {
     setSelectionState(true);
   }
 
+  console.log(state.interestedLocums);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -174,7 +177,9 @@ const CalendarView = ({ navigation }) => {
             disponibles (
             {currentUser.accountType === 'locum'
               ? state.events.filter((event: Event) => !event.interested).length
-              : state.interestedLocums.length}
+              : _.flatten(
+                  state.events.map((event: Event) => event.interestedLocums),
+                ).length}
             )
           </Text>
         </View>
@@ -202,7 +207,12 @@ const CalendarView = ({ navigation }) => {
             />
             <Text style={[styles.legendText, { color: colors.lightGray }]}>
               En attente de locum (
-              {state.events.length - state.interestedLocums.length})
+              {
+                state.events.filter(
+                  (event: Event) => event.interestedLocums.length === 0,
+                ).length
+              }
+              )
             </Text>
           </View>
         )}
@@ -291,7 +301,19 @@ const CalendarView = ({ navigation }) => {
           firestore.applyForContract(event, currentUser.id);
           setEventModalVisible(false);
         }}
-        interestedLocums={state.interestedLocums}
+        interestedLocums={
+          // interestedlocums from the clicked date
+          state.interestedLocums.filter(
+            (data: any) =>
+              clickedEvents.map(e => e.event.day).includes(data.day) &&
+              clickedEvents.map(e => e.event.month).includes(data.month) &&
+              clickedEvents.map(e => e.event.year).includes(data.year) &&
+              clickedEvents
+                .map(e => e.event.startTime)
+                .includes(data.startTime) &&
+              clickedEvents.map(e => e.event.endTime).includes(data.endTime),
+          )[0]
+        }
         isLocum={currentUser.accountType === 'locum'}
         closeModal={() => setEventModalVisible(false)}
       />

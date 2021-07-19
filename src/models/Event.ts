@@ -5,8 +5,8 @@ export default interface Event {
   minExperience: string;
   startTime: string;
   endTime: string;
-  interestedLocums: number[]; // User Ids
-  acceptedLocums: number[];
+  interestedLocums: string[]; // User Ids
+  acceptedLocums: string[];
   year: number;
   month: number;
   day: number;

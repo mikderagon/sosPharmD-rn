@@ -60,7 +60,7 @@ const Contract = (props: Props) => {
             {pharmacy.affiliation}, {pharmacy.address}
           </Text>
           <Text style={[styles.school, { marginTop: 1, color: colors.main }]}>
-            {event.startTime} - {event.endTime}
+            {event.startTime} à {event.endTime}
           </Text>
         </View>
       </View>

@@ -28,6 +28,8 @@ import {
 import { EventAndOwner } from './CalendarView';
 import { Event, Locum } from '../../models';
 import * as firestore from '../../actions/firestore';
+import { defaultAvatar } from '../Home/shared';
+import { toSchoolYear } from '../../utils/school';
 
 interface Props {
   closeModal: any;
@@ -90,8 +92,11 @@ const EventModal = (props: Props) => {
         <FlatList
           data={events}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) =>
-            isLocum ? (
+          renderItem={({ item, index }) => {
+            const locum = isLocum
+              ? null
+              : interestedLocums.interestedLocums[index];
+            return isLocum ? (
               <View style={styles.component}>
                 <View style={styles.textOverPicture}>
                   <Text style={styles.address}>
@@ -115,7 +120,7 @@ const EventModal = (props: Props) => {
 
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={{ color: colors.main, fontWeight: '600' }}>
-                      {item.event.startTime} - {item.event.endTime}
+                      {item.event.startTime} à {item.event.endTime}
                     </Text>
                   </View>
 
@@ -167,13 +172,65 @@ const EventModal = (props: Props) => {
                 </View>
               </View>
             ) : (
-              <View style={styles.component}>
-                <Text>
-                  {interestedLocums.interestedLocums[index].firstName}
-                </Text>
-              </View>
-            )
-          }
+              <TouchableOpacity
+                style={styles.component}
+                onPress={() => {
+                  Alert.alert('État de la demande', '', [
+                    {
+                      text: 'Accepter',
+                      onPress: () => {
+                        firestore.acceptLocum(
+                          item.event as Event,
+                          locum || ({} as Locum),
+                        );
+                      },
+                    },
+                    {
+                      text: 'Refuser',
+                      onPress: () => {
+                        closeModal();
+                        setTimeout(() => {
+                          firestore.refuseLocum(
+                            item.event as Event,
+                            locum || ({} as Locum),
+                          );
+                        }, 1000);
+                      },
+                      style: 'destructive',
+                    },
+                    {
+                      text: 'Annuler',
+                      onPress: () => {},
+                      style: 'cancel',
+                    },
+                  ]);
+                }}>
+                <Image
+                  source={
+                    locum?.pictureUrl
+                      ? { uri: locum.pictureUrl }
+                      : defaultAvatar
+                  }
+                  style={styles.locumPicture}
+                />
+                <View style={styles.outsideImageContainer}>
+                  <Text style={styles.name}>
+                    {locum.firstName + ' ' + locum.lastName}
+                  </Text>
+                  <Text style={[styles.school, { marginTop: 1 }]}>
+                    {`PharmD - ${toSchoolYear(locum.schoolYear)} année à l'${
+                      locum.school
+                    }`}
+                  </Text>
+                </View>
+                <View style={styles.timeStamp}>
+                  <Text style={{ color: colors.main, fontWeight: '600' }}>
+                    {item.event.startTime} à {item.event.endTime}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
         />
       </View>
     </Modal>
@@ -184,7 +241,7 @@ const styles = StyleSheet.create({
   modalView: {
     height: hp(20),
     width: wp(100),
-    backgroundColor: '#eee',
+    backgroundColor: '#fff',
     borderRadius: 25,
     alignItems: 'center',
   },
@@ -196,6 +253,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 10,
+  },
+  locumPicture: {
+    marginLeft: wp(3),
+    marginTop: hp(1.5),
+    height: hp(6),
+    width: hp(6),
+    resizeMode: 'contain',
   },
   pharmacyPicture: {
     height: '100%',
@@ -215,6 +279,29 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 10,
     fontWeight: '400',
+  },
+  outsideImageContainer: {
+    width: '60%',
+    marginLeft: 10,
+    top: 12,
+    alignSelf: 'flex-start',
+  },
+  name: {
+    fontWeight: '600',
+    fontSize: 17,
+    color: '#494949',
+  },
+  school: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#aaa',
+  },
+  timeStamp: {
+    alignItems: 'flex-end',
+    width: wp(12),
+    position: 'absolute',
+    top: hp(1.7),
+    right: wp(3),
   },
 });
 

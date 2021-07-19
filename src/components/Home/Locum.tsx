@@ -56,9 +56,7 @@ const Locum = (props: Props) => {
         <View style={styles.outsideImageContainer}>
           <Text style={styles.name}>{firstName + ' ' + lastName}</Text>
           <Text style={[styles.school, { marginTop: 1 }]}>
-            {`Étudiant PharmD de ${toSchoolYear(
-              schoolYear,
-            )} année à l'${school}`}
+            {`PharmD - ${toSchoolYear(schoolYear)} année à l'${school}`}
           </Text>
         </View>
       </View>

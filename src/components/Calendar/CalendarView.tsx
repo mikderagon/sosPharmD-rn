@@ -124,6 +124,7 @@ const CalendarView = ({ navigation }) => {
         endTime: userEvent?.endTime,
         interestedLocums: [],
         acceptedLocums: [],
+        refusedLocums: [],
       } as Event;
     });
     dispatch({
@@ -147,8 +148,6 @@ const CalendarView = ({ navigation }) => {
     Alert.alert("Choisissez les dates de l'événement");
     setSelectionState(true);
   }
-
-  console.log(state.interestedLocums);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -178,7 +177,13 @@ const CalendarView = ({ navigation }) => {
             {currentUser.accountType === 'locum'
               ? state.events.filter((event: Event) => !event.interested).length
               : _.flatten(
-                  state.events.map((event: Event) => event.interestedLocums),
+                  state.events.map((event: Event) =>
+                    event.interestedLocums.filter(
+                      interestedLocum =>
+                        !event.acceptedLocums.includes(interestedLocum) &&
+                        !event.refusedLocums.includes(interestedLocum),
+                    ),
+                  ),
                 ).length}
             )
           </Text>
@@ -208,9 +213,15 @@ const CalendarView = ({ navigation }) => {
             <Text style={[styles.legendText, { color: colors.lightGray }]}>
               En attente de locum (
               {
-                state.events.filter(
-                  (event: Event) => event.interestedLocums.length === 0,
-                ).length
+                state.events.filter((event: Event) => {
+                  return (
+                    event.interestedLocums.filter(
+                      interestedLocum =>
+                        !event.acceptedLocums.includes(interestedLocum) ||
+                        !event.refusedLocums.includes(interestedLocum),
+                    ).length === 0
+                  );
+                }).length
               }
               )
             </Text>
@@ -235,7 +246,13 @@ const CalendarView = ({ navigation }) => {
                 onDayPress={onDayPress}
                 events={state.events.filter(
                   (event: Event) =>
-                    event.year === item.year && event.month === item.month,
+                    event.interestedLocums.filter(
+                      interestedLocum =>
+                        !event.acceptedLocums.includes(interestedLocum) ||
+                        !event.refusedLocums.includes(interestedLocum),
+                    ).length > 0 &&
+                    event.year === item.year &&
+                    event.month === item.month,
                 )}
                 calendarState={item}
                 additionalRow={

@@ -22,9 +22,10 @@ import Cell from './Cells/Cell';
 import * as dates from '../../utils/dates';
 import { useContext } from 'react';
 import { store } from '../../store';
+import { Event } from '../../models';
 
 interface Props {
-  events: any;
+  events: Event[];
   currentEvent?: number;
   previousEvent?: number;
   additionalRow: boolean;
@@ -89,7 +90,14 @@ const Calendar = (props: Props) => {
         .includes(day),
       // owner pov
       interestedLocum: events
-        .filter(event => event.interestedLocums.length)
+        .filter(
+          event =>
+            event.interestedLocums.filter(
+              interestedLocum =>
+                !event.acceptedLocums.includes(interestedLocum) &&
+                !event.refusedLocums.includes(interestedLocum),
+            ).length,
+        )
         .map(event => event.day)
         .includes(day),
     };

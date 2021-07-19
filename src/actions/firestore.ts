@@ -118,14 +118,18 @@ export async function initLocumData(currentUser: Locum, dispatch: any) {
     });
 }
 
-export async function findUser<T>(uid: string): Promise<T> {
+export async function findUser<T>(uid: string): Promise<T & User> {
   return new Promise((resolve, reject) => {
     firestore()
       .collection('users')
       .doc(uid)
       .get()
       .then(user => {
-        resolve(user.data() as T);
+        const data = user.data();
+        resolve({
+          ...data,
+          id: uid,
+        } as T & User);
       })
       .catch(e => {
         reject(e);
@@ -159,9 +163,16 @@ export function getMonthEvents(events: Event[]) {
 
 export function getMonthEventDates(thisMonthEvents: Event[]) {
   const thisMonthEventDates = _.flatten(
-    thisMonthEvents.map(e =>
-      Array.from({ length: e.interestedLocums?.length || 0 }).fill(e.day),
-    ),
+    thisMonthEvents.map(event => {
+      return Array.from({
+        length:
+          event.interestedLocums.filter(
+            interestedLocum =>
+              !event.acceptedLocums.includes(interestedLocum) &&
+              !event.refusedLocums.includes(interestedLocum),
+          ).length || 0,
+      }).fill(event.day);
+    }),
   );
   return thisMonthEventDates.sort();
 }
@@ -171,7 +182,9 @@ export async function getLocumTags(
 ): Promise<LocumTag[]> {
   let locums = [];
   for (const event of thisMonthEvents) {
-    const theLocumsAre = event.interestedLocums;
+    const theLocumsAre = event.interestedLocums.filter(
+      interestedLocum => !event.refusedLocums.includes(interestedLocum),
+    );
     if (theLocumsAre?.length) {
       for (const locum of theLocumsAre) {
         const locumFound = await findUser<Locum>(locum.toString());
@@ -214,7 +227,11 @@ export async function getInterestedLocums(events: Event[]) {
         startTime: event.startTime,
         endTime: event.endTime,
         interestedLocums: await Promise.all(
-          event.interestedLocums.map(locum => findUser<Locum>(locum)),
+          event.interestedLocums
+            .filter(
+              interestedLocum => !event.refusedLocums.includes(interestedLocum),
+            )
+            .map(locum => findUser<Locum>(locum)),
         ),
       };
     }),
@@ -276,6 +293,57 @@ export function applyForContract(event: Event, uid: string) {
         const interestedLocums = data?.interestedLocums || [];
         return _event.ref.update({
           interestedLocums: _.uniq([...interestedLocums, uid]),
+        });
+      })
+      .then(() => {
+        resolve('ok');
+      })
+      .catch(e => {
+        console.error('error', e);
+        reject(e);
+      });
+  });
+}
+
+export function refuseLocum(event: Event, locum: Locum) {
+  // add a modal on next time this locum opens the app saying 'hey the owner already found another locum, sorry'....
+  return new Promise((resolve, reject) => {
+    firestore()
+      .collection('events')
+      .doc(event.id)
+      .get()
+      .then(_event => {
+        const data = _event.data();
+        const refusedLocums = data?.refusedLocums || [];
+        return _event.ref.update({
+          refusedLocums: _.uniq([...refusedLocums, locum.id]),
+        });
+      })
+      .then(() => {
+        resolve('ok');
+      })
+      .catch(e => {
+        console.error('error', e);
+        reject(e);
+      });
+  });
+}
+
+export function acceptLocum(event: Event, locum: Locum) {
+  return new Promise((resolve, reject) => {
+    firestore()
+      .collection('events')
+      .doc(event.id)
+      .get()
+      .then(_event => {
+        const data = _event.data();
+        const interestedLocums = (data?.interestedLocums || []) as Locum[];
+        const acceptedLocums = (data?.acceptedLocums || []) as Locum[];
+        return _event.ref.update({
+          interestedLocums: interestedLocums.filter(
+            interestedLocum => interestedLocum.id !== locum.id,
+          ),
+          acceptedLocums: _.uniq([...acceptedLocums, locum.id]),
         });
       })
       .then(() => {

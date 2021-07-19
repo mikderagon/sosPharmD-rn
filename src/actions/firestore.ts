@@ -1,6 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import _ from 'underscore';
+import _, { where } from 'underscore';
 import { signUpFormData } from '../components/SignUp/Form';
 import { ContractTag, LocumTag } from '../interfaces';
 import { Locum, Owner, User, Event, Pharmacy, School } from '../models';
@@ -71,44 +71,41 @@ export async function initOwnerData(currentUser: Owner, dispatch: any) {
 }
 
 export async function initLocumData(currentUser: Locum, dispatch: any) {
-  // const { docs } = await firestore()
-  //   .collection('events')
-  //   .where('minExperience', '<=', currentUser.schoolYear)
-  //   .get();
   firestore()
     .collection('events')
     .where('minExperience', '<=', currentUser.schoolYear)
-    .onSnapshot(doc => {
-      console.log('current data', doc.docs);
+    .onSnapshot(async doc => {
+      const events = doc.docs.map(_doc => {
+        const data = _doc.data();
+        const UserId = data.UserId;
+        return {
+          ...data,
+          id: _doc.id,
+          UserId,
+        } as Event;
+      });
+      dispatch({
+        type: 'SET_CALENDAR_EVENTS',
+        events,
+      });
+      const thisMonthEvents = getMonthEvents(events);
+      const thisMonthEventDates = thisMonthEvents
+        .map(event => event.day)
+        .sort();
+      const contracts = await getContractTags(thisMonthEvents);
+      dispatch({
+        type: 'SET_THIS_MONTH_EVENTS',
+        thisMonthEvents,
+      });
+      dispatch({
+        type: 'SET_THIS_MONTH_EVENT_DATES',
+        thisMonthEventDates,
+      });
+      dispatch({
+        type: 'SET_CONTRACTS',
+        contracts,
+      });
     });
-  // const events = docs.map(doc => {
-  //   const data = doc.data();
-  //   const UserId = data.UserId;
-  //   return {
-  //     ...data,
-  //     id: doc.id,
-  //     UserId,
-  //   } as Event;
-  // });
-  // dispatch({
-  //   type: 'SET_CALENDAR_EVENTS',
-  //   events,
-  // });
-  // const thisMonthEvents = getMonthEvents(events);
-  // const thisMonthEventDates = thisMonthEvents.map(event => event.day).sort();
-  // const contracts = await getContractTags(thisMonthEvents);
-  // dispatch({
-  //   type: 'SET_THIS_MONTH_EVENTS',
-  //   thisMonthEvents,
-  // });
-  // dispatch({
-  //   type: 'SET_THIS_MONTH_EVENT_DATES',
-  //   thisMonthEventDates,
-  // });
-  // dispatch({
-  //   type: 'SET_CONTRACTS',
-  //   contracts,
-  // });
 }
 
 export async function findUser<T>(uid: string): Promise<T> {
@@ -250,7 +247,7 @@ export function applyForContract(event: Event, uid: string) {
         const data = _event.data();
         const interestedLocums = data?.interestedLocums || [];
         return _event.ref.update({
-          interestedLocums: [...interestedLocums, uid],
+          interestedLocums: _.uniq([...interestedLocums, uid]),
         });
       })
       .then(() => {

@@ -12,6 +12,7 @@ import Navigator from './Navigator';
 import { store } from './store';
 import { StackParamList } from './types';
 import * as firestore from './actions/firestore';
+import { Locum, Owner } from './models';
 
 const AppRoot = () => {
   const { state, dispatch } = useContext(store);
@@ -26,6 +27,12 @@ const AppRoot = () => {
             type: 'SET_CURRENT_USER',
             currentUser: signedUser,
           });
+          if (signedUser?.accountType === 'locum') {
+            firestore.initLocumData(signedUser as Locum, dispatch);
+          }
+          if (signedUser?.accountType === 'owner') {
+            firestore.initOwnerData(signedUser as Owner, dispatch);
+          }
           initialRouteName.current = 'Home';
           setReadyToMount(true);
         });

@@ -10,4 +10,5 @@ export default interface Event {
   year: number;
   month: number;
   day: number;
-}
+  interested?: boolean;
+};

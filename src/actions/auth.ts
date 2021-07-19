@@ -2,6 +2,7 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { signUpFormData } from '../components/SignUp/Form';
 import { Locum, Owner } from '../models';
+import { initLocumData, initOwnerData } from './firestore';
 
 export function createUser(userData: signUpFormData): Promise<Locum | Owner> {
   return new Promise((resolve, reject) => {
@@ -53,7 +54,6 @@ export function createUser(userData: signUpFormData): Promise<Locum | Owner> {
           .collection('users')
           .doc(newUser.user.uid)
           .get();
-        console.log(_data);
         resolve({
           ..._data,
           id: newUser.user.uid,

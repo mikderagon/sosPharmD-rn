@@ -110,28 +110,36 @@ const EventModal = (props: Props) => {
                   </Text>
                 </View>
 
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    width: wp(30),
-                    justifyContent: 'space-between',
-                    bottom: 5,
-                    position: 'absolute',
-                    right: 40,
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => applyForContract(item.event)}
+                {!item.event.interested && (
+                  <View
                     style={{
-                      backgroundColor: colors.darkLime,
-                      height: 45,
-                      width: 100,
-                      borderRadius: 10,
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      flexDirection: 'row',
+                      width: wp(30),
+                      justifyContent: 'space-between',
+                      bottom: 5,
+                      position: 'absolute',
+                      right: 40,
                     }}>
-                    <Text style={{ color: 'white' }}>Postuler</Text>
-                  </TouchableOpacity>
-                </View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        closeModal();
+                        // give time for the close modal animation to finish
+                        setTimeout(() => {
+                          applyForContract(item.event);
+                        }, 1000);
+                      }}
+                      style={{
+                        backgroundColor: colors.darkLime,
+                        height: 45,
+                        width: 100,
+                        borderRadius: 10,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <Text style={{ color: 'white' }}>Postuler</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </View>
             </View>
           )}

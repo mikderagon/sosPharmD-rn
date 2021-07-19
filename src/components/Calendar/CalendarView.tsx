@@ -173,11 +173,25 @@ const CalendarView = ({ navigation }) => {
             {currentUser.accountType === 'locum' ? 'Contrats' : 'Locums'}{' '}
             disponibles (
             {currentUser.accountType === 'locum'
-              ? state.events.length
+              ? state.events.filter((event: Event) => !event.interested).length
               : state.interestedLocums.length}
             )
           </Text>
         </View>
+        {currentUser.accountType === 'locum' && (
+          <View style={[styles.flexRow, { marginLeft: 20 }]}>
+            <View
+              style={[
+                styles.legendDot,
+                { backgroundColor: colors.darkLime, marginRight: 5 },
+              ]}
+            />
+            <Text style={[styles.legendText, { color: colors.darkLime }]}>
+              Contrats postulés (
+              {state.events.filter((event: Event) => event.interested).length})
+            </Text>
+          </View>
+        )}
         {currentUser.accountType === 'owner' && (
           <View style={[styles.flexRow, { marginLeft: 20 }]}>
             <View

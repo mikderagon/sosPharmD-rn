@@ -82,6 +82,12 @@ const Calendar = (props: Props) => {
       isToday:
         day === today.getDate() && calendarState.month === today.getMonth() + 1,
       isEvent: events.map(event => event.day).includes(day),
+      // locum pov
+      isInterested: events
+        .filter(event => event.interested)
+        .map(event => event.day)
+        .includes(day),
+      // owner pov
       interestedLocum: events
         .filter(event => event.interestedLocums.length)
         .map(event => event.day)
@@ -128,6 +134,14 @@ const Calendar = (props: Props) => {
           <View style={styles.todayHighlight}>
             <Text style={styles.highlightedDay}>{day}</Text>
           </View>
+        </Cell>
+      );
+    }
+    if (state.currentUser.accountType === 'locum' && CELL_STATES.isInterested) {
+      return (
+        <Cell key={index.toString()} onDayPress={_onDayPress}>
+          <Text style={styles.day}>{day}</Text>
+          <View style={[styles.dayDot, { backgroundColor: colors.darkLime }]} />
         </Cell>
       );
     }

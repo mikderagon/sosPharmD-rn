@@ -26,16 +26,20 @@ import {
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
 import { EventAndOwner } from './CalendarView';
-import { Event, Locum } from '../../models';
+import { Event, Locum, Owner } from '../../models';
 import * as firestore from '../../actions/firestore';
 import { defaultAvatar } from '../Home/shared';
 import { toSchoolYear } from '../../utils/school';
+import icons from '../../styles/icons';
+import { sharedStyles } from '../../styles/shared';
+import AcceptedTag from '../Shared/AcceptedTag';
 
 interface Props {
   closeModal: any;
   showExperienceModal: any;
   isVisible: boolean;
   events: EventAndOwner[];
+  currentUser: Owner | Locum;
   applyForContract: (event: Event) => void;
   isLocum: boolean;
   interestedLocums: {
@@ -54,6 +58,7 @@ const EventModal = (props: Props) => {
     isLocum,
     closeModal,
     events,
+    currentUser,
     applyForContract,
     interestedLocums,
     showExperienceModal,
@@ -182,7 +187,11 @@ const EventModal = (props: Props) => {
                               : colors.white,
                             fontWeight: '600',
                           }}>
-                          {item.event.interested ? 'Postulé' : 'Postuler'}
+                          {item.event.acceptedLocums.includes(currentUser.id)
+                            ? `Accepté ${icons.checkmark}`
+                            : item.event.interested
+                            ? 'Postulé'
+                            : 'Postuler'}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -192,38 +201,52 @@ const EventModal = (props: Props) => {
             ) : (
               <View style={styles.shadow}>
                 <TouchableOpacity
+                  activeOpacity={
+                    locum && !item.event.acceptedLocums.includes(locum.id)
+                      ? 0.2
+                      : 1
+                  }
                   style={[styles.component]}
                   onPress={() => {
-                    Alert.alert('État de la demande', '', [
-                      {
-                        text: 'Accepter',
-                        onPress: () => {
-                          firestore.acceptLocum(
-                            item.event as Event,
-                            locum || ({} as Locum),
-                          );
-                        },
-                      },
-                      {
-                        text: 'Refuser',
-                        onPress: () => {
-                          closeModal();
-                          setTimeout(() => {
-                            firestore.refuseLocum(
+                    if (
+                      locum &&
+                      !item.event.acceptedLocums.includes(locum.id)
+                    ) {
+                      Alert.alert('État de la demande', '', [
+                        {
+                          text: 'Accepter',
+                          onPress: () => {
+                            firestore.acceptLocum(
                               item.event as Event,
                               locum || ({} as Locum),
                             );
-                          }, 1000);
+                            closeModal();
+                          },
                         },
-                        style: 'destructive',
-                      },
-                      {
-                        text: 'Annuler',
-                        onPress: () => {},
-                        style: 'cancel',
-                      },
-                    ]);
+                        {
+                          text: 'Refuser',
+                          onPress: () => {
+                            closeModal();
+                            setTimeout(() => {
+                              firestore.refuseLocum(
+                                item.event as Event,
+                                locum || ({} as Locum),
+                              );
+                            }, 1000);
+                          },
+                          style: 'destructive',
+                        },
+                        {
+                          text: 'Annuler',
+                          onPress: () => {},
+                          style: 'cancel',
+                        },
+                      ]);
+                    }
                   }}>
+                  {locum && item.event.acceptedLocums.includes(locum.id) && (
+                    <AcceptedTag />
+                  )}
                   <Image
                     source={
                       locum?.pictureUrl

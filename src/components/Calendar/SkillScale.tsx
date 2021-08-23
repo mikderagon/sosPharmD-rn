@@ -34,12 +34,10 @@ const SkillScale = (props: Props) => {
         scrollEnabled={false}
         renderItem={({ item, index }) => {
           return item <= rating ? (
-            // filled
             <View style={styles.filledCircle}>
               <View style={styles.innerFilling} />
             </View>
           ) : (
-            // empty
             <View style={styles.emptyCircle} />
           );
         }}

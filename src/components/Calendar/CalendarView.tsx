@@ -194,12 +194,24 @@ const CalendarView = ({ navigation }) => {
             <View
               style={[
                 styles.legendDot,
-                { backgroundColor: colors.darkLime, marginRight: 5 },
+                { backgroundColor: colors.darkBlue, marginRight: 5 },
               ]}
             />
-            <Text style={[styles.legendText, { color: colors.darkLime }]}>
+            <Text style={[styles.legendText, { color: colors.darkBlue }]}>
               Contrats postulés (
-              {state.events.filter((event: Event) => event.interested).length})
+              {
+                state.events
+                  .filter((event: Event) => event.interested)
+                  .filter(
+                    (event: Event) =>
+                      !event.refusedLocums.includes(currentUser.id),
+                  )
+                  .filter(
+                    (event: Event) =>
+                      !event.acceptedLocums.includes(currentUser.id),
+                  ).length
+              }
+              )
             </Text>
           </View>
         )}
@@ -229,6 +241,27 @@ const CalendarView = ({ navigation }) => {
           </View>
         )}
       </View>
+      {currentUser.accountType === 'locum' && (
+        <View style={[{ marginTop: 5 }, styles.flexRow, styles.legend]}>
+          <View
+            style={[
+              styles.legendDot,
+              { backgroundColor: colors.darkLime, marginRight: 5 },
+            ]}
+          />
+          <Text style={[styles.legendText, { color: colors.darkLime }]}>
+            Contrats acceptés (
+            {
+              _.flatten(
+                state.events.filter((event: Event) =>
+                  event.acceptedLocums.includes(currentUser.id),
+                ),
+              ).length
+            }
+            )
+          </Text>
+        </View>
+      )}
       {currentUser.accountType === 'owner' && (
         <View style={[{ marginTop: 5 }, styles.flexRow, styles.legend]}>
           <View
@@ -335,6 +368,7 @@ const CalendarView = ({ navigation }) => {
       )}
       <EventModal
         isVisible={eventModalVisible}
+        currentUser={currentUser}
         events={clickedEvents}
         applyForContract={(event: Event) => {
           firestore.applyForContract(event, currentUser.id);

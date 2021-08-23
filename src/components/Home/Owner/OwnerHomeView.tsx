@@ -97,7 +97,7 @@ const OwnerHomeView = ({ navigation }) => {
           justifyContent: 'center',
         }}>
         <View style={styles.modalView}>
-          <Text>Verifiy your email</Text>
+          <Text>Verify your email</Text>
           <Button
             onPress={() => {
               // check again currentuser to see if emailverified

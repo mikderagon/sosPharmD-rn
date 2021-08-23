@@ -48,8 +48,6 @@ const Calendar = (props: Props) => {
     onDayPress,
   } = props;
 
-  console.log(events);
-
   const daysRow = (
     state.language === 'fr' ? jours_semaines : weekdays_short
   ).map((day, index) => (
@@ -88,6 +86,10 @@ const Calendar = (props: Props) => {
       // locum pov
       isInterested: events
         .filter(event => event.interested)
+        .map(event => event.day)
+        .includes(day),
+      isAccepted: events
+        .filter(event => event.acceptedLocums.includes(state.currentUser.id))
         .map(event => event.day)
         .includes(day),
       // owner pov
@@ -151,11 +153,19 @@ const Calendar = (props: Props) => {
         </Cell>
       );
     }
-    if (state.currentUser.accountType === 'locum' && CELL_STATES.isInterested) {
+    if (state.currentUser.accountType === 'locum' && CELL_STATES.isAccepted) {
       return (
         <Cell key={index.toString()} onDayPress={_onDayPress}>
           <Text style={styles.day}>{day}</Text>
           <View style={[styles.dayDot, { backgroundColor: colors.darkLime }]} />
+        </Cell>
+      );
+    }
+    if (state.currentUser.accountType === 'locum' && CELL_STATES.isInterested) {
+      return (
+        <Cell key={index.toString()} onDayPress={_onDayPress}>
+          <Text style={styles.day}>{day}</Text>
+          <View style={[styles.dayDot, { backgroundColor: colors.darkBlue }]} />
         </Cell>
       );
     }

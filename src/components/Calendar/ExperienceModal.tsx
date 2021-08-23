@@ -58,6 +58,7 @@ const ExperienceModal = (props: Props) => {
           <View style={[styles.underline, { backgroundColor: colors.main }]} />
         </View>
         <FlatList
+          scrollEnabled={false}
           data={[
             {
               name: 'sosmaster',

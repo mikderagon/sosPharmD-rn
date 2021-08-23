@@ -59,7 +59,7 @@ const OwnerHomeView = ({ navigation }) => {
           thisMonthEventDates.length === 0
             ? 0
             : currentEventIndex + 1;
-        if (nextIndex > thisMonthEventDates.length) {
+        if (nextIndex >= thisMonthEventDates.length) {
           nextIndex = 0;
         }
         setPreviousEventIndex(currentEventIndex);

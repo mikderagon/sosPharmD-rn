@@ -180,7 +180,7 @@ const Calendar = (props: Props) => {
     }
     if (CELL_STATES.acceptedLocum) {
       return (
-        <Cell key={index.toString()} touchEnabled={false} onDayPress={() => {}}>
+        <Cell key={index.toString()} onDayPress={_onDayPress}>
           <Text style={styles.day}>{day}</Text>
           <View style={[styles.dayDot, { backgroundColor: colors.darkLime }]} />
         </Cell>

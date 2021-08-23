@@ -32,6 +32,7 @@ import Calendar from './Calendar';
 import * as firestore from '../../actions/firestore';
 import EventModal from './EventModal';
 import _ from 'underscore';
+import ExperienceModal from './ExperienceModal';
 
 const backCaret = require('assets/images/backCaret.png');
 
@@ -43,6 +44,7 @@ export interface EventAndOwner {
 const CalendarView = ({ navigation }) => {
   const [addEventModalVisible, setAddEventModalVisible] = useState(false);
   const [eventModalVisible, setEventModalVisible] = useState(false);
+  const [experienceModalVisible, setExperienceModalVisible] = useState(false);
   const [selectionState, setSelectionState] = useState(false); // set true to test
   const toggleAddEventModal = () =>
     setAddEventModalVisible(!addEventModalVisible);
@@ -353,6 +355,21 @@ const CalendarView = ({ navigation }) => {
         }
         isLocum={currentUser.accountType === 'locum'}
         closeModal={() => setEventModalVisible(false)}
+        showExperienceModal={() => {
+          setEventModalVisible(false);
+          setTimeout(() => {
+            setExperienceModalVisible(true);
+          }, 700);
+        }}
+      />
+      <ExperienceModal
+        closeModal={() => {
+          setExperienceModalVisible(false);
+          setTimeout(() => {
+            setEventModalVisible(true);
+          }, 700);
+        }}
+        isVisible={experienceModalVisible}
       />
     </SafeAreaView>
   );

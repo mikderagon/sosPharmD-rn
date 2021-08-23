@@ -33,6 +33,7 @@ import { toSchoolYear } from '../../utils/school';
 
 interface Props {
   closeModal: any;
+  showExperienceModal: any;
   isVisible: boolean;
   events: EventAndOwner[];
   applyForContract: (event: Event) => void;
@@ -55,6 +56,7 @@ const EventModal = (props: Props) => {
     events,
     applyForContract,
     interestedLocums,
+    showExperienceModal,
   } = props;
 
   return (
@@ -239,6 +241,23 @@ const EventModal = (props: Props) => {
                         locum.school
                       }`}
                     </Text>
+                    <TouchableOpacity
+                      style={{
+                        marginTop: 3,
+                        borderRadius: 10,
+                        height: 30,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                      onPress={() => showExperienceModal()}>
+                      <Text
+                        style={{
+                          color: colors.main,
+                          fontStyle: 'italic',
+                        }}>
+                        Voir Expérience avec Logiciels
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                   <View style={styles.timeStamp}>
                     <Text style={{ color: colors.main, fontWeight: '600' }}>

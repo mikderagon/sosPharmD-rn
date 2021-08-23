@@ -49,9 +49,9 @@ const LocumHomeView = ({ navigation }) => {
   const [horizontalFlatListScrolled, setHorizontalFlatListScrolled] =
     useState(false);
   const horizontalFlatListRef = useRef(null);
+  const CalendarState = dates.getCalendarState(new Date());
   const { state, dispatch } = useContext(store);
   const { currentUser, contracts, thisMonthEventDates } = state;
-  const CalendarState = dates.getCalendarState(new Date());
 
   useEffect(() => {
     if (contracts.length > 1) {
@@ -61,7 +61,7 @@ const LocumHomeView = ({ navigation }) => {
           thisMonthEventDates.length === 0
             ? 0
             : currentEventIndex + 1;
-        if (nextIndex > thisMonthEventDates.length) {
+        if (nextIndex >= thisMonthEventDates.length) {
           nextIndex = 0;
         }
         setPreviousEventIndex(currentEventIndex);

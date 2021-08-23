@@ -1,26 +1,17 @@
-import { Locum } from './models';
+import { Event, Locum, Owner } from './models';
 
 export interface DateObject {
   day: number;
   month: number;
   year: number;
 }
-
-export interface Event {
-  id: number;
-  title: string;
-  location: string;
-  minExperience: string;
-  startTime: string;
-  endTime: string;
-  interestedLocums?: number[]; // User Ids
-  acceptedLocums?: number[];
-}
 export interface LocumTag {
   user: Locum;
-  date: {
-    day: number;
-    month: number;
-    year: number;
-  };
+  date: DateObject;
+}
+
+export interface ContractTag {
+  user: Owner;
+  date: DateObject;
+  event: Event;
 }

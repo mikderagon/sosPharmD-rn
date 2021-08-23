@@ -1,15 +1,21 @@
 import React, { createContext, useReducer } from 'react';
 import _ from 'underscore';
 import firestore from '@react-native-firebase/firestore';
-import { User, Event, Locum, Owner } from './models';
+import { User, Event, Locum, Owner, Pharmacy, School } from './models';
+import { DateObject } from './interfaces';
 
 const initialState = {
   currentUser: {} as Locum | Owner,
+  currentUserPharmacy: {} as Pharmacy,
   language: 'fr',
   locumTags: [],
-  events: [],
+  contracts: [],
+  events: [] as Event[],
   thisMonthEvents: [],
   thisMonthEventDates: [],
+  interestedLocums: [],
+  pharmacies: [] as Pharmacy[],
+  schools: [] as School[],
 };
 
 const store = createContext(initialState);
@@ -48,16 +54,46 @@ const StateProvider = ({ children }) => {
           locumTags: action.locumTags,
         };
         return newState;
+      case 'SET_CONTRACTS':
+        var newState = {
+          ...state,
+          contracts: action.contracts,
+        };
+        return newState;
       case 'SET_CURRENT_USER':
         var newState = {
           ...state,
           currentUser: action.currentUser,
         };
         return newState;
+      case 'SET_CURRENT_USER_PHARMACY':
+        var newState = {
+          ...state,
+          currentUserPharmacy: action.currentUserPharmacy,
+        };
+        return newState;
       case 'SET_APP_LANGUAGE':
         var newState = {
           ...state,
           language: action.language,
+        };
+        return newState;
+      case 'SET_SCHOOLS':
+        var newState = {
+          ...state,
+          schools: action.schools,
+        };
+        return newState;
+      case 'SET_PHARMACIES':
+        var newState = {
+          ...state,
+          pharmacies: action.pharmacies,
+        };
+        return newState;
+      case 'SET_INTERESTED_LOCUMS':
+        var newState = {
+          ...state,
+          interestedLocums: action.interestedLocums,
         };
         return newState;
       default:

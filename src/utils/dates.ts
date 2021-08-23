@@ -13,12 +13,38 @@ export const months = [
   'December',
 ];
 
+export const mois = [
+  'Janvier',
+  'Février',
+  'Mars',
+  'Avril',
+  'Mai',
+  'Juin',
+  'Juillet',
+  'Août',
+  'Septembre',
+  'Octobre',
+  'Novembre',
+  'Décembre',
+];
+
 export function getMonthName(monthIndex: number): string {
   return months[monthIndex - 1];
 }
 
 export function getMonthIndex(monthName: string): number {
   return months.findIndex(month => month === monthName) + 1;
+}
+
+// french version
+export function formatDay(day: number | undefined): string {
+  if (typeof day === 'undefined') {
+    return '';
+  }
+  if (day === 1) {
+    return '1er';
+  }
+  return day.toString();
 }
 
 const weekdays_long = [
@@ -32,7 +58,7 @@ const weekdays_long = [
 ];
 
 export const weekdays_short = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
+export const jours_semaines = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 export interface CalendarState {
   day: number;
   month: number;

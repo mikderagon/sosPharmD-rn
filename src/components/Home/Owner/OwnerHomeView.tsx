@@ -21,73 +21,47 @@ import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modal';
 import _ from 'underscore';
 import _String from 'underscore.string';
-import { LocumTag } from '../../interfaces';
-import { store } from '../../store';
-import colors from '../../styles/colors';
-import * as dates from '../../utils/dates';
+import { LocumTag } from '../../../interfaces';
+import { store } from '../../../store';
+import colors from '../../../styles/colors';
+import * as dates from '../../../utils/dates';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
-import Button from './Button';
-import Calendar from './Calendar';
-import CalendarEventTag from './CalendarEventTag';
+} from '../../../utils/responsiveLayout';
+import Button from '../Button';
+import Calendar from '../Calendar';
+import CalendarEventTag from '../CalendarEventTag';
 import Locum, { locumSize } from './Locum';
-import * as firestore from '../../actions/firestore';
+import {
+  defaultAvatar,
+  GRADIENT_COLORS,
+  verticalDots,
+  calendar,
+  locumIcon,
+} from '../shared';
 
-const fourSquares = require('assets/images/fourSquares.png');
-const verticalDots = require('assets/images/verticalDots.png');
-const calendar = require('assets/images/calendarIcon.png');
-const locumIcon = require('assets/images/locumIcon.png');
-const defaultAvatar = {
-  owner: {
-    male: { uri: 'https://image.flaticon.com/icons/png/512/1152/1152624.png' },
-    female: {
-      uri: 'https://image.flaticon.com/icons/png/512/1152/1152623.png',
-    },
-  },
-};
-
-function hexToRgba(hex: string, opacity: number) {
-  let c;
-  if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-    c = hex.substring(1).split('');
-    if (c.length == 3) {
-      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-    }
-    c = '0x' + c.join('');
-    return `rgba(${(c >> 16) & 255},${(c >> 8) & 255},${c & 255},${opacity})`;
-  }
-  throw new Error('Bad Hex');
-}
-
-const GRADIENT_COLORS = [
-  hexToRgba(colors.main, 1),
-  hexToRgba(colors.main, 0.9),
-  hexToRgba(colors.main, 0.8),
-  hexToRgba(colors.main, 0.9),
-  hexToRgba(colors.main, 1),
-];
-
-const HomeView = ({ navigation }) => {
+const OwnerHomeView = ({ navigation }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const [previousEventIndex, setPreviousEventIndex] = useState(0);
   const [horizontalFlatListScrolled, setHorizontalFlatListScrolled] =
     useState(false);
   const horizontalFlatListRef = useRef(null);
   const { state, dispatch } = useContext(store);
-  const { currentUser, users, locumTags, thisMonthEventDates } = state;
+  const { currentUser, locumTags, thisMonthEventDates } = state;
   const CalendarState = dates.getCalendarState(new Date());
-  // const { currentUser } = auth();
 
   useEffect(() => {
     if (locumTags.length > 1) {
-      const interval = setInterval(() => {
-        const nextIndex =
+      const timeout = setTimeout(() => {
+        let nextIndex =
           currentEventIndex === thisMonthEventDates.length - 1 ||
           thisMonthEventDates.length === 0
             ? 0
             : currentEventIndex + 1;
+        if (nextIndex > thisMonthEventDates.length) {
+          nextIndex = 0;
+        }
         setPreviousEventIndex(currentEventIndex);
         setCurrentEventIndex(nextIndex);
         setHorizontalFlatListScrolled(true);
@@ -97,23 +71,10 @@ const HomeView = ({ navigation }) => {
           viewPosition: 0.5,
         });
       }, 3000);
-      return () => clearInterval(interval);
+      return () => clearTimeout(timeout);
     }
   });
 
-  // function onAuthStateChanged(user) {
-  //   console.log(currentUser);
-  //   console.log(user);
-  //   if (!user.emailVerified) {
-  //   }
-  // }
-
-  // useEffect(() => {
-  // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-  // return subscriber;
-  // }, []);
-
-  // TODO: create interface and component
   const noLocumTags = [
     {
       title: 'No Locum',
@@ -153,7 +114,7 @@ const HomeView = ({ navigation }) => {
             <View style={styles.headerBarText}>
               <View style={styles.topLeftTitle}>
                 <Text style={styles.title}>
-                  Hi,{' '}
+                  Bonjour,{' '}
                   <Text style={[styles.title, { fontWeight: '800' }]}>
                     {currentUser.firstName}!
                   </Text>
@@ -168,23 +129,12 @@ const HomeView = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          {/* <View style={styles.pictureNameRow}>
-
-            <View style={styles.userInfoContainer}>
-              <Text style={styles.name} numberOfLines={1} adjustsFontSizeToFit>
-                {currentUser.firstName + ' ' + currentUser.lastName}
-              </Text>
-              <Text style={styles.year}>{'udeM'}</Text>
-              <Text style={styles.year}>{currentUser.year || 0}</Text>
-              <Text style={styles.location}>{currentUser.city}</Text>
-            </View>
-          </View> */}
           <View style={[styles.userPictureShadow, { marginTop: hp(1) }]}>
             <Image
               source={
                 currentUser.pictureUrl
                   ? { uri: currentUser.pictureUrl }
-                  : defaultAvatar.owner.male
+                  : defaultAvatar
               }
               style={styles.userPicture}
             />
@@ -192,10 +142,14 @@ const HomeView = ({ navigation }) => {
           <Text style={[styles.name, { marginTop: hp(2) }]}>
             {currentUser.firstName + ' ' + currentUser.lastName + ', '}
             <Text style={styles.userType}>
-              {_String.capitalize(currentUser.accountType)}
+              {_String.capitalize('Propriétaire')}
             </Text>
           </Text>
-          <Text style={styles.location}>{currentUser.pharmacy}</Text>
+          <Text style={styles.location}>
+            {currentUser.pharmacy.affiliation}
+            {', '}
+            {currentUser.pharmacy.address}
+          </Text>
         </LinearGradient>
       </View>
       {/* Calendar */}
@@ -206,13 +160,13 @@ const HomeView = ({ navigation }) => {
           width: '92%',
           flexDirection: 'row',
         }}>
-        <Text style={styles2.sectionTitle}>Your Calendar</Text>
+        <Text style={styles2.sectionTitle}>Votre Calendrier</Text>
         <Image source={calendar} style={styles.calendarIcon} />
       </View>
       <View style={{ marginTop: hp(2) }}>
         <Calendar
           events={thisMonthEventDates}
-          state={CalendarState}
+          calendarState={CalendarState}
           openCalendar={() =>
             navigation.navigate('Calendar', {
               currentMonth: CalendarState.month,
@@ -234,7 +188,7 @@ const HomeView = ({ navigation }) => {
           width: '92%',
           flexDirection: 'row',
         }}>
-        <Text style={styles2.sectionTitle2}>Your Locums</Text>
+        <Text style={styles2.sectionTitle2}>Vos Locums</Text>
         <Image source={locumIcon} style={styles.calendarIcon} />
       </View>
       <View style={{ marginTop: hp(2) }}>
@@ -258,7 +212,7 @@ const HomeView = ({ navigation }) => {
                 }
               />
             ) : (
-              <CalendarEventTag />
+              <CalendarEventTag type={currentUser.accountType} />
             )
           }
           getItemLayout={(data, index) => ({
@@ -401,7 +355,7 @@ const styles = StyleSheet.create({
   userType: {
     color: '#fff',
     fontWeight: '700',
-    fontSize: 10,
+    fontSize: 12,
   },
 });
 
@@ -424,4 +378,4 @@ const styles2 = StyleSheet.create({
   },
 });
 
-export default HomeView;
+export default OwnerHomeView;

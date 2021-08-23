@@ -17,24 +17,24 @@ import {
   FlatList,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import colors from '../../styles/colors';
+import colors from '../../../styles/colors';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
-import LinearGradient from 'react-native-linear-gradient';
-import { calendarDimensions } from './Calendar';
+} from '../../../utils/responsiveLayout';
+import { toSchoolYear } from '../../../utils/school';
+import { calendarDimensions } from '../Calendar';
+import { defaultAvatar } from '../shared';
 
 interface Props {
   date: number;
   user: {
-    city: string;
     firstName: string;
     lastName: string;
     id: number;
     pictureUrl: string;
-    year: number;
-    educationalInstitution: string;
+    schoolYear: number;
+    school: string;
   };
   onPress?: () => void;
   centerCorrection?: boolean;
@@ -42,36 +42,24 @@ interface Props {
 
 const Locum = (props: Props) => {
   const { date, user, centerCorrection } = props;
-  const {
-    firstName,
-    lastName,
-    pictureUrl,
-    city,
-    year,
-    educationalInstitution,
-  } = user;
+  const { firstName, lastName, pictureUrl, schoolYear, school } = user;
   return (
     <View style={[styles.container, centerCorrection ? { left: wp(-5) } : {}]}>
       <View style={styles.dateTag}>
         <Text style={styles.date}>{date}</Text>
       </View>
       <View style={styles.topDiv}>
-        <Image source={{ uri: pictureUrl }} style={styles.userPicture} />
+        <Image
+          source={pictureUrl ? { uri: pictureUrl } : defaultAvatar}
+          style={styles.userPicture}
+        />
         <View style={styles.outsideImageContainer}>
           <Text style={styles.name}>{firstName + ' ' + lastName}</Text>
           <Text style={[styles.school, { marginTop: 1 }]}>
-            {`${year}nd year Pharmacy Student, ${educationalInstitution}`}
+            {`PharmD - ${toSchoolYear(schoolYear)} année à l'${school}`}
           </Text>
         </View>
       </View>
-      {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <TouchableOpacity style={[styles.button, { marginTop: hp(1.5) }]}>
-          <Text style={styles.buttonText}>Accept</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, { marginTop: hp(1.5) }]}>
-          <Text style={styles.buttonText}>Refuse</Text>
-        </TouchableOpacity>
-      </View> */}
     </View>
   );
 };

@@ -6,17 +6,15 @@
  * @flow strict-local
  */
 
-import auth from '@react-native-firebase/auth';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
-import { initAppWithFirestoreData } from './actions/firestore';
 import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
 import Calendar from './components/Calendar/CalendarView';
-import Home from './components/Home/HomeView';
+import LocumHome from './components/Home/Locum/LocumHomeView';
+import OwnerHome from './components/Home/Owner/OwnerHomeView';
 import Locums from './components/Locums/LocumsView';
 import Onboarding from './components/Onboarding/OnboardingView';
 import Settings from './components/Settings/SettingsView';
@@ -41,17 +39,13 @@ const defaultTheme = {
   },
 };
 
-const Navigator = () => {
+interface Props {
+  initialRouteName: keyof StackParamList;
+}
+
+const Navigator = (props: Props) => {
+  const { initialRouteName } = props;
   const { state, dispatch } = useContext(store);
-  // const initialRouteName = 'Onboarding';
-  // const initialRouteName = 'Home';
-  const { currentUser } = auth();
-  // console.log(currentUser);
-  // const initialRouteName = currentUser ? 'Home' : 'SignIn';
-  const initialRouteName = 'SignIn';
-  useEffect(() => {
-    initAppWithFirestoreData(dispatch);
-  }, [dispatch]);
   return (
     <NavigationContainer theme={defaultTheme}>
       <Stack.Navigator headerMode="screen" initialRouteName={initialRouteName}>
@@ -102,7 +96,9 @@ const Navigator = () => {
         />
         <Stack.Screen
           name="Home"
-          component={Home}
+          component={
+            state.currentUser.accountType === 'locum' ? LocumHome : OwnerHome
+          }
           options={{
             headerShown: false,
           }}

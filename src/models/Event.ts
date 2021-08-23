@@ -1,14 +1,16 @@
 export default interface Event {
-  id: number;
+  id?: string;
+  archived?: boolean;
   title: string;
-  UserId: number;
-  address: string;
+  UserId: string;
   minExperience: string;
   startTime: string;
   endTime: string;
-  interestedLocums?: number[]; // User Ids
-  acceptedLocums?: number[];
+  interestedLocums: string[]; // User Ids
+  acceptedLocums: string[];
+  refusedLocums: string[];
   year: number;
   month: number;
   day: number;
+  interested?: boolean;
 };

@@ -17,27 +17,19 @@ import {
 interface Props {
   date: number;
   user: {
-    city: string;
     firstName: string;
     lastName: string;
     id: number;
     pictureUrl: string;
     year: number;
-    educationalInstitution: string;
+    school: string;
   };
   onPress?: () => void;
 }
 
 const Locum = (props: Props) => {
   const { date, user, onPress } = props;
-  const {
-    firstName,
-    lastName,
-    pictureUrl,
-    city,
-    year,
-    educationalInstitution,
-  } = user;
+  const { firstName, lastName, pictureUrl, year, school } = user;
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.userPicturePosition}>
@@ -45,7 +37,7 @@ const Locum = (props: Props) => {
       </View>
       <View style={styles.userInfoContainer}>
         <Text style={styles.bold}>{`${firstName} ${lastName}`}</Text>
-        <Text>{`${educationalInstitution} - year ${year}`}</Text>
+        <Text>{`${school} - year ${year}`}</Text>
       </View>
       <Text>{date}</Text>
     </TouchableOpacity>

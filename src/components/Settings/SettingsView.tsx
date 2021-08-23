@@ -24,10 +24,21 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
+import * as firestore from '../../actions/firestore';
 
 const backCaret = require('assets/images/backCaret.png');
 
 const SettingsView = ({ navigation }) => {
+  function handleSignOut() {
+    firestore
+      .signOut()
+      .then(success => {
+        // success
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }
   return (
     <View style={[styles.container]}>
       <>
@@ -46,11 +57,11 @@ const SettingsView = ({ navigation }) => {
                     width: wp(16),
                   }}>
                   <Image source={backCaret} style={styles.backCaret} />
-                  <Text style={styles.leftHeaderText}>Home</Text>
+                  <Text style={styles.leftHeaderText}>Retour</Text>
                 </View>
               </TouchableOpacity>
               <Text style={[styles.headerTitle, { width: '30%' }]}>
-                Settings
+                Paramètres
               </Text>
               <View style={{ width: '35%' }} />
             </View>
@@ -65,15 +76,16 @@ const SettingsView = ({ navigation }) => {
           <TouchableOpacity
             style={styles.row}
             onPress={() => {
-              Alert.alert('Sign Out', '', [
+              Alert.alert('Se Déconnecter', '', [
                 {
-                  text: 'No',
+                  text: 'Non',
                   onPress: () => {},
                   style: 'cancel',
                 },
                 {
-                  text: 'Yes',
+                  text: 'Oui',
                   onPress: () => {
+                    handleSignOut();
                     navigation.reset({
                       index: 0,
                       routes: [{ name: 'SignIn' }],
@@ -82,7 +94,7 @@ const SettingsView = ({ navigation }) => {
                 },
               ]);
             }}>
-            <Text style={styles.rowText}>Sign Out</Text>
+            <Text style={styles.rowText}>Se Déconnecter</Text>
           </TouchableOpacity>
         </View>
       </>
@@ -145,6 +157,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '500',
     fontSize: 14,
+    marginLeft: 5,
   },
 });
 

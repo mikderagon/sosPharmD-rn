@@ -18,7 +18,8 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import { CalendarEvent, DateObject } from '../../interfaces';
+import { DateObject } from '../../interfaces';
+import { Event, Owner, Pharmacy } from '../../models';
 import { store } from '../../store';
 import colors from '../../styles/colors';
 import * as dates from '../../utils/dates';
@@ -26,16 +27,28 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import AddEventModal from './AddEventModal';
+import AddEventModal, { NewEvent } from './AddEventModal';
 import Calendar from './Calendar';
+import * as firestore from '../../actions/firestore';
+import EventModal from './EventModal';
+import _ from 'underscore';
 
 const backCaret = require('assets/images/backCaret.png');
 
+export interface EventAndOwner {
+  event: Event;
+  owner: Owner;
+}
+
 const CalendarView = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [addEventModalVisible, setAddEventModalVisible] = useState(false);
+  const [eventModalVisible, setEventModalVisible] = useState(false);
   const [selectionState, setSelectionState] = useState(false); // set true to test
-  const toggleModalVisibility = () => setModalVisible(!modalVisible);
-  const [userEvent, setUserEvent] = useState<CalendarEvent>();
+  const toggleAddEventModal = () =>
+    setAddEventModalVisible(!addEventModalVisible);
+  const toggleEventModal = () => setEventModalVisible(!eventModalVisible);
+  const [clickedEvents, setClickedEvents] = useState<EventAndOwner[]>([]);
+  const [userEvent, setUserEvent] = useState<NewEvent>();
   const [selectedDays, setSelectedDays] = useState<DateObject[]>([]);
   const { state, dispatch } = useContext(store);
   const { currentUser } = state;
@@ -49,7 +62,6 @@ const CalendarView = ({ navigation }) => {
       runningMonth = 1;
       runningYear += 1;
     }
-
     return dates.getCalendarState(
       new Date(
         `${runningYear}-${
@@ -59,7 +71,7 @@ const CalendarView = ({ navigation }) => {
     );
   });
 
-  function onDayPress(day: number, month: number, year: number) {
+  async function onDayPress(day: number, month: number, year: number) {
     if (selectionState) {
       if (
         selectedDays.find(
@@ -82,13 +94,18 @@ const CalendarView = ({ navigation }) => {
         setSelectedDays([...selectedDays, { day, month, year }]);
       }
     } else {
-      let clickedEvent;
-      state.events.forEach(event => {
-        if (event.day === day && event.month === month && event.year === year) {
-          clickedEvent = event;
-        }
-      });
-      console.log(clickedEvent);
+      let _clickedEvents = state.events.filter(
+        (event: Event) =>
+          event.day === day && event.month === month && event.year === year,
+      );
+      _clickedEvents = await Promise.all(
+        _clickedEvents.map(async (event: Event) => {
+          const owner: Owner = await firestore.findUser(event.UserId);
+          return { event, owner };
+        }),
+      );
+      setClickedEvents(_clickedEvents);
+      toggleEventModal();
     }
   }
 
@@ -96,29 +113,38 @@ const CalendarView = ({ navigation }) => {
     setSelectionState(false);
     const formattedEvents = selectedDays.map(selectedDay => {
       return {
-        id: 50,
+        UserId: currentUser.id,
+        minExperience: userEvent?.minExperience,
         day: selectedDay.day,
         month: selectedDay.month,
         year: selectedDay.year,
-        userId: currentUser.id,
         title: userEvent?.title,
         startTime: userEvent?.startTime,
         endTime: userEvent?.endTime,
         interestedLocums: [],
         acceptedLocums: [],
-      };
+        refusedLocums: [],
+      } as Event;
     });
     dispatch({
       type: 'ADD_CALENDAR_EVENTS',
       events: formattedEvents,
     });
+    firestore
+      .batchUpsertEvents(formattedEvents)
+      .then(success => {
+        // success
+      })
+      .catch(e => {
+        console.error(e);
+      });
     // clear selectedDays
     setSelectedDays([]);
   }
 
-  function addCalendarEvent(event: CalendarEvent) {
+  function addCalendarEvent(event: NewEvent) {
     setUserEvent(event);
-    Alert.alert('Click on the dates on the calendar that you want');
+    Alert.alert("Choisissez les dates de l'événement");
     setSelectionState(true);
   }
 
@@ -131,7 +157,9 @@ const CalendarView = ({ navigation }) => {
           onPress={() => navigation.navigate('Home')}>
           <Image source={backCaret} style={styles.backCaret} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Your Calendar</Text>
+        <Text style={styles.headerTitle}>
+          {currentUser.accountType === 'locum' ? '' : 'Votre '}Calendrier
+        </Text>
         <View style={{ width: styles.backCaret.width }} />
       </View>
       <View style={[styles.flexRow, { marginTop: 5 }, styles.legend]}>
@@ -143,21 +171,83 @@ const CalendarView = ({ navigation }) => {
             ]}
           />
           <Text style={[styles.legendText, { color: colors.main }]}>
-            Fulfilled
+            {currentUser.accountType === 'locum' ? 'Contrats' : 'Locums'}{' '}
+            disponibles (
+            {currentUser.accountType === 'locum'
+              ? state.events.filter((event: Event) => !event.interested).length
+              : _.flatten(
+                  state.events.map((event: Event) =>
+                    event.interestedLocums.filter(
+                      interestedLocum =>
+                        !event.acceptedLocums.includes(interestedLocum) &&
+                        !event.refusedLocums.includes(interestedLocum),
+                    ),
+                  ),
+                ).length}
+            )
           </Text>
         </View>
-        <View style={[styles.flexRow, { marginLeft: 20 }]}>
+        {currentUser.accountType === 'locum' && (
+          <View style={[styles.flexRow, { marginLeft: 20 }]}>
+            <View
+              style={[
+                styles.legendDot,
+                { backgroundColor: colors.darkLime, marginRight: 5 },
+              ]}
+            />
+            <Text style={[styles.legendText, { color: colors.darkLime }]}>
+              Contrats postulés (
+              {state.events.filter((event: Event) => event.interested).length})
+            </Text>
+          </View>
+        )}
+        {currentUser.accountType === 'owner' && (
+          <View style={[styles.flexRow, { marginLeft: 20 }]}>
+            <View
+              style={[
+                styles.legendDot,
+                { backgroundColor: colors.lightGray, marginRight: 5 },
+              ]}
+            />
+            <Text style={[styles.legendText, { color: colors.lightGray }]}>
+              En attente de locum (
+              {
+                state.events.filter((event: Event) => {
+                  return (
+                    event.interestedLocums.filter(
+                      interestedLocum =>
+                        !event.acceptedLocums.includes(interestedLocum) ||
+                        !event.refusedLocums.includes(interestedLocum),
+                    ).length === 0
+                  );
+                }).length
+              }
+              )
+            </Text>
+          </View>
+        )}
+      </View>
+      {currentUser.accountType === 'owner' && (
+        <View style={[{ marginTop: 5 }, styles.flexRow, styles.legend]}>
           <View
             style={[
               styles.legendDot,
-              { backgroundColor: colors.lightGray, marginRight: 5 },
+              { backgroundColor: colors.darkLime, marginRight: 5 },
             ]}
           />
-          <Text style={[styles.legendText, { color: colors.lightGray }]}>
-            Unfulfilled
+          <Text style={[styles.legendText, { color: colors.darkLime }]}>
+            Locums acceptés (
+            {
+              _.flatten(
+                state.events.filter(
+                  (event: Event) => event.acceptedLocums.length,
+                ),
+              ).length
+            }
+            )
           </Text>
         </View>
-      </View>
+      )}
 
       <View style={{ marginTop: 10 }}>
         <FlatList
@@ -175,10 +265,16 @@ const CalendarView = ({ navigation }) => {
                 selectedDays={selectedDays}
                 onDayPress={onDayPress}
                 events={state.events.filter(
-                  event =>
-                    event.year === item.year && event.month === item.month,
+                  (event: Event) =>
+                    (event.interestedLocums.filter(
+                      interestedLocum =>
+                        !event.refusedLocums.includes(interestedLocum),
+                    ).length > 0 ||
+                      event.interestedLocums.length === 0) &&
+                    event.year === item.year &&
+                    event.month === item.month,
                 )}
-                state={item}
+                calendarState={item}
                 additionalRow={
                   (item.monthLength < 31 &&
                     item.firstWeekdayOfMonthIndex === 6) ||
@@ -192,44 +288,71 @@ const CalendarView = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
         />
       </View>
-      <View style={styles.footer}>
-        <TouchableOpacity
-          onPress={() => {
-            if (selectionState && selectedDays.length) {
-              deployEvents();
-            } else {
-              toggleModalVisibility();
-            }
-          }}
-          style={[
-            styles.addButton,
-            selectionState
-              ? {
-                  backgroundColor: '#fff',
-                  borderColor: selectedDays.length ? colors.main : 'red',
+      {currentUser.accountType === 'owner' && (
+        <>
+          <View style={styles.footer}>
+            <TouchableOpacity
+              onPress={() => {
+                if (selectionState && selectedDays.length) {
+                  deployEvents();
+                } else {
+                  toggleAddEventModal();
                 }
-              : {},
-          ]}>
-          <Text
-            style={[
-              styles.addButtonText,
-              selectionState
-                ? { color: selectedDays.length ? colors.main : 'red' }
-                : {},
-            ]}>
-            {selectionState
-              ? selectedDays.length
-                ? 'Done'
-                : 'Cancel'
-              : 'Add Event'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+              }}
+              style={[
+                styles.addButton,
+                selectionState
+                  ? {
+                      backgroundColor: '#fff',
+                      borderColor: selectedDays.length ? colors.main : 'red',
+                    }
+                  : {},
+              ]}>
+              <Text
+                style={[
+                  styles.addButtonText,
+                  selectionState
+                    ? { color: selectedDays.length ? colors.main : 'red' }
+                    : {},
+                ]}>
+                {selectionState
+                  ? selectedDays.length
+                    ? 'Done'
+                    : 'Cancel'
+                  : 'Ajouter un événement'}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-      <AddEventModal
-        isVisible={modalVisible}
-        closeModal={() => setModalVisible(false)}
-        addCalendarEvent={addCalendarEvent}
+          <AddEventModal
+            isVisible={addEventModalVisible}
+            closeModal={() => setAddEventModalVisible(false)}
+            addCalendarEvent={addCalendarEvent}
+          />
+        </>
+      )}
+      <EventModal
+        isVisible={eventModalVisible}
+        events={clickedEvents}
+        applyForContract={(event: Event) => {
+          firestore.applyForContract(event, currentUser.id);
+          setEventModalVisible(false);
+        }}
+        interestedLocums={
+          // interestedlocums from the clicked date
+          state.interestedLocums.filter(
+            (data: any) =>
+              clickedEvents.map(e => e.event.day).includes(data.day) &&
+              clickedEvents.map(e => e.event.month).includes(data.month) &&
+              clickedEvents.map(e => e.event.year).includes(data.year) &&
+              clickedEvents
+                .map(e => e.event.startTime)
+                .includes(data.startTime) &&
+              clickedEvents.map(e => e.event.endTime).includes(data.endTime),
+          )[0]
+        }
+        isLocum={currentUser.accountType === 'locum'}
+        closeModal={() => setEventModalVisible(false)}
       />
     </SafeAreaView>
   );
@@ -319,7 +442,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     height: 50,
-    width: 170,
+    width: 240,
     borderRadius: 50,
     backgroundColor: colors.main,
     alignItems: 'center',

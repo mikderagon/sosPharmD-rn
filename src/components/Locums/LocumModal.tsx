@@ -43,7 +43,7 @@ const LocumModal = (props: Props) => {
         <Text>{locum.user.firstName}</Text>
         <Text>{locum.user.lastName}</Text>
         <Text>{locum.user.email}</Text>
-        <Text>{locum.user.educationalInstitution}</Text>
+        <Text>{locum.user.school}</Text>
         <Text>
           {getMonthName(locum.date.month) +
             ' ' +

@@ -30,32 +30,45 @@ const OnboardingImage3 = require('assets/images/onboarding3.png');
 
 interface Props {}
 
-const OnboardingSlideFactory = (source: ImageSourcePropType) => (
+const OnboardingSlideFactory = (
+  source: ImageSourcePropType,
+  title: string,
+  text: string,
+) => (
   <View style={styles.carouselSlide}>
     <View style={styles.imageContainer}>
       <Image source={source} style={styles.onboardingImages} />
     </View>
-    <Text style={styles.title}>LOREM IPSUM DO</Text>
-    <Text style={styles.text}>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim.
-    </Text>
+    <Text style={styles.title}>{title}</Text>
+    <Text style={styles.text}>{text}</Text>
   </View>
 );
 
 const OnboardingView = ({ navigation }: NavigationProps) => {
   const slides = [
     {
-      component: OnboardingSlideFactory(OnboardingImage1),
-      buttonText: 'Next',
+      component: OnboardingSlideFactory(
+        OnboardingImage1,
+        'Besoin de locums?',
+        'Trouvez facilement des locums qualifiés pour tous vos postes à combler',
+      ),
+      buttonText: 'Suivant',
     },
     {
-      component: OnboardingSlideFactory(OnboardingImage2),
-      buttonText: 'Next',
+      component: OnboardingSlideFactory(
+        OnboardingImage2,
+        'Organisez votre horaire rapidement',
+        "Soyez notifié dès qu'un locum est disponible pour l'un de vos postes",
+      ),
+      buttonText: 'Suivant',
     },
     {
-      component: OnboardingSlideFactory(OnboardingImage3),
-      buttonText: 'Get Started',
+      component: OnboardingSlideFactory(
+        OnboardingImage3,
+        'Soyez rassurés',
+        "Chaque locum passe par un examen qui assure la qualité et l'authenticité de son expérience",
+      ),
+      buttonText: 'Suivant',
     },
   ];
 
@@ -92,7 +105,7 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
               carouselRef.current.snapToPrev();
               setActiveSlide(activeSlide - 1);
             }}
-            text="Prev"
+            text="Précédent"
             style="borderless"
           />
         )}
@@ -106,7 +119,7 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
             }
           }}
           text={slides[activeSlide].buttonText}
-          style={activeSlide == slides.length - 1 ? 'bold' : 'default'}
+          // style={activeSlide == slides.length - 1 ? 'bold' : 'default'}
         />
       </View>
     </View>
@@ -136,14 +149,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   title: {
-    fontSize: 30,
+    maxWidth: wp(90),
+    fontSize: 28,
     marginTop: hp(10),
+    textAlign: 'center',
+    fontWeight: '600',
+    color: '#494949',
   },
   text: {
+    color: '#aaa',
     fontSize: 18,
     marginTop: hp(3),
     width: wp(80),
     textAlign: 'center',
+    fontWeight: '300',
   },
   pagination: {
     position: 'absolute',

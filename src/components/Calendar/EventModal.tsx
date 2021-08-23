@@ -78,13 +78,14 @@ const EventModal = (props: Props) => {
         ]}>
         {/*
             scrollview of components of the contracts available on the clicked date.
-            you have one action for the component: 'postuler'
         */}
         <Text
           style={{
             alignSelf: 'flex-start',
             marginLeft: wp(5),
             marginTop: hp(2),
+            color: colors.main,
+            fontWeight: '700',
           }}>
           Contrats du {formatDay(events[0]?.event.day)}{' '}
           {mois[events[0]?.event.month - 1]}
@@ -92,143 +93,154 @@ const EventModal = (props: Props) => {
         <FlatList
           data={events}
           keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{
+            width: wp(100),
+            alignItems: 'center',
+          }}
           renderItem={({ item, index }) => {
             const locum = isLocum
               ? null
               : interestedLocums.interestedLocums[index];
             return isLocum ? (
-              <View style={styles.component}>
-                <View style={styles.textOverPicture}>
-                  <Text style={styles.address}>
-                    {item.owner.pharmacy.address}
-                  </Text>
-                </View>
-                <Image
-                  source={{
-                    uri: item.owner.pharmacy.pictureUrl,
-                  }}
-                  style={styles.pharmacyPicture}
-                />
-                <View style={{ marginLeft: 10 }}>
-                  <Text style={{ marginTop: 4 }}>{item.event.title}</Text>
-                  <View style={{ flexDirection: 'row' }}>
-                    {/* <Text>{event?.UserId}</Text> */}
-                    <Text style={{ color: '#494949', fontSize: 12 }}>
-                      Affiché par {item.owner.firstName} {item.owner.lastName}
+              <View style={styles.shadow}>
+                <View style={styles.component}>
+                  <View style={styles.textOverPicture}>
+                    <Text style={styles.address}>
+                      {item.owner.pharmacy.address}
                     </Text>
                   </View>
-
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ color: colors.main, fontWeight: '600' }}>
-                      {item.event.startTime} à {item.event.endTime}
+                  <Image
+                    source={{
+                      uri: item.owner.pharmacy.pictureUrl,
+                    }}
+                    style={styles.pharmacyPicture}
+                  />
+                  <View style={{ marginLeft: 10 }}>
+                    <Text style={{ marginTop: 4, color: colors.white }}>
+                      {item.event.title}
                     </Text>
-                  </View>
-
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: wp(30),
-                      justifyContent: 'space-between',
-                      bottom: 5,
-                      position: 'absolute',
-                      right: 40,
-                    }}>
-                    <TouchableOpacity
-                      activeOpacity={item.event.interested ? 1 : 0.2}
-                      onPress={() => {
-                        if (!item.event.interested) {
-                          closeModal();
-                          // give time for the close modal animation to finish
-                          Alert.alert(
-                            'Nous envoyons vos informations au propriétaire',
-                          );
-                          setTimeout(() => {
-                            applyForContract(item.event);
-                          }, 1000);
-                        }
-                      }}
-                      style={{
-                        backgroundColor: item.event.interested
-                          ? 'transparent'
-                          : colors.main,
-                        height: 45,
-                        width: 100,
-                        borderRadius: item.event.interested ? 0 : 10,
-                        borderWidth: item.event.interested ? 1 : 0,
-                        borderColor: colors.darkLime,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <Text
-                        style={{
-                          color: item.event.interested
-                            ? colors.darkLime
-                            : '#fff',
-                        }}>
-                        {item.event.interested ? 'Postulé' : 'Postuler'}
+                    <View style={{ flexDirection: 'row' }}>
+                      {/* <Text>{event?.UserId}</Text> */}
+                      <Text style={{ color: colors.white, fontSize: 12 }}>
+                        Affiché par {item.owner.firstName} {item.owner.lastName}
                       </Text>
-                    </TouchableOpacity>
+                    </View>
+
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={{ color: colors.main, fontWeight: '600' }}>
+                        {item.event.startTime} à {item.event.endTime}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        width: wp(30),
+                        justifyContent: 'space-between',
+                        bottom: 5,
+                        position: 'absolute',
+                        right: 40,
+                      }}>
+                      <TouchableOpacity
+                        activeOpacity={item.event.interested ? 1 : 0.2}
+                        onPress={() => {
+                          if (!item.event.interested) {
+                            closeModal();
+                            // give time for the close modal animation to finish
+                            Alert.alert(
+                              'Nous envoyons vos informations au propriétaire',
+                            );
+                            setTimeout(() => {
+                              applyForContract(item.event);
+                            }, 1000);
+                          }
+                        }}
+                        style={{
+                          backgroundColor: item.event.interested
+                            ? 'transparent'
+                            : colors.white,
+                          height: 45,
+                          width: 100,
+                          borderRadius: item.event.interested ? 0 : 10,
+                          borderWidth: item.event.interested ? 1 : 0,
+                          borderColor: colors.darkLime,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            color: item.event.interested
+                              ? colors.darkLime
+                              : colors.main,
+                            fontWeight: '600',
+                          }}>
+                          {item.event.interested ? 'Postulé' : 'Postuler'}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>
             ) : (
-              <TouchableOpacity
-                style={styles.component}
-                onPress={() => {
-                  Alert.alert('État de la demande', '', [
-                    {
-                      text: 'Accepter',
-                      onPress: () => {
-                        firestore.acceptLocum(
-                          item.event as Event,
-                          locum || ({} as Locum),
-                        );
-                      },
-                    },
-                    {
-                      text: 'Refuser',
-                      onPress: () => {
-                        closeModal();
-                        setTimeout(() => {
-                          firestore.refuseLocum(
+              <View style={styles.shadow}>
+                <TouchableOpacity
+                  style={styles.component}
+                  onPress={() => {
+                    Alert.alert('État de la demande', '', [
+                      {
+                        text: 'Accepter',
+                        onPress: () => {
+                          firestore.acceptLocum(
                             item.event as Event,
                             locum || ({} as Locum),
                           );
-                        }, 1000);
+                        },
                       },
-                      style: 'destructive',
-                    },
-                    {
-                      text: 'Annuler',
-                      onPress: () => {},
-                      style: 'cancel',
-                    },
-                  ]);
-                }}>
-                <Image
-                  source={
-                    locum?.pictureUrl
-                      ? { uri: locum.pictureUrl }
-                      : defaultAvatar
-                  }
-                  style={styles.locumPicture}
-                />
-                <View style={styles.outsideImageContainer}>
-                  <Text style={styles.name}>
-                    {locum.firstName + ' ' + locum.lastName}
-                  </Text>
-                  <Text style={[styles.school, { marginTop: 1 }]}>
-                    {`PharmD - ${toSchoolYear(locum.schoolYear)} année à l'${
-                      locum.school
-                    }`}
-                  </Text>
-                </View>
-                <View style={styles.timeStamp}>
-                  <Text style={{ color: colors.main, fontWeight: '600' }}>
-                    {item.event.startTime} à {item.event.endTime}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+                      {
+                        text: 'Refuser',
+                        onPress: () => {
+                          closeModal();
+                          setTimeout(() => {
+                            firestore.refuseLocum(
+                              item.event as Event,
+                              locum || ({} as Locum),
+                            );
+                          }, 1000);
+                        },
+                        style: 'destructive',
+                      },
+                      {
+                        text: 'Annuler',
+                        onPress: () => {},
+                        style: 'cancel',
+                      },
+                    ]);
+                  }}>
+                  <Image
+                    source={
+                      locum?.pictureUrl
+                        ? { uri: locum.pictureUrl }
+                        : defaultAvatar
+                    }
+                    style={styles.locumPicture}
+                  />
+                  <View style={styles.outsideImageContainer}>
+                    <Text style={styles.name}>
+                      {locum.firstName + ' ' + locum.lastName}
+                    </Text>
+                    <Text style={[styles.school, { marginTop: 1 }]}>
+                      {`PharmD - ${toSchoolYear(locum.schoolYear)} année à l'${
+                        locum.school
+                      }`}
+                    </Text>
+                  </View>
+                  <View style={styles.timeStamp}>
+                    <Text style={{ color: colors.white, fontWeight: '600' }}>
+                      {item.event.startTime} à {item.event.endTime}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             );
           }}
         />
@@ -242,16 +254,23 @@ const styles = StyleSheet.create({
     height: hp(20),
     width: wp(100),
     backgroundColor: '#fff',
-    borderRadius: 25,
+    borderRadius: 15,
     alignItems: 'center',
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowRadius: 2,
+    shadowOffset: { height: 1, width: 1 },
+    shadowOpacity: 0.3,
   },
   component: {
     marginTop: hp(2),
     flexDirection: 'row',
     height: hp(14),
     width: wp(90),
-    borderWidth: 1,
-    borderColor: '#ddd',
+    // borderWidth: 1,
+    // borderColor: '#ddd',
+    backgroundColor: colors.main,
     borderRadius: 10,
   },
   locumPicture: {
@@ -289,12 +308,12 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: '600',
     fontSize: 17,
-    color: '#494949',
+    color: '#fff',
   },
   school: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#aaa',
+    color: '#fff',
   },
   timeStamp: {
     alignItems: 'flex-end',

@@ -1,5 +1,6 @@
 export default interface Event {
   id?: string;
+  archived?: boolean;
   title: string;
   UserId: string;
   minExperience: string;
@@ -12,4 +13,4 @@ export default interface Event {
   month: number;
   day: number;
   interested?: boolean;
-}
+};

@@ -40,15 +40,17 @@ export async function initOwnerData(currentUser: Owner, dispatch: any) {
     .collection('events')
     .where('UserId', '==', currentUser.id)
     .onSnapshot(async doc => {
-      const events = doc.docs.map(_doc => {
-        const data = _doc.data();
-        const UserId = data.UserId;
-        return {
-          ...data,
-          id: _doc.id,
-          UserId,
-        } as Event;
-      });
+      const events = doc.docs
+        .filter(_doc => !_doc.data().archived)
+        .map(_doc => {
+          const data = _doc.data();
+          const UserId = data.UserId;
+          return {
+            ...data,
+            id: _doc.id,
+            UserId,
+          } as Event;
+        });
       dispatch({
         type: 'SET_CALENDAR_EVENTS',
         events,
@@ -81,16 +83,18 @@ export async function initLocumData(currentUser: Locum, dispatch: any) {
     .collection('events')
     .where('minExperience', '<=', currentUser.schoolYear)
     .onSnapshot(async doc => {
-      const events = doc.docs.map(_doc => {
-        const data = _doc.data();
-        const UserId = data.UserId;
-        return {
-          ...data,
-          id: _doc.id,
-          UserId,
-          interested: data.interestedLocums.includes(currentUser.id),
-        } as Event;
-      });
+      const events = doc.docs
+        .filter(_doc => !_doc.data().archived)
+        .map(_doc => {
+          const data = _doc.data();
+          const UserId = data.UserId;
+          return {
+            ...data,
+            id: _doc.id,
+            UserId,
+            interested: data.interestedLocums.includes(currentUser.id),
+          } as Event;
+        });
       dispatch({
         type: 'SET_CALENDAR_EVENTS',
         events,

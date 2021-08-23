@@ -62,7 +62,6 @@ const CalendarView = ({ navigation }) => {
       runningMonth = 1;
       runningYear += 1;
     }
-
     return dates.getCalendarState(
       new Date(
         `${runningYear}-${
@@ -148,6 +147,8 @@ const CalendarView = ({ navigation }) => {
     Alert.alert("Choisissez les dates de l'événement");
     setSelectionState(true);
   }
+
+  console.log(state.events);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -246,11 +247,12 @@ const CalendarView = ({ navigation }) => {
                 onDayPress={onDayPress}
                 events={state.events.filter(
                   (event: Event) =>
-                    event.interestedLocums.filter(
+                    (event.interestedLocums.filter(
                       interestedLocum =>
                         !event.acceptedLocums.includes(interestedLocum) ||
                         !event.refusedLocums.includes(interestedLocum),
-                    ).length > 0 &&
+                    ).length > 0 ||
+                      event.interestedLocums.length === 0) &&
                     event.year === item.year &&
                     event.month === item.month,
                 )}

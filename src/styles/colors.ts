@@ -9,6 +9,7 @@ const colors = {
   main: '#5BA3D9',
   lightGray: '#ccc',
   red: 'rgba(255, 36, 0, 0.4)',
+  white: '#fff',
 };
 
 export default colors;

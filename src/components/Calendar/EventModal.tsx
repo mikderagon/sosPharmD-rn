@@ -84,7 +84,7 @@ const EventModal = (props: Props) => {
             alignSelf: 'flex-start',
             marginLeft: wp(5),
             marginTop: hp(2),
-            color: colors.main,
+            color: colors.white,
             fontWeight: '700',
           }}>
           Contrats du {formatDay(events[0]?.event.day)}{' '}
@@ -116,12 +116,19 @@ const EventModal = (props: Props) => {
                     style={styles.pharmacyPicture}
                   />
                   <View style={{ marginLeft: 10 }}>
-                    <Text style={{ marginTop: 4, color: colors.white }}>
+                    <Text
+                      style={{
+                        marginTop: 4,
+                        color: colors.darkGray,
+                        width: '92%',
+                      }}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit>
                       {item.event.title}
                     </Text>
                     <View style={{ flexDirection: 'row' }}>
                       {/* <Text>{event?.UserId}</Text> */}
-                      <Text style={{ color: colors.white, fontSize: 12 }}>
+                      <Text style={{ color: colors.gray, fontSize: 12 }}>
                         Affiché par {item.owner.firstName} {item.owner.lastName}
                       </Text>
                     </View>
@@ -139,7 +146,6 @@ const EventModal = (props: Props) => {
                         justifyContent: 'space-between',
                         bottom: 5,
                         position: 'absolute',
-                        right: 40,
                       }}>
                       <TouchableOpacity
                         activeOpacity={item.event.interested ? 1 : 0.2}
@@ -158,10 +164,10 @@ const EventModal = (props: Props) => {
                         style={{
                           backgroundColor: item.event.interested
                             ? 'transparent'
-                            : colors.white,
+                            : colors.main,
                           height: 45,
                           width: 100,
-                          borderRadius: item.event.interested ? 0 : 10,
+                          borderRadius: 10,
                           borderWidth: item.event.interested ? 1 : 0,
                           borderColor: colors.darkLime,
                           alignItems: 'center',
@@ -171,7 +177,7 @@ const EventModal = (props: Props) => {
                           style={{
                             color: item.event.interested
                               ? colors.darkLime
-                              : colors.main,
+                              : colors.white,
                             fontWeight: '600',
                           }}>
                           {item.event.interested ? 'Postulé' : 'Postuler'}
@@ -184,7 +190,7 @@ const EventModal = (props: Props) => {
             ) : (
               <View style={styles.shadow}>
                 <TouchableOpacity
-                  style={styles.component}
+                  style={[styles.component]}
                   onPress={() => {
                     Alert.alert('État de la demande', '', [
                       {
@@ -235,7 +241,7 @@ const EventModal = (props: Props) => {
                     </Text>
                   </View>
                   <View style={styles.timeStamp}>
-                    <Text style={{ color: colors.white, fontWeight: '600' }}>
+                    <Text style={{ color: colors.main, fontWeight: '600' }}>
                       {item.event.startTime} à {item.event.endTime}
                     </Text>
                   </View>
@@ -253,7 +259,7 @@ const styles = StyleSheet.create({
   modalView: {
     height: hp(20),
     width: wp(100),
-    backgroundColor: '#fff',
+    backgroundColor: colors.main,
     borderRadius: 15,
     alignItems: 'center',
   },
@@ -270,7 +276,7 @@ const styles = StyleSheet.create({
     width: wp(90),
     // borderWidth: 1,
     // borderColor: '#ddd',
-    backgroundColor: colors.main,
+    backgroundColor: colors.white,
     borderRadius: 10,
   },
   locumPicture: {
@@ -281,21 +287,23 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   pharmacyPicture: {
-    height: '100%',
+    alignSelf: 'center',
+    marginLeft: 5,
+    height: '90%',
     width: '37%',
     borderRadius: 10,
   },
   textOverPicture: {
     position: 'absolute',
-    bottom: 3,
-    left: 5,
+    bottom: 8,
+    left: 10,
     zIndex: 1,
     height: '30%',
     width: '37%',
     justifyContent: 'flex-end',
   },
   address: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 10,
     fontWeight: '400',
   },
@@ -308,12 +316,12 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: '600',
     fontSize: 17,
-    color: '#fff',
+    color: colors.darkGray,
   },
   school: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#fff',
+    color: colors.gray,
   },
   timeStamp: {
     alignItems: 'flex-end',

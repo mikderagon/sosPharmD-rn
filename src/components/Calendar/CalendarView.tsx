@@ -148,8 +148,6 @@ const CalendarView = ({ navigation }) => {
     setSelectionState(true);
   }
 
-  console.log(state.events);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -229,6 +227,27 @@ const CalendarView = ({ navigation }) => {
           </View>
         )}
       </View>
+      {currentUser.accountType === 'owner' && (
+        <View style={[{ marginTop: 5 }, styles.flexRow, styles.legend]}>
+          <View
+            style={[
+              styles.legendDot,
+              { backgroundColor: colors.darkLime, marginRight: 5 },
+            ]}
+          />
+          <Text style={[styles.legendText, { color: colors.darkLime }]}>
+            Locums acceptés (
+            {
+              _.flatten(
+                state.events.filter(
+                  (event: Event) => event.acceptedLocums.length,
+                ),
+              ).length
+            }
+            )
+          </Text>
+        </View>
+      )}
 
       <View style={{ marginTop: 10 }}>
         <FlatList
@@ -249,7 +268,6 @@ const CalendarView = ({ navigation }) => {
                   (event: Event) =>
                     (event.interestedLocums.filter(
                       interestedLocum =>
-                        !event.acceptedLocums.includes(interestedLocum) ||
                         !event.refusedLocums.includes(interestedLocum),
                     ).length > 0 ||
                       event.interestedLocums.length === 0) &&

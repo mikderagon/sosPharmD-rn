@@ -21,27 +21,27 @@ import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modal';
 import _ from 'underscore';
 import _String from 'underscore.string';
-import { LocumTag } from '../../interfaces';
-import { store } from '../../store';
-import colors from '../../styles/colors';
-import * as dates from '../../utils/dates';
+import { LocumTag } from '../../../interfaces';
+import { store } from '../../../store';
+import colors from '../../../styles/colors';
+import * as dates from '../../../utils/dates';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
-import Button from './Button';
-import Calendar from './Calendar';
-import CalendarEventTag from './CalendarEventTag';
-import { locumSize } from './Locum';
+} from '../../../utils/responsiveLayout';
+import Button from '../Button';
+import Calendar from '../Calendar';
+import CalendarEventTag from '../CalendarEventTag';
+import { locumSize } from '../Owner/Locum';
 import Contract from './Contract';
-import { toSchoolYear } from '../../utils/school';
+import { toSchoolYear } from '../../../utils/school';
 import {
   GRADIENT_COLORS,
   calendar,
   defaultAvatar,
   locumIcon,
   verticalDots,
-} from './shared';
+} from '../shared';
 
 const LocumHomeView = ({ navigation }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
@@ -56,11 +56,14 @@ const LocumHomeView = ({ navigation }) => {
   useEffect(() => {
     if (contracts.length > 1) {
       const timeout = setTimeout(() => {
-        const nextIndex =
+        let nextIndex =
           currentEventIndex === thisMonthEventDates.length - 1 ||
           thisMonthEventDates.length === 0
             ? 0
             : currentEventIndex + 1;
+        if (nextIndex > thisMonthEventDates.length) {
+          nextIndex = 0;
+        }
         setPreviousEventIndex(currentEventIndex);
         setCurrentEventIndex(nextIndex);
         setHorizontalFlatListScrolled(true);

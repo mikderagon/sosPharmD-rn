@@ -21,17 +21,17 @@ import LinearGradient from 'react-native-linear-gradient';
 import Modal from 'react-native-modal';
 import _ from 'underscore';
 import _String from 'underscore.string';
-import { LocumTag } from '../../interfaces';
-import { store } from '../../store';
-import colors from '../../styles/colors';
-import * as dates from '../../utils/dates';
+import { LocumTag } from '../../../interfaces';
+import { store } from '../../../store';
+import colors from '../../../styles/colors';
+import * as dates from '../../../utils/dates';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
-import Button from './Button';
-import Calendar from './Calendar';
-import CalendarEventTag from './CalendarEventTag';
+} from '../../../utils/responsiveLayout';
+import Button from '../Button';
+import Calendar from '../Calendar';
+import CalendarEventTag from '../CalendarEventTag';
 import Locum, { locumSize } from './Locum';
 import {
   defaultAvatar,
@@ -39,7 +39,7 @@ import {
   verticalDots,
   calendar,
   locumIcon,
-} from './shared';
+} from '../shared';
 
 const OwnerHomeView = ({ navigation }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
@@ -54,11 +54,14 @@ const OwnerHomeView = ({ navigation }) => {
   useEffect(() => {
     if (locumTags.length > 1) {
       const timeout = setTimeout(() => {
-        const nextIndex =
+        let nextIndex =
           currentEventIndex === thisMonthEventDates.length - 1 ||
           thisMonthEventDates.length === 0
             ? 0
             : currentEventIndex + 1;
+        if (nextIndex > thisMonthEventDates.length) {
+          nextIndex = 0;
+        }
         setPreviousEventIndex(currentEventIndex);
         setCurrentEventIndex(nextIndex);
         setHorizontalFlatListScrolled(true);
@@ -126,17 +129,6 @@ const OwnerHomeView = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          {/* <View style={styles.pictureNameRow}>
-
-            <View style={styles.userInfoContainer}>
-              <Text style={styles.name} numberOfLines={1} adjustsFontSizeToFit>
-                {currentUser.firstName + ' ' + currentUser.lastName}
-              </Text>
-              <Text style={styles.year}>{'udeM'}</Text>
-              <Text style={styles.year}>{currentUser.year || 0}</Text>
-              <Text style={styles.location}>{currentUser.city}</Text>
-            </View>
-          </View> */}
           <View style={[styles.userPictureShadow, { marginTop: hp(1) }]}>
             <Image
               source={

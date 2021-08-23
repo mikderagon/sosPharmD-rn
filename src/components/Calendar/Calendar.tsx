@@ -48,6 +48,8 @@ const Calendar = (props: Props) => {
     onDayPress,
   } = props;
 
+  console.log(events);
+
   const daysRow = (
     state.language === 'fr' ? jours_semaines : weekdays_short
   ).map((day, index) => (
@@ -98,6 +100,10 @@ const Calendar = (props: Props) => {
                 !event.refusedLocums.includes(interestedLocum),
             ).length,
         )
+        .map(event => event.day)
+        .includes(day),
+      acceptedLocum: events
+        .filter(event => event.acceptedLocums.length)
         .map(event => event.day)
         .includes(day),
     };
@@ -169,6 +175,14 @@ const Calendar = (props: Props) => {
         <Cell key={index.toString()} onDayPress={_onDayPress}>
           <Text style={styles.day}>{day}</Text>
           <View style={styles.dayDot} />
+        </Cell>
+      );
+    }
+    if (CELL_STATES.acceptedLocum) {
+      return (
+        <Cell key={index.toString()} touchEnabled={false} onDayPress={() => {}}>
+          <Text style={styles.day}>{day}</Text>
+          <View style={[styles.dayDot, { backgroundColor: colors.darkLime }]} />
         </Cell>
       );
     }

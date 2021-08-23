@@ -55,8 +55,10 @@ export async function initOwnerData(currentUser: Owner, dispatch: any) {
         type: 'SET_CALENDAR_EVENTS',
         events,
       });
+      console.log('snapshot events', events);
       const thisMonthEvents = getMonthEvents(events);
       const thisMonthEventDates = getMonthEventDates(thisMonthEvents);
+      console.log('init owner data: thismontheventdates', thisMonthEventDates);
       const interestedLocums = await getInterestedLocums(events);
       const locumTags = await getLocumTags(thisMonthEvents);
       dispatch({
@@ -171,9 +173,7 @@ export function getMonthEventDates(thisMonthEvents: Event[]) {
       return Array.from({
         length:
           event.interestedLocums.filter(
-            interestedLocum =>
-              !event.acceptedLocums.includes(interestedLocum) &&
-              !event.refusedLocums.includes(interestedLocum),
+            interestedLocum => !event.refusedLocums.includes(interestedLocum),
           ).length || 0,
       }).fill(event.day);
     }),

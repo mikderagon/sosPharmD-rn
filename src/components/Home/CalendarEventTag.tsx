@@ -10,7 +10,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
 import { widthPercentageToDP as wp } from '../../utils/responsiveLayout';
-import { locumSize } from './Locum';
+import { locumSize } from './Owner/Locum';
 
 interface Props {
   date?: number;

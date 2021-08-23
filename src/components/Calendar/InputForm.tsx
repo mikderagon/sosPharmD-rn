@@ -50,7 +50,7 @@ const InputForm = (props: Props) => {
         />
       </View>
       <View style={styles.container}>
-        <Text style={styles.label}>Expérience min.:</Text>
+        <Text style={styles.label}>Expérience demandée:</Text>
         <TextInput
           ref={ref3}
           style={styles.input}
@@ -63,7 +63,7 @@ const InputForm = (props: Props) => {
           autoCorrect={false}
           keyboardType="numbers-and-punctuation"
           returnKeyType="next"
-          maxLength={2}
+          maxLength={1}
         />
       </View>
 

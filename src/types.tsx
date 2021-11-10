@@ -7,6 +7,7 @@ export type StackParamList = {
   SignUp: undefined;
   AccountConfirmation: undefined;
   Calendar: undefined;
+  Settings: undefined;
 };
 
 export type NavigationProp = StackNavigationProp<StackParamList>;

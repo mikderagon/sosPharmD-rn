@@ -11,7 +11,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
-import AccountConfirmation from './components/AccountConfirmation/AccountConfirmation';
 import Calendar from './components/Calendar/CalendarView';
 import LocumHome from './components/Home/Locum/LocumHomeView';
 import OwnerHome from './components/Home/Owner/OwnerHomeView';
@@ -86,13 +85,6 @@ const Navigator = (props: Props) => {
               </TouchableOpacity>
             ),
           })}
-        />
-        <Stack.Screen
-          name="AccountConfirmation"
-          component={AccountConfirmation}
-          options={{
-            headerShown: false,
-          }}
         />
         <Stack.Screen
           name="Home"

@@ -5,7 +5,6 @@ export type StackParamList = {
   Home: undefined;
   SignIn: undefined;
   SignUp: undefined;
-  AccountConfirmation: undefined;
   Calendar: undefined;
   Settings: undefined;
 };

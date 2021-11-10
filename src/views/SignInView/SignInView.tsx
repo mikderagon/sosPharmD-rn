@@ -25,6 +25,7 @@ import {
   Image,
   TouchableOpacity,
   View,
+  ScrollView,
 } from 'react-native';
 import 'react-native-gesture-handler';
 import * as firestore from '../../server/firestore';
@@ -35,7 +36,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import AnimatedTrail from './AnimatedTrail';
+import { AnimatedTrail } from '../../components/Animations';
 import LoginButton from './Button';
 import Input from './Input';
 
@@ -83,105 +84,93 @@ const SignInView = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* title */}
-      <View
-        style={{
-          marginTop: hp(10),
-          alignItems: 'flex-start',
-          alignSelf: 'flex-start',
-          marginLeft: wp(11),
-        }}>
+      <View style={styles.titleContainer}>
         <Text style={styles.appTitle}>
           {state.language === 'fr' ? 'Connexion' : 'Login'}
         </Text>
         <AnimatedTrail language={state.language} />
       </View>
-      {/* logo */}
-      {/* <View style={{ marginTop: hp(1) }}>
-        <Image source={logo} style={styles.logo} />
-      </View> */}
-      {/* identifier */}
-      <View style={{ marginTop: hp(6) }}>
-        <View style={styles.inputContainer}>
-          <Image source={usernameImage} style={styles.usernameImage} />
-          <TextInput
-            ref={inputRef1}
-            autoFocus
-            style={styles.input}
-            onChangeText={setEmail}
-            placeholder={
-              state.language === 'fr' ? 'Addresse courrielle' : 'Email'
-            }
-            placeholderTextColor="#bbb"
-            autoCapitalize="none"
-            autoCompleteType="off"
-            autoCorrect={false}
-            onEndEditing={() => inputRef2.current.focus()}
-            // maxLength={20}
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={{ marginTop: hp(6) }}>
+          <View style={styles.inputContainer}>
+            <Image source={usernameImage} style={styles.usernameImage} />
+            <TextInput
+              ref={inputRef1}
+              autoFocus
+              style={styles.input}
+              onChangeText={setEmail}
+              placeholder={
+                state.language === 'fr' ? 'Addresse courrielle' : 'Email'
+              }
+              placeholderTextColor="#bbb"
+              autoCapitalize="none"
+              autoCompleteType="off"
+              autoCorrect={false}
+              onEndEditing={() => inputRef2.current.focus()}
+              // maxLength={20}
+            />
+          </View>
+        </View>
+        <View style={{ marginTop: hp(4) }}>
+          <View style={styles.inputContainer}>
+            <Image source={passwordImage} style={styles.usernameImage} />
+            <TextInput
+              ref={inputRef2}
+              secureTextEntry
+              style={styles.input}
+              onChangeText={setPassword}
+              placeholder={
+                state.language === 'fr' ? 'Mot de passe' : 'Password'
+              }
+              placeholderTextColor="#bbb"
+              autoCapitalize="none"
+              autoCompleteType="off"
+              autoCorrect={false}
+              // maxLength={20}
+            />
+          </View>
+        </View>
+        <View style={{ marginTop: hp(4) }}>
+          <LoginButton
+            loading={spinnerActive}
+            onPress={() => {
+              // login logic TODO: persist user connection, and refactor in store.tsx
+              setSpinnerActive(true);
+              handleSignIn();
+            }}
+            text={state.language === 'fr' ? 'Se connecter' : 'Log in'}
           />
         </View>
-      </View>
-      {/* password */}
-      <View style={{ marginTop: hp(4) }}>
-        <View style={styles.inputContainer}>
-          <Image source={passwordImage} style={styles.usernameImage} />
-          <TextInput
-            ref={inputRef2}
-            secureTextEntry
-            style={styles.input}
-            onChangeText={setPassword}
-            placeholder={state.language === 'fr' ? 'Mot de passe' : 'Password'}
-            placeholderTextColor="#bbb"
-            autoCapitalize="none"
-            autoCompleteType="off"
-            autoCorrect={false}
-            // maxLength={20}
-          />
+        <View style={{ marginTop: hp(3) }}>
+          <TouchableOpacity
+            onPress={() => {
+              // navigation.navigate('forgotPassword');
+            }}>
+            <Text style={[styles.boldText, { color: colors.main }]}>
+              {state.language === 'fr'
+                ? 'Mot de passe oublié?'
+                : 'Forgot Password?'}
+            </Text>
+          </TouchableOpacity>
         </View>
-      </View>
-      {/* login */}
-      <View style={{ marginTop: hp(4) }}>
-        <LoginButton
-          loading={spinnerActive}
-          onPress={() => {
-            // login logic TODO: persist user connection, and refactor in store.tsx
-            setSpinnerActive(true);
-            handleSignIn();
-          }}
-          text={state.language === 'fr' ? 'Se connecter' : 'Log in'}
-        />
-      </View>
-      {/* forgot password */}
-      <View style={{ marginTop: hp(3) }}>
-        <TouchableOpacity
-          onPress={() => {
-            // navigation.navigate('forgotPassword');
-          }}>
-          <Text style={[styles.boldText, { color: colors.main }]}>
-            {state.language === 'fr'
-              ? 'Mot de passe oublié?'
-              : 'Forgot Password?'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {/*  */}
-      <View style={{ marginTop: hp(3) }}>
-        <TouchableOpacity
-          style={styles.signUp}
-          onPress={() => {
-            navigation.navigate('SignUp');
-          }}>
-          <Text style={styles.regularText}>
-            {state.language === 'fr'
-              ? 'Pas de compte?'
-              : "Don't have an account?"}
-          </Text>
-          <Text style={[styles.boldText, { color: colors.main }]}>
-            {' '}
-            {state.language === 'fr' ? 'Inscrivez-vous' : 'Sign Up'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+        <View style={{ marginTop: hp(3) }}>
+          <TouchableOpacity
+            style={styles.signUp}
+            onPress={() => {
+              navigation.navigate('SignUp');
+            }}>
+            <Text style={styles.regularText}>
+              {state.language === 'fr'
+                ? 'Pas de compte?'
+                : "Don't have an account?"}
+            </Text>
+            <Text style={[styles.boldText, { color: colors.main }]}>
+              {' '}
+              {state.language === 'fr' ? 'Inscrivez-vous' : 'Sign Up'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -191,6 +180,15 @@ const styles = StyleSheet.create({
     height: hp(100),
     width: wp(100),
     alignItems: 'center',
+  },
+  scrollView: {
+    alignItems: 'center',
+  },
+  titleContainer: {
+    marginTop: hp(10),
+    alignItems: 'flex-start',
+    alignSelf: 'flex-start',
+    marginLeft: wp(11),
   },
   appTitle: {
     fontSize: 30,

@@ -37,21 +37,21 @@ const renderSlide = ({ source, title, text }: SlideProps) => (
 );
 
 const slides = [
-  renderSlide({
+  {
     source: OnboardingImage1,
     title: 'Besoin de locums?',
     text: 'Trouvez facilement des locums qualifiés pour tous vos postes à combler',
-  }),
-  renderSlide({
+  },
+  {
     source: OnboardingImage2,
     title: 'Organisez votre horaire rapidement',
     text: "Soyez notifié dès qu'un locum est disponible pour l'un de vos postes",
-  }),
-  renderSlide({
+  },
+  {
     source: OnboardingImage3,
     title: 'Soyez rassurés',
     text: "Chaque locum passe par un examen qui assure la qualité et l'authenticité de son expérience",
-  }),
+  },
 ];
 
 const OnboardingView = ({ navigation }: NavigationProps) => {
@@ -65,7 +65,7 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
       <Carousel
         ref={carouselRef}
         data={slides}
-        renderItem={({ item }) => item}
+        renderItem={({ item }) => renderSlide(item)}
         sliderWidth={wp(100)}
         itemWidth={wp(100)}
         onSnapToItem={index => setActiveSlide(index)}
@@ -98,8 +98,7 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
               setActiveSlide(activeSlide + 1);
             }
           }}
-          text={slides[activeSlide].component.buttonText}
-          // style={activeSlide == slides.length - 1 ? 'bold' : 'default'}
+          text="Suivant"
         />
       </View>
     </View>

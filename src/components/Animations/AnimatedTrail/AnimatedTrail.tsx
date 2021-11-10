@@ -10,8 +10,8 @@ import React from 'react';
 import { useEffect, memo } from 'react';
 import { Animated, Easing, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
-import colors from '../../styles/colors';
-import { widthPercentageToDP as wp } from '../../utils/responsiveLayout';
+import colors from '../../../styles/colors';
+import { widthPercentageToDP as wp } from '../../../utils/responsiveLayout';
 
 interface Props {
   language: string;

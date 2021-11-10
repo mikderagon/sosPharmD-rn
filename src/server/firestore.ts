@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import _, { where } from 'underscore';
-import { signUpFormData } from '../views/SignUp/Form';
+import { signUpFormData } from '../views/SignUpView/Form';
 import { ContractTag, LocumTag } from '../interfaces';
 import { Locum, Owner, User, Event, Pharmacy, School } from '../models';
 import * as dates from '../utils/dates';

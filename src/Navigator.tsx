@@ -11,14 +11,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import 'react-native-gesture-handler';
-import Calendar from './components/Calendar/CalendarView';
-import LocumHome from './components/Home/Locum/LocumHomeView';
-import OwnerHome from './components/Home/Owner/OwnerHomeView';
-import Locums from './components/Locums/LocumsView';
-import Onboarding from './components/Onboarding/OnboardingView';
-import Settings from './components/Settings/SettingsView';
-import SignIn from './components/SignIn/SignInView';
-import SignUp from './components/SignUp/SignUpView';
+import OnboardingView from './views/OnboardingView';
+import SignInView from './views/SignInView';
+import SignUpView from './views/SignUpView';
 import { store } from './store';
 import { StackParamList } from './types';
 
@@ -50,21 +45,21 @@ const Navigator = (props: Props) => {
       <Stack.Navigator headerMode="screen" initialRouteName={initialRouteName}>
         <Stack.Screen
           name="Onboarding"
-          component={Onboarding}
+          component={OnboardingView}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
           name="SignIn"
-          component={SignIn}
+          component={SignInView}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
           name="SignUp"
-          component={SignUp}
+          component={SignUpView}
           options={({ navigation }) => ({
             title: state.language === 'fr' ? 'Inscription' : 'Registration',
             headerStyle: {
@@ -85,36 +80,6 @@ const Navigator = (props: Props) => {
               </TouchableOpacity>
             ),
           })}
-        />
-        <Stack.Screen
-          name="Home"
-          component={
-            state.currentUser.accountType === 'locum' ? LocumHome : OwnerHome
-          }
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Settings"
-          component={Settings}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Calendar"
-          component={Calendar}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Locums"
-          component={Locums}
-          options={{
-            headerShown: false,
-          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,6 +1,6 @@
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { signUpFormData } from '../views/SignUp/Form';
+import { signUpFormData } from '../views/SignUpView/Form';
 import { Locum, Owner } from '../models';
 
 export function createUser(userData: signUpFormData): Promise<Locum | Owner> {

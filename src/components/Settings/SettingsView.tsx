@@ -24,7 +24,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../utils/responsiveLayout';
-import * as firestore from '../../actions/firestore';
+import * as firestore from '../../server/firestore';
 
 const backCaret = require('assets/images/backCaret.png');
 

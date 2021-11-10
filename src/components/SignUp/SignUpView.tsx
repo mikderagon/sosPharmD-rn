@@ -9,7 +9,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
-import * as firestore from '../../actions/firestore';
+import * as firestore from '../../server/firestore';
 import { store } from '../../store';
 import {
   heightPercentageToDP as hp,

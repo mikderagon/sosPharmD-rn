@@ -27,7 +27,7 @@ import {
 } from '../../utils/responsiveLayout';
 import { EventAndOwner } from './CalendarView';
 import { Event, Locum, Owner } from '../../models';
-import * as firestore from '../../actions/firestore';
+import * as firestore from '../../server/firestore';
 import { defaultAvatar } from '../Home/shared';
 import { toSchoolYear } from '../../utils/school';
 import icons from '../../styles/icons';

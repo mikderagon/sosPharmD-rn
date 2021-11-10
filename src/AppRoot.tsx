@@ -11,7 +11,7 @@ import 'react-native-gesture-handler';
 import Navigator from './Navigator';
 import { store } from './store';
 import { StackParamList } from './types';
-import * as firestore from './actions/firestore';
+import * as firestore from './server/firestore';
 import { Locum, Owner } from './models';
 
 const AppRoot = () => {

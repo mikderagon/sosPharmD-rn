@@ -27,7 +27,7 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import * as firestore from '../../actions/firestore';
+import * as firestore from '../../server/firestore';
 import { Locum, Owner } from '../../models';
 import { store } from '../../store';
 import colors from '../../styles/colors';

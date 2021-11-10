@@ -25,7 +25,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { calendarDimensions } from '../Calendar';
 import { defaultAvatar } from '../shared';
-import * as firestore from '../../../actions/firestore';
+import * as firestore from '../../../server/firestore';
 import { Event, Pharmacy } from '../../../models';
 
 interface Props {

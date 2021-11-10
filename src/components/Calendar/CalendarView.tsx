@@ -29,7 +29,7 @@ import {
 } from '../../utils/responsiveLayout';
 import AddEventModal, { NewEvent } from './AddEventModal';
 import Calendar from './Calendar';
-import * as firestore from '../../actions/firestore';
+import * as firestore from '../../server/firestore';
 import EventModal from './EventModal';
 import _ from 'underscore';
 import ExperienceModal from './ExperienceModal';

@@ -17,7 +17,7 @@ import { Locum, Owner } from './models';
 const AppRoot = () => {
   const { state, dispatch } = useContext(store);
   const [readyToMount, setReadyToMount] = useState(false);
-  let initialRouteName = useRef('Onboarding');
+  let initialRouteName = useRef('SignIn');
 
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(user => {

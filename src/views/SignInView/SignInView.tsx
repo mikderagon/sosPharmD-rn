@@ -1,55 +1,37 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import auth from '@react-native-firebase/auth';
-import React, {
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-  memo,
-  useRef,
-} from 'react';
+import React, { useContext, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
-  Alert,
-  TextInput,
-  Animated,
-  Easing,
+  ScrollView,
   StyleSheet,
   Text,
-  Image,
   TouchableOpacity,
   View,
-  ScrollView,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import * as firestore from '../../server/firestore';
-import { Locum, Owner } from '../../models';
-import { store } from '../../store';
-import colors from '../../styles/colors';
+import { AnimatedTrail } from '../../components/Animations';
+import LoginButton from '../../components/Button/LoginButton';
+import { Input } from '../../components/TextInput';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
-import { AnimatedTrail } from '../../components/Animations';
-import LoginButton from './Button';
-import Input from './Input';
+} from '../../helpers/layout/responsiveLayout';
+import { store } from '../../store';
+import colors from '../../styles/colors';
+import { NavigationProps } from '../../types';
 
 const usernameImage = require('assets/images/usernameImage.png');
 const passwordImage = require('assets/images/passwordImage.png');
 
-const SignInView = ({ navigation }) => {
+const SignInView = ({ navigation }: NavigationProps) => {
   const { state, dispatch } = useContext(store);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [spinnerActive, setSpinnerActive] = useState(false);
-  const inputRef1 = useRef(null);
-  const inputRef2 = useRef(null);
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
+
+  console.log('errors:', errors);
 
   // (DEV ENV ONLY) autologin
   // const [iter, setIter] = useState(0);
@@ -58,29 +40,37 @@ const SignInView = ({ navigation }) => {
   //   handleSignIn(auth().currentUser.email, 'sospharmd');
   // }
 
-  function handleSignIn(_email?: string, _password?: string) {
-    firestore
-      .signIn(_email || email, _password || password)
-      .then((user: Locum | Owner) => {
-        dispatch({
-          type: 'SET_CURRENT_USER',
-          currentUser: user,
-        });
-        if (user.accountType === 'locum') {
-          firestore.initLocumData(user as Locum, dispatch);
-        } else {
-          firestore.initOwnerData(user as Owner, dispatch);
-        }
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'Home' }],
-        });
-      })
-      .catch(e => {
-        setSpinnerActive(false);
-        Alert.alert('No user');
-      });
-  }
+  type onSubmitProps = {
+    email: string;
+    password: string;
+  };
+  const onSubmit = ({ email, password }: onSubmitProps) => {
+    console.log('submitted data:', email, password);
+  };
+
+  // const handleSignIn = (_email?: string, _password?: string) => {
+  //   firestore
+  //     .signIn(_email || email, _password || password)
+  //     .then((user: Locum | Owner) => {
+  //       dispatch({
+  //         type: 'SET_CURRENT_USER',
+  //         currentUser: user,
+  //       });
+  //       if (user.accountType === 'locum') {
+  //         firestore.initLocumData(user as Locum, dispatch);
+  //       } else {
+  //         firestore.initOwnerData(user as Owner, dispatch);
+  //       }
+  //       navigation.reset({
+  //         index: 0,
+  //         routes: [{ name: 'Home' }],
+  //       });
+  //     })
+  //     .catch(e => {
+  //       setSpinnerActive(false);
+  //       Alert.alert('No user');
+  //     });
+  // };
 
   return (
     <View style={styles.container}>
@@ -88,56 +78,32 @@ const SignInView = ({ navigation }) => {
         <Text style={styles.appTitle}>
           {state.language === 'fr' ? 'Connexion' : 'Login'}
         </Text>
-        <AnimatedTrail language={state.language} />
+        <AnimatedTrail side="left" language={state.language} />
       </View>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={{ marginTop: hp(6) }}>
-          <View style={styles.inputContainer}>
-            <Image source={usernameImage} style={styles.usernameImage} />
-            <TextInput
-              ref={inputRef1}
-              autoFocus
-              style={styles.input}
-              onChangeText={setEmail}
-              placeholder={
-                state.language === 'fr' ? 'Addresse courrielle' : 'Email'
-              }
-              placeholderTextColor="#bbb"
-              autoCapitalize="none"
-              autoCompleteType="off"
-              autoCorrect={false}
-              onEndEditing={() => inputRef2.current.focus()}
-              // maxLength={20}
-            />
-          </View>
+          <Input
+            autoFocus
+            name="email"
+            control={control}
+            placeholder={
+              state.language === 'fr' ? 'Addresse courrielle' : 'Email'
+            }
+            imageSource={usernameImage}
+          />
         </View>
         <View style={{ marginTop: hp(4) }}>
-          <View style={styles.inputContainer}>
-            <Image source={passwordImage} style={styles.usernameImage} />
-            <TextInput
-              ref={inputRef2}
-              secureTextEntry
-              style={styles.input}
-              onChangeText={setPassword}
-              placeholder={
-                state.language === 'fr' ? 'Mot de passe' : 'Password'
-              }
-              placeholderTextColor="#bbb"
-              autoCapitalize="none"
-              autoCompleteType="off"
-              autoCorrect={false}
-              // maxLength={20}
-            />
-          </View>
+          <Input
+            name="password"
+            control={control}
+            placeholder={state.language === 'fr' ? 'Mot de passe' : 'Password'}
+            imageSource={passwordImage}
+          />
         </View>
         <View style={{ marginTop: hp(4) }}>
           <LoginButton
             loading={spinnerActive}
-            onPress={() => {
-              // login logic TODO: persist user connection, and refactor in store.tsx
-              setSpinnerActive(true);
-              handleSignIn();
-            }}
+            onPress={handleSubmit(onSubmit)}
             text={state.language === 'fr' ? 'Se connecter' : 'Log in'}
           />
         </View>
@@ -221,27 +187,6 @@ const styles = StyleSheet.create({
   regularText: {
     fontWeight: '300',
     fontSize: 14,
-  },
-  usernameImage: {
-    right: wp(1.2),
-    resizeMode: 'contain',
-    height: '100%',
-  },
-  input: {
-    fontSize: 19,
-    color: '#494949',
-    width: '70%',
-    textAlign: 'center',
-  },
-  inputContainer: {
-    backgroundColor: '#fff',
-    borderColor: '#ddd',
-    borderWidth: 2,
-    borderRadius: wp(80),
-    height: wp(80) * 0.15,
-    width: wp(80),
-    flexDirection: 'row',
-    alignItems: 'center',
   },
 });
 

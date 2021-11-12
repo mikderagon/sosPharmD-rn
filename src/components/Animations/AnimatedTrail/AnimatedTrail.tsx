@@ -11,14 +11,14 @@ import { useEffect, memo } from 'react';
 import { Animated, Easing, StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import colors from '../../../styles/colors';
-import { widthPercentageToDP as wp } from '../../../utils/responsiveLayout';
+import { widthPercentageToDP as wp } from '../../../helpers/layout/responsiveLayout';
 
 interface Props {
   language: string;
+  side: 'left' | 'right';
 }
 
-const AnimatedTrail = (props: Props) => {
-  const { language } = props;
+const AnimatedTrail = ({ language, side }: Props) => {
   const animatedValue = new Animated.Value(0);
   useEffect(() => {
     Animated.loop(
@@ -54,7 +54,7 @@ const AnimatedTrail = (props: Props) => {
             {
               translateX: animatedValue.interpolate({
                 inputRange: [0, 1, 2],
-                outputRange: [-300, 0, 400],
+                outputRange: side === 'left' ? [-300, 0, 400] : [400, 0, -300],
               }),
             },
           ],

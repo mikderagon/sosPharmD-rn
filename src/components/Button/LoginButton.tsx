@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import {
   ActivityIndicator,
@@ -14,11 +6,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import colors from '../../styles/colors';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
+} from '../../helpers/layout/responsiveLayout';
+import colors from '../../styles/colors';
 
 interface Props {
   onPress: () => void;
@@ -27,19 +19,24 @@ interface Props {
   loading?: boolean;
 }
 
-const Button = (props: Props) => {
-  const { onPress, text = 'Log in', active = false, loading } = props;
-  return active ? (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+const Button = ({
+  onPress,
+  text = 'Log in',
+  active = true,
+  loading,
+}: Props) => {
+  return (
+    <TouchableOpacity
+      activeOpacity={active ? 0.2 : 1}
+      style={styles.container}
+      onPress={() => {
+        active ? onPress() : {};
+      }}>
       {loading ? (
-        <ActivityIndicator color="#fff" />
+        <ActivityIndicator color={colors.white} />
       ) : (
         <Text style={styles.text}>{text}</Text>
       )}
-    </TouchableOpacity>
-  ) : (
-    <TouchableOpacity activeOpacity={1} style={styles.inactiveContainer}>
-      <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   );
 };
@@ -55,16 +52,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  inactiveContainer: {
-    height: hp(6),
-    width: wp(80),
-    borderRadius: 50,
-    backgroundColor: '#ddd',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   text: {
-    color: '#fff',
+    color: colors.white,
     fontWeight: '800',
     fontSize: 20,
   },

@@ -9,12 +9,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
-import LinearGradient from 'react-native-linear-gradient';
-import { NavigationProps } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
+} from '../../helpers/layout/responsiveLayout';
 
 const Footer = () => {
   return (

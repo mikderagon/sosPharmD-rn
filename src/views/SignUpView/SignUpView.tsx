@@ -1,118 +1,108 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React, { useContext, useEffect, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { useForm } from 'react-hook-form';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
-import * as firestore from '../../server/firestore';
-import { store } from '../../store';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { AnimatedTrail } from '../../components/Animations';
+import Button from '../../components/Button/LoginButton';
+import { Input, PasswordInput } from '../../components/TextInput';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
-import Button from './Button';
-import Form, { fields, locumFields, ownerFields, signUpFormData } from './Form';
-import { User, Locum, Owner, Pharmacy } from '../../models';
+} from '../../helpers/layout/responsiveLayout';
+import * as firestore from '../../server/firestore';
+import { store } from '../../store';
+import colors from '../../styles/colors';
 
 const SignUpLocumView = ({ navigation }) => {
   const { state, dispatch } = useContext(store);
-  const [isLocum, setIsLocum] = useState(true);
-  const [userData, setUserData] = useState({} as signUpFormData);
-  const [allFieldsEntered, setAllFieldsEntered] = useState(false);
-  const [spinnerActive, setSpinnerActive] = useState(false);
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
 
-  // form completion verificator
-  useEffect(() => {
-    if (
-      Object.keys(userData).length ===
-      fields.length + (isLocum ? locumFields.length : ownerFields.length)
-    ) {
-      let status = true;
-      for (let value of Object.values(userData)) {
-        if (!value.length) {
-          status = false;
-          break;
-        }
-      }
-      setAllFieldsEntered(status);
-    }
-  }, [userData, isLocum]);
+  const onSubmit = data => console.log(data);
+
+  const usernameImage = require('../../../assets/images/usernameImage.png');
 
   useEffect(() => {
     // feed schools and pharmacies arrays for signup form autocompletes
     firestore.getSignupData(dispatch);
   }, [dispatch]);
 
-  function handleSignUp(data: signUpFormData) {
-    if (allFieldsEntered) {
-      firestore
-        .createUser(data)
-        .then((user: Locum | Owner) => {
-          dispatch({
-            type: 'SET_CURRENT_USER',
-            currentUser: user,
-          });
-          if (user.accountType === 'locum') {
-            firestore.initLocumData(user as Locum, dispatch);
-          } else {
-            firestore.initOwnerData(user as Owner, dispatch);
-          }
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'Home' }],
-          });
-        })
-        .catch((e: Error) => {
-          setSpinnerActive(false);
-          console.error('error trying to signup:', e);
-          Alert.alert(e.message.split(']')[1]);
-        });
-    }
-  }
-
   return (
     <View style={styles.container}>
-      <View style={styles.flatListContainer}>
-        <Form
-          isLocum={isLocum}
-          setIsLocum={setIsLocum}
-          setValue={(key: string, value: string) => {
-            setUserData({ ...userData, [key]: value });
-          }}
-          deleteKeys={(keys: string[]) => {
-            const newUserData = { ...userData };
-            for (const key of keys) {
-              delete newUserData[key];
-            }
-            setUserData({ ...newUserData });
-          }}
-          setUntouchable={() => setAllFieldsEntered(false)}
-          schools={state.schools}
-          pharmacies={state.pharmacies}
-        />
+      {/* <View style={styles.caretPosition}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image source={require('../../../assets/images/backCaret.png')} />
+        </TouchableOpacity>
+      </View> */}
+      <View style={styles.titleContainer}>
+        <Text style={styles.appTitle}>
+          {state.language === 'fr' ? 'Inscription' : 'Sign Up'}
+        </Text>
+        <AnimatedTrail side="right" language={state.language} />
       </View>
 
-      <View style={styles.footer}>
+      <View style={{ marginTop: hp(2) }}>
+        <TouchableOpacity
+          style={styles.signUp}
+          onPress={() => {
+            navigation.navigate('SignIn');
+          }}>
+          <Text style={styles.regularText}>
+            {state.language === 'fr'
+              ? 'Vous avez un compte?'
+              : 'Have an account?'}
+          </Text>
+          <Text style={[styles.boldText, { color: colors.main }]}>
+            {' '}
+            {state.language === 'fr' ? 'Connectez-vous' : 'Sign In'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <KeyboardAwareScrollView>
         <View style={{ marginTop: hp(2) }}>
-          <Button
-            loading={spinnerActive}
-            active={allFieldsEntered}
-            onPress={() => {
-              setSpinnerActive(true);
-              handleSignUp({
-                ...userData,
-                accountType: isLocum ? 'locum' : 'owner',
-              });
-            }}
-            text={state.language === 'fr' ? "S'inscrire" : 'Sign Up'}
+          <Input
+            autoFocus
+            name="firstName"
+            control={control}
+            placeholder={state.language === 'fr' ? 'Prénom' : 'First name'}
           />
         </View>
-      </View>
+        <View style={{ marginTop: hp(2) }}>
+          <Input
+            name="lastName"
+            control={control}
+            placeholder={state.language === 'fr' ? 'Nom' : 'Last name'}
+          />
+        </View>
+        <View style={{ marginTop: hp(2) }}>
+          <Input
+            name="emailAddress"
+            control={control}
+            placeholder={
+              state.language === 'fr' ? 'Addresse courriel' : 'Email address'
+            }
+          />
+        </View>
+        <View style={{ marginTop: hp(2) }}>
+          <PasswordInput
+            name="password"
+            control={control}
+            placeholder={state.language === 'fr' ? 'Mot de passe' : 'Password'}
+          />
+        </View>
+        <View style={{ marginTop: hp(2) }}>
+          <Button
+            loading={false}
+            onPress={handleSubmit(onSubmit)}
+            text={state.language === 'fr' ? 'Créer le compte' : 'Sign up'}
+          />
+        </View>
+      </KeyboardAwareScrollView>
     </View>
   );
 };
@@ -122,6 +112,22 @@ const styles = StyleSheet.create({
     height: hp(100),
     width: wp(100),
     alignItems: 'center',
+  },
+  caretPosition: {
+    position: 'absolute',
+    top: hp(10),
+    left: wp(10),
+  },
+  titleContainer: {
+    marginTop: hp(10),
+    alignItems: 'flex-start',
+    alignSelf: 'flex-start',
+    marginLeft: wp(11),
+  },
+  appTitle: {
+    fontSize: 30,
+    fontWeight: '700',
+    color: colors.darkerBlue,
   },
   flatListContainer: {
     height: hp(77),
@@ -140,6 +146,18 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#fff',
     alignItems: 'center',
+  },
+  signUp: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  boldText: {
+    fontWeight: '500',
+    fontSize: 15,
+  },
+  regularText: {
+    fontWeight: '300',
+    fontSize: 14,
   },
 });
 

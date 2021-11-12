@@ -1,11 +1,9 @@
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import _, { where } from 'underscore';
-import { signUpFormData } from '../views/SignUpView/Form';
+import _ from 'underscore';
 import { ContractTag, LocumTag } from '../interfaces';
-import { Locum, Owner, User, Event, Pharmacy, School } from '../models';
-import * as dates from '../utils/dates';
-import { signIn, createUser, getUser, signOut } from './auth';
+import { Event, Locum, Owner, Pharmacy, School, User } from '../models';
+import * as dates from '../helpers/dates/dates';
+import { createUser, getUser, signIn, signOut } from './auth';
 
 // change type of userData to be the correct types from the signup form and the return type to User model
 export { signIn, createUser, getUser, signOut };

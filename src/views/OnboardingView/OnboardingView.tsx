@@ -1,6 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  Alert,
   Image,
   ImageSourcePropType,
   StyleSheet,
@@ -9,12 +8,12 @@ import {
 } from 'react-native';
 import 'react-native-gesture-handler';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { NavigationProps } from '../../types';
+import Button from '../../components/Button/Button';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
-import Button from '../../components/Button/Button';
+} from '../../helpers/layout/responsiveLayout';
+import { NavigationProps } from '../../types';
 
 const OnboardingImage1 = require('assets/images/onboarding1.png');
 const OnboardingImage2 = require('assets/images/onboarding2.png');
@@ -56,14 +55,23 @@ const slides = [
 
 const OnboardingView = ({ navigation }: NavigationProps) => {
   const [activeSlide, setActiveSlide] = useState(0);
-  let carouselRef = useRef(null);
+
+  let carouselRef: Carousel<{
+    source: any;
+    title: string;
+    text: string;
+  }>;
 
   const lastSlideActive = activeSlide === slides.length - 1;
 
   return (
     <View style={styles.container}>
       <Carousel
-        ref={carouselRef}
+        ref={c => {
+          if (c !== null) {
+            carouselRef = c;
+          }
+        }}
         data={slides}
         renderItem={({ item }) => renderSlide(item)}
         sliderWidth={wp(100)}
@@ -74,14 +82,14 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
         containerStyle={styles.pagination}
         dotsLength={slides.length}
         activeDotIndex={activeSlide}
-        dotStyle={{ ...styles.dotStyle, width: 15 }}
-        inactiveDotStyle={styles.dotStyle}
+        dotStyle={styles.dotStyle}
+        inactiveDotStyle={styles.inactiveDotStyle}
       />
       <View style={styles.buttonsContainer}>
         {activeSlide > 0 && (
           <Button
             onPress={() => {
-              carouselRef.current.snapToPrev();
+              carouselRef.snapToPrev();
               setActiveSlide(activeSlide - 1);
             }}
             text="Précédent"
@@ -94,7 +102,7 @@ const OnboardingView = ({ navigation }: NavigationProps) => {
             if (lastSlideActive) {
               navigation.navigate('SignIn');
             } else {
-              carouselRef.current.snapToNext();
+              carouselRef.snapToNext();
               setActiveSlide(activeSlide + 1);
             }
           }}
@@ -148,6 +156,13 @@ const styles = StyleSheet.create({
     top: hp(49.5),
   },
   dotStyle: {
+    width: 15,
+    height: 10,
+    borderRadius: 50,
+    marginHorizontal: -10,
+    backgroundColor: '#494949',
+  },
+  inactiveDotStyle: {
     width: 10,
     height: 10,
     borderRadius: 50,

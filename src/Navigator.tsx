@@ -60,38 +60,13 @@ const Navigator = (props: Props) => {
         <Stack.Screen
           name="SignUp"
           component={SignUpView}
-          options={({ navigation }) => ({
-            title: state.language === 'fr' ? 'Inscription' : 'Registration',
-            headerStyle: {
-              backgroundColor: '#fff',
-              borderBottomColor: '#303D5C',
-              borderBottomWidth: 1,
-            },
-            headerTitleStyle: {
-              fontWeight: '800',
-              color: '#303D5C',
-            },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('SignIn');
-                }}>
-                <Image source={backCaret} style={styles.backCaret} />
-              </TouchableOpacity>
-            ),
-          })}
+          options={{
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  backCaret: {
-    marginLeft: 10,
-    height: 15,
-    resizeMode: 'contain',
-  },
-});
 
 export default Navigator;

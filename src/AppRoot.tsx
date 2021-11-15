@@ -8,7 +8,7 @@
 import auth from '@react-native-firebase/auth';
 import React, { useContext, useRef, useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
-import Navigator from './Navigator';
+import Navigator from './navigation/Navigator';
 import { store } from './store';
 import { StackParamList } from './types';
 import * as firestore from './server/firestore';

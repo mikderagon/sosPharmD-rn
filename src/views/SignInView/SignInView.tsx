@@ -15,6 +15,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../helpers/layout/responsiveLayout';
+import signIn from '../../api/signIn';
 import { store } from '../../store';
 import colors from '../../styles/colors';
 import { NavigationProps } from '../../types';
@@ -44,33 +45,22 @@ const SignInView = ({ navigation }: NavigationProps) => {
     email: string;
     password: string;
   };
-  const onSubmit = ({ email, password }: onSubmitProps) => {
+  const onSubmit = async ({ email, password }: onSubmitProps) => {
     console.log('submitted data:', email, password);
+    try {
+      const signedUser = await signIn({ email, password });
+      dispatch({
+        type: 'SET_CURRENT_USER',
+        currentUser: signedUser,
+      });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
+    } catch (e) {
+      console.log('error trying to sign in a user', e);
+    }
   };
-
-  // const handleSignIn = (_email?: string, _password?: string) => {
-  //   firestore
-  //     .signIn(_email || email, _password || password)
-  //     .then((user: Locum | Owner) => {
-  //       dispatch({
-  //         type: 'SET_CURRENT_USER',
-  //         currentUser: user,
-  //       });
-  //       if (user.accountType === 'locum') {
-  //         firestore.initLocumData(user as Locum, dispatch);
-  //       } else {
-  //         firestore.initOwnerData(user as Owner, dispatch);
-  //       }
-  //       navigation.reset({
-  //         index: 0,
-  //         routes: [{ name: 'Home' }],
-  //       });
-  //     })
-  //     .catch(e => {
-  //       setSpinnerActive(false);
-  //       Alert.alert('No user');
-  //     });
-  // };
 
   return (
     <View style={styles.container}>

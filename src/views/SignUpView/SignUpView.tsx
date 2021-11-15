@@ -24,25 +24,13 @@ const SignUpLocumView = ({ navigation }) => {
 
   const onSubmit = data => console.log(data);
 
-  const usernameImage = require('../../../assets/images/usernameImage.png');
-
-  useEffect(() => {
-    // feed schools and pharmacies arrays for signup form autocompletes
-    firestore.getSignupData(dispatch);
-  }, [dispatch]);
-
   return (
     <View style={styles.container}>
-      {/* <View style={styles.caretPosition}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={require('../../../assets/images/backCaret.png')} />
-        </TouchableOpacity>
-      </View> */}
       <View style={styles.titleContainer}>
         <Text style={styles.appTitle}>
           {state.language === 'fr' ? 'Inscription' : 'Sign Up'}
         </Text>
-        <AnimatedTrail side="right" language={state.language} />
+        <AnimatedTrail side="left" language={state.language} />
       </View>
 
       <View style={{ marginTop: hp(2) }}>
@@ -113,11 +101,6 @@ const styles = StyleSheet.create({
     width: wp(100),
     alignItems: 'center',
   },
-  caretPosition: {
-    position: 'absolute',
-    top: hp(10),
-    left: wp(10),
-  },
   titleContainer: {
     marginTop: hp(10),
     alignItems: 'flex-start',
@@ -128,24 +111,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '700',
     color: colors.darkerBlue,
-  },
-  flatListContainer: {
-    height: hp(77),
-    // marginTop: hp(3),
-    alignItems: 'center',
-  },
-  footer: {
-    position: 'absolute',
-    shadowColor: '#000',
-    shadowOffset: { height: -1, width: 0 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    bottom: 0,
-    marginBottom: hp(10),
-    height: hp(13),
-    width: '100%',
-    backgroundColor: '#fff',
-    alignItems: 'center',
   },
   signUp: {
     flexDirection: 'row',

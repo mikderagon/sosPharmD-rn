@@ -58,18 +58,17 @@ const getTabBarIcon = ({ focused, route }) => {
   return (
     <View
       style={{
-        height: 50,
-        width: 50,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 2,
+        // marginBottom: 2,
+        bottom: -10,
       }}>
       <Image
         source={tabBarOptions[route.name as keyof tabBarTypes].imageSource}
         style={{
           tintColor: focused ? focusedColor : unfocusedColor,
-          height: 30,
-          maxWidth: 30,
+          height: 25,
+          maxWidth: 25,
           resizeMode: 'contain',
         }}
       />

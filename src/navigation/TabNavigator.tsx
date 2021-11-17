@@ -1,14 +1,6 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Image, ImageSourcePropType, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { store } from '../store';
@@ -17,6 +9,8 @@ import { StackParamList } from '../types';
 import CalendarView from '../views/CalendarView';
 import HomeView from '../views/HomeView';
 import ProfileView from '../views/ProfileView';
+
+import CalendarNavigator from '../navigation/CalendarNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -86,7 +80,7 @@ const getTabBarIcon = ({ focused, route }) => {
 
 const Navigator = (props: Props) => {
   const { initialRouteName } = props;
-  const { state, dispatch } = useContext(store);
+  // const { state, dispatch } = useContext(store);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -94,8 +88,7 @@ const Navigator = (props: Props) => {
         tabBarIcon: ({ focused }) => getTabBarIcon({ focused, route }),
       })}
       initialRouteName="Home">
-      <Tab.Screen name="Home" component={HomeView} />
-      <Tab.Screen name="Calendar" component={CalendarView} />
+      <Tab.Screen name="Calendar" component={CalendarNavigator} />
       <Tab.Screen name="Profile" component={ProfileView} />
     </Tab.Navigator>
   );

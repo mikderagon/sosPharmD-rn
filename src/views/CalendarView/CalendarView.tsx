@@ -1,9 +1,14 @@
-import React from 'react';
+import {
+  BottomTabNavigationOptions,
+  BottomTabNavigationProp,
+} from '@react-navigation/bottom-tabs';
+import React, { useRef } from 'react';
 import {
   ScrollView,
   ScrollViewComponent,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
@@ -11,19 +16,22 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../helpers/layout/responsiveLayout';
-import { NavigationProps } from '../../types';
 
-const CalendarView = ({ navigation }: NavigationProps) => {
+const CalendarView = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerInner}>
           <Text style={[styles.headerText, { opacity: 0 }]}>Create</Text>
           <Text style={styles.headerText}>Calendars</Text>
-          <Text style={styles.headerTextRed}>Create</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('CalendarCreation')}>
+            <Text style={styles.headerTextRed}>Create</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
         contentInset={{ bottom: hp(10) }}>
         <View style={styles.calendar}>

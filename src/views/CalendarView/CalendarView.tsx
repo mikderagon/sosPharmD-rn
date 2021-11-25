@@ -1,11 +1,6 @@
-import {
-  BottomTabNavigationOptions,
-  BottomTabNavigationProp,
-} from '@react-navigation/bottom-tabs';
-import React, { useRef } from 'react';
+import React from 'react';
 import {
   ScrollView,
-  ScrollViewComponent,
   StyleSheet,
   Text,
   TouchableOpacity,

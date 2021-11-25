@@ -11,6 +11,7 @@ import HomeView from '../views/HomeView';
 import ProfileView from '../views/ProfileView';
 
 import CalendarNavigator from '../navigation/CalendarNavigator';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
@@ -78,6 +79,16 @@ const getTabBarIcon = ({ focused, route }) => {
   );
 };
 
+const getIsTabBarShown = route => {
+  const routeName = getFocusedRouteNameFromRoute(route);
+  switch (routeName) {
+    case 'CalendarCreation':
+      return false;
+    default:
+      return true;
+  }
+};
+
 const Navigator = (props: Props) => {
   const { initialRouteName } = props;
   // const { state, dispatch } = useContext(store);
@@ -88,7 +99,13 @@ const Navigator = (props: Props) => {
         tabBarIcon: ({ focused }) => getTabBarIcon({ focused, route }),
       })}
       initialRouteName="Home">
-      <Tab.Screen name="Calendar" component={CalendarNavigator} />
+      <Tab.Screen
+        name="Calendar"
+        component={CalendarNavigator}
+        options={({ route }) => ({
+          tabBarVisible: getIsTabBarShown(route),
+        })}
+      />
       <Tab.Screen name="Profile" component={ProfileView} />
     </Tab.Navigator>
   );

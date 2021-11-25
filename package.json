@@ -38,6 +38,7 @@
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.2.0",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-wizard": "^2.1.0",
     "underscore": "^1.13.1",
     "underscore.string": "^3.3.5"
   },

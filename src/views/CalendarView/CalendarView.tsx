@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
+import Calendar from '../../components/Home/Calendar';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -29,20 +30,11 @@ const CalendarView = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
         contentInset={{ bottom: hp(10) }}>
+        <View>
+          <Text>Proprio?</Text>
+        </View>
         <View style={styles.calendar}>
           <Text>Calendar 1</Text>
-        </View>
-
-        <View style={styles.calendar}>
-          <Text>Calendar 2</Text>
-        </View>
-
-        <View style={styles.calendar}>
-          <Text>Calendar 3</Text>
-        </View>
-
-        <View style={styles.calendar}>
-          <Text>Calendar 4</Text>
         </View>
       </ScrollView>
     </View>
@@ -55,7 +47,7 @@ const styles = StyleSheet.create({
     width: wp(100),
   },
   header: {
-    height: hp(9),
+    height: hp(8),
     width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -66,7 +58,7 @@ const styles = StyleSheet.create({
   },
   calendar: {
     marginVertical: hp(2),
-    height: 200,
+    height: 400,
     width: '90%',
     borderRadius: 10,
     alignItems: 'center',

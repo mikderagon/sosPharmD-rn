@@ -12,13 +12,13 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import { Input } from '../../components/TextInput';
+import { Input } from '../../../components/TextInput';
 import { useForm } from 'react-hook-form';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import colors from '../../styles/colors';
+} from '../../../helpers/layout/responsiveLayout';
+import colors from '../../../styles/colors';
 
 const WizardStep1 = ({ navigation, onNext }) => {
   const {

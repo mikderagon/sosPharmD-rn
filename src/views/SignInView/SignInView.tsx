@@ -20,8 +20,8 @@ import { store } from '../../store';
 import colors from '../../styles/colors';
 import { NavigationProps } from '../../types';
 
-const usernameImage = require('assets/images/usernameImage.png');
-const passwordImage = require('assets/images/passwordImage.png');
+const usernameImage = require('assets/images/user.png');
+const passwordImage = require('assets/images/password.png');
 
 const SignInView = ({ navigation }: NavigationProps) => {
   const { state, dispatch } = useContext(store);

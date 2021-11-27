@@ -23,10 +23,8 @@ import { NavigationProp } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../utils/responsiveLayout';
+} from '../../helpers/layout/responsiveLayout';
 import * as firestore from '../../server/firestore';
-
-const backCaret = require('assets/images/backCaret.png');
 
 const SettingsView = ({ navigation }) => {
   function handleSignOut() {
@@ -43,36 +41,6 @@ const SettingsView = ({ navigation }) => {
     <View style={[styles.container]}>
       <>
         <View style={styles.innerView}>
-          <View style={styles.header}>
-            <View style={styles.innerHeader}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Home')}
-                style={{ width: '35%' }}>
-                <View
-                  style={{
-                    marginLeft: 5,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: wp(16),
-                  }}>
-                  <Image source={backCaret} style={styles.backCaret} />
-                  <Text style={styles.leftHeaderText}>Retour</Text>
-                </View>
-              </TouchableOpacity>
-              <Text style={[styles.headerTitle, { width: '30%' }]}>
-                Paramètres
-              </Text>
-              <View style={{ width: '35%' }} />
-            </View>
-          </View>
-
-          {/* <View style={styles.row}>
-            <Text style={styles.rowText}>Favorite Softwares</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.rowText}>Account type</Text>
-          </View> */}
           <TouchableOpacity
             style={styles.row}
             onPress={() => {
@@ -133,11 +101,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  backCaret: {
-    tintColor: '#fff',
-    height: 17,
-    resizeMode: 'contain',
-  },
   headerTitle: {
     textAlign: 'center',
     fontSize: 17,
@@ -145,7 +108,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   row: {
-    marginVertical: 1,
+    marginVertical: 50,
     height: hp(5),
     backgroundColor: '#fff',
     justifyContent: 'center',

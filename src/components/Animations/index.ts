@@ -1,1 +1,1 @@
-export { default as AnimatedTrail } from './AnimatedTrail';
+export { default } from './AnimatedTrail';

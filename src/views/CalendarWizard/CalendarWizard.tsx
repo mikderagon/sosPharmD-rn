@@ -2,8 +2,8 @@ import React, { useRef, useState } from 'react';
 import { Image } from 'react-native';
 import Wizard from 'react-native-wizard';
 
-import Step1 from './WizardStep1';
-import Step2 from './WizardStep2';
+import Step1 from './steps/WizardStep1';
+import Step2 from './steps/WizardStep2';
 
 const CalendarWizard = ({ navigation }) => {
   const wizard = useRef();

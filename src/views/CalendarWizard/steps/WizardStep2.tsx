@@ -1,24 +1,11 @@
-import {
-  BottomTabNavigationOptions,
-  BottomTabNavigationProp,
-} from '@react-navigation/bottom-tabs';
-import React, { useRef } from 'react';
-import {
-  ScrollView,
-  ScrollViewComponent,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import 'react-native-gesture-handler';
-import { Input } from '../../components/TextInput';
+import React from 'react';
 import { useForm } from 'react-hook-form';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import 'react-native-gesture-handler';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import colors from '../../styles/colors';
+} from '../../../helpers/layout/responsiveLayout';
 
 const WizardStep2 = ({ navigation, onNext, onPrev }) => {
   const {

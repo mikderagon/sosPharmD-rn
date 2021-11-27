@@ -7,35 +7,33 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import Calendar from '../../components/Home/Calendar';
+import Calendar from './Calendar';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../helpers/layout/responsiveLayout';
+import TopNavBar from '../../components/NavBar/TopNavBar';
+import colors from '../../styles/colors';
 
 const CalendarView = ({ navigation }) => {
+  const weekdays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'].map(w => (
+    <View style={styles.weekday}>
+      <Text style={styles.weekdayFont}>{w}</Text>
+    </View>
+  ));
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerInner}>
-          <Text style={[styles.headerText, { opacity: 0 }]}>Create</Text>
-          <Text style={styles.headerText}>Calendars</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('CalendarCreation')}>
-            <Text style={styles.headerTextRed}>Create</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <TopNavBar
+        navigation={navigation}
+        onCreateCalendar={() => navigation.navigate('CalendarCreation')}
+      />
+      <View style={styles.weekdaysContainer}>{weekdays}</View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
         contentInset={{ bottom: hp(10) }}>
-        <View>
-          <Text>Proprio?</Text>
-        </View>
-        <View style={styles.calendar}>
-          <Text>Calendar 1</Text>
-        </View>
+        <Calendar />
+        <Calendar />
       </ScrollView>
     </View>
   );
@@ -46,40 +44,24 @@ const styles = StyleSheet.create({
     height: hp(100),
     width: wp(100),
   },
-  header: {
-    height: hp(8),
-    width: '100%',
-    justifyContent: 'flex-end',
+  weekdaysContainer: {
+    backgroundColor: colors.lightMain,
+    height: hp(4),
+    width: wp(100),
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
+  },
+  weekday: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  weekdayFont: {
+    color: colors.main,
   },
   scrollViewContent: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  calendar: {
-    marginVertical: hp(2),
-    height: 400,
-    width: '90%',
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ddd',
-  },
-  headerInner: {
-    marginBottom: hp(1),
-    width: '90%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  headerText: {
-    fontSize: 13,
-    color: '#494949',
-    fontWeight: '500',
-  },
-  headerTextRed: {
-    fontSize: 12,
-    color: 'red',
-    fontWeight: '300',
   },
 });
 

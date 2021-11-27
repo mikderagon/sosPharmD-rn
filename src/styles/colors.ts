@@ -1,3 +1,7 @@
+import { hexToRgba } from '../helpers/hexToRgba';
+
+const themeColor = '#f57242';
+
 const colors = {
   darkerBlue: '#303D5C',
   darkBlue: '#1D2366',
@@ -7,7 +11,8 @@ const colors = {
   // main: '#009ffd',
   // main: '#246EE9',
   // main: '#5BA3D9',
-  main: '#f57242',
+  main: themeColor,
+  lightMain: hexToRgba(themeColor, 0.4),
   lightGray: '#ccc',
   gray: '#aaa',
   darkGray: '#494949',

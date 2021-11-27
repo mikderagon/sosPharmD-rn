@@ -1,25 +1,20 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import React, { useContext, useState } from 'react';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import React from 'react';
 import { Image, ImageSourcePropType, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
-import { store } from '../store';
-import colors from '../styles/colors';
-import { StackParamList } from '../types';
-import CalendarView from '../views/CalendarView';
-import HomeView from '../views/HomeView';
-import ProfileView from '../views/ProfileView';
-
+import SettingsView from '../views/SettingsView/SettingsView';
 import CalendarNavigator from '../navigation/CalendarNavigator';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import colors from '../styles/colors';
+import shadows from '../styles/shadows';
+import { StackParamList } from '../types';
+import ProfileView from '../views/ProfileView';
 
 const Tab = createBottomTabNavigator();
 
-const Stack = createStackNavigator<StackParamList>();
-
-const HomeIcon = require('../../assets/images/HomeIcon.png');
-const CalendarIcon = require('../../assets/images/CalendarIcon.png');
-const UserIcon = require('../../assets/images/UserIcon.png');
+const HomeIcon = require('../../assets/images/home.png');
+const CalendarIcon = require('../../assets/images/calendar.png');
+const UserIcon = require('../../assets/images/user.png');
 
 interface Props {
   initialRouteName: keyof StackParamList;
@@ -31,18 +26,18 @@ type tabTypes = {
 
 type tabBarTypes = {
   Home: tabTypes;
-  Calendar: tabTypes;
-  Profile: tabTypes;
+  Calendrier: tabTypes;
+  Profil: tabTypes;
 };
 
 const tabBarOptions: tabBarTypes = {
   Home: {
     imageSource: HomeIcon,
   },
-  Calendar: {
+  Calendrier: {
     imageSource: CalendarIcon,
   },
-  Profile: {
+  Profil: {
     imageSource: UserIcon,
   },
 };
@@ -94,19 +89,22 @@ const Navigator = (props: Props) => {
   // const { state, dispatch } = useContext(store);
   return (
     <Tab.Navigator
+      tabBarOptions={{
+        showLabel: false,
+        style: shadows.main,
+      }}
       screenOptions={({ route }) => ({
-        tabBarLabel: '',
         tabBarIcon: ({ focused }) => getTabBarIcon({ focused, route }),
       })}
       initialRouteName="Home">
       <Tab.Screen
-        name="Calendar"
+        name="Calendrier"
         component={CalendarNavigator}
         options={({ route }) => ({
           tabBarVisible: getIsTabBarShown(route),
         })}
       />
-      <Tab.Screen name="Profile" component={ProfileView} />
+      <Tab.Screen name="Profil" component={SettingsView} />
     </Tab.Navigator>
   );
 };

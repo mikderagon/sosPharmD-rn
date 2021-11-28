@@ -19,6 +19,7 @@ import {
   widthPercentageToDP as wp,
 } from '../../../helpers/layout/responsiveLayout';
 import colors from '../../../styles/colors';
+import CircularSlider from '../../../components/CircularSlider';
 
 const WizardStep1 = ({ navigation, onNext }) => {
   const {
@@ -26,14 +27,7 @@ const WizardStep1 = ({ navigation, onNext }) => {
     control,
     formState: { errors },
   } = useForm();
-  return (
-    <View style={styles.container}>
-      <Text>Select the hours</Text>
-      <TouchableOpacity onPress={onNext}>
-        <Text>Next Step</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  return <CircularSlider />;
 };
 
 const styles = StyleSheet.create({

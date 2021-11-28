@@ -27,7 +27,7 @@ const WizardStep1 = ({ navigation, onNext }) => {
     control,
     formState: { errors },
   } = useForm();
-  return <CircularSlider />;
+  return <CircularSlider onNext={onNext} />;
 };
 
 const styles = StyleSheet.create({

@@ -16,8 +16,8 @@ import TopNavBar from '../../components/NavBar/TopNavBar';
 import colors from '../../styles/colors';
 
 const CalendarView = ({ navigation }) => {
-  const weekdays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'].map(w => (
-    <View style={styles.weekday}>
+  const weekdays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((w, index) => (
+    <View style={styles.weekday} key={`${index} ${w}`}>
       <Text style={styles.weekdayFont}>{w}</Text>
     </View>
   ));

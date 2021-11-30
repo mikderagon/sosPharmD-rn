@@ -1,16 +1,14 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
-
-import CircularSlider from './CircularSlider';
-import { PADDING } from './constants';
-import Container from './components/Container';
 import {
   heightPercentageToDP,
   widthPercentageToDP,
 } from '../../helpers/layout/responsiveLayout';
 import colors from '../../styles/colors';
-import Button from '../Button/Button';
+import CircularSlider from './CircularSlider';
+import Container from './components/Container';
+import { PADDING } from './constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Bedtime = ({ onNext }) => {
+const Bedtime = () => {
   const start = useSharedValue(0);
   const end = useSharedValue(1.5 * Math.PI);
   return (
@@ -37,7 +35,6 @@ const Bedtime = ({ onNext }) => {
       <Container start={start} end={end}>
         <CircularSlider start={start} end={end} />
       </Container>
-      <Button text="Next" onPress={onNext} />
     </View>
   );
 };

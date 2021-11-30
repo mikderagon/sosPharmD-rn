@@ -35,9 +35,9 @@ const Calendar = (props: Props) => {
     return list;
   }
 
-  const daysGrid = getDaysList().map(day => {
+  const daysGrid = getDaysList().map((day, index) => {
     return (
-      <TouchableOpacity style={styles.cell}>
+      <TouchableOpacity key={index} style={styles.cell}>
         <Text style={styles.day}>{day}</Text>
       </TouchableOpacity>
     );

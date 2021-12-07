@@ -20,7 +20,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default () => {
+interface CustomSliderProps {
+  rowOfNumbers: number[];
+}
+
+export default ({ rowOfNumbers }: CustomSliderProps) => {
   const x1 = new Value(0);
   const x2 = new Value(0);
   return (
@@ -31,15 +35,29 @@ export default () => {
           top: 0,
           left: min(x1, x2),
           right: 0,
-          backgroundColor: colors.darkLime,
+          backgroundColor: colors.lightMain,
           width: add(max(add(x2, multiply(-1, x1)), 0), height),
           height,
           borderRadius: height / 2,
         }}
       />
-      <Labels size={height} {...{ x: x1, count }} />
-      <Cursor size={height} {...{ x: x1, count }} />
-      <Cursor size={height} {...{ x: x2, count }} />
+      <Labels {...{ rowOfNumbers }} />
+      <Cursor
+        size={height}
+        {...{
+          x: x1,
+          count: rowOfNumbers.length,
+          initialIndex: rowOfNumbers[0],
+        }}
+      />
+      <Cursor
+        size={height}
+        {...{
+          x: x2,
+          count: rowOfNumbers.length,
+          initialIndex: rowOfNumbers[0],
+        }}
+      />
     </View>
   );
 };

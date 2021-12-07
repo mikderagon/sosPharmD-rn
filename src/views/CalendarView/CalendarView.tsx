@@ -33,7 +33,9 @@ const CalendarView = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
         contentInset={{ bottom: hp(10) }}>
-        <CustomSlider />
+        <CustomSlider rowOfNumbers={[1, 2, 3, 4, 5, 6, 7]} />
+        <CustomSlider rowOfNumbers={[8, 9, 10, 11, 12, 13, 14]} />
+        <CustomSlider rowOfNumbers={[15, 16, 17, 18, 19, 20, 21]} />
         {/* <Calendar />
         <Calendar /> */}
       </ScrollView>

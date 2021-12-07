@@ -9,6 +9,7 @@ import {
   snapPoint,
   timing,
 } from 'react-native-redash';
+import colors from '../../styles/colors';
 
 const { Value, round, divide, concat, add } = Animated;
 
@@ -16,9 +17,10 @@ interface CursorProps {
   x: Animated.Value<number>;
   size: number;
   count: number;
+  initialIndex: number;
 }
 
-export default ({ size, count, x }: CursorProps) => {
+export default ({ size, count, x, initialIndex }: CursorProps) => {
   const snapPoints = new Array(count).fill(0).map((e, i) => i * size);
   const index = round(divide(x, size));
   const translationX = new Value(0);
@@ -48,7 +50,7 @@ export default ({ size, count, x }: CursorProps) => {
           width: size,
           height: size,
           borderRadius: size / 2,
-          backgroundColor: 'white',
+          backgroundColor: colors.lightMain,
           elevation: 5,
           shadowColor: '#000',
           shadowOffset: {
@@ -61,7 +63,11 @@ export default ({ size, count, x }: CursorProps) => {
           alignItems: 'center',
           transform: [{ translateX }],
         }}>
-        <ReText style={{ fontSize: 24 }} text={concat(add(index, 1))} />
+        <ReText
+          style={{ fontSize: 24, color: colors.white }}
+          text={concat(add(index, initialIndex))}
+          // text={concat(add(2, 3))}
+        />
       </Animated.View>
     </PanGestureHandler>
   );

@@ -1,18 +1,13 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { mixColor } from 'react-native-redash';
 import Animated from 'react-native-reanimated';
-
-const { cond, lessOrEq, add, round, divide } = Animated;
+import colors from '../../styles/colors';
 
 interface LabelProps {
-  x: Animated.Value<number>;
-  count: number;
-  size: number;
+  rowOfNumbers: number[];
 }
 
-export default ({ count, x, size }: LabelProps) => {
-  const index = add(round(divide(x, size)), 1);
+export default ({ rowOfNumbers }: LabelProps) => {
   return (
     <View
       style={{
@@ -21,12 +16,16 @@ export default ({ count, x, size }: LabelProps) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      {new Array(count).fill(0).map((e, i) => {
-        const color = mixColor(cond(lessOrEq(index, i), 0, 1), 'gray', 'white');
+      {rowOfNumbers.map((e, i) => {
         return (
-          <View key={i} style={{ flex: 1 }}>
-            <Animated.Text style={{ color, textAlign: 'center', fontSize: 24 }}>
-              {`${i + 1}`}
+          <View key={e} style={{ flex: 1 }}>
+            <Animated.Text
+              style={{
+                color: colors.main,
+                textAlign: 'center',
+                fontSize: 24,
+              }}>
+              {e}
             </Animated.Text>
           </View>
         );

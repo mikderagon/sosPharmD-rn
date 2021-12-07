@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import Animated from 'react-native-reanimated';
-
+import Animated, { multiply } from 'react-native-reanimated';
+import colors from '../../styles/colors';
 import Cursor from './Cursor';
 import Labels from './Labels';
 
-const { Value, max, add } = Animated;
+const { Value, max, min, add } = Animated;
 
 const { width: totalWidth } = Dimensions.get('window');
 const count = 7;
@@ -29,10 +29,10 @@ export default () => {
         style={{
           position: 'absolute',
           top: 0,
-          left: 0,
+          left: min(x1, x2),
           right: 0,
-          backgroundColor: '#bd536d',
-          width: add(max(x1, 0), height),
+          backgroundColor: colors.darkLime,
+          width: add(max(add(x2, multiply(-1, x1)), 0), height),
           height,
           borderRadius: height / 2,
         }}

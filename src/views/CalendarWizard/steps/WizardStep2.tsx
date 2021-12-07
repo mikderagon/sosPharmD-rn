@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
+import CustomSlider from '../../../components/CustomSlider/CustomSlider';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -22,6 +23,7 @@ const WizardStep2 = ({ navigation, onNext, onPrev }) => {
       <TouchableOpacity onPress={onNext}>
         <Text>Next Step</Text>
       </TouchableOpacity>
+      <CustomSlider />
     </View>
   );
 };

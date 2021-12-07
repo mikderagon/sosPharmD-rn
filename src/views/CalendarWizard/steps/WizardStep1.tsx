@@ -10,6 +10,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../../helpers/layout/responsiveLayout';
+import { ThemeProvider } from '@react-navigation/native';
 
 const WizardStep1 = ({ navigation, onNext }) => {
   const {
@@ -22,35 +23,25 @@ const WizardStep1 = ({ navigation, onNext }) => {
   const [endTime, setEndTime] = useState(new Date());
 
   return (
-    <View>
+    <View style={{ height: hp(100), width: wp(100) }}>
       {/* <CircularSlider /> */}
+      <Text style={[styles.text, { marginTop: hp(22) }]}>De:</Text>
       <DateTimePicker
-        style={{
-          top: hp(10),
-          right: wp(50),
-        }}
         testID="startTime"
         value={startTime}
         mode="time"
-        display="default"
+        display="spinner"
         onChange={(event, time) => setStartTime(time)}
       />
+      <Text style={styles.text}>À:</Text>
       <DateTimePicker
-        style={{
-          top: hp(12),
-          right: wp(50),
-        }}
         testID="endTime"
         value={endTime}
         mode="time"
         is24Hour={true}
-        display="default"
+        display="spinner"
         onChange={(event, time) => setEndTime(time)}
       />
-      <View style={styles.calendarPlaceholder}>
-        <Text>Calendar</Text>
-      </View>
-
       <View style={styles.nextButton}>
         <Button text="Suivant" onPress={onNext} />
       </View>
@@ -59,17 +50,13 @@ const WizardStep1 = ({ navigation, onNext }) => {
 };
 
 const styles = StyleSheet.create({
-  calendarPlaceholder: {
-    marginTop: 150,
-    height: 400,
-    width: wp(90),
-    borderRadius: 25,
-    backgroundColor: '#ddd',
-    alignSelf: 'center',
+  text: {
+    marginLeft: wp(10),
+    fontWeight: '800',
   },
   nextButton: {
     position: 'absolute',
-    top: hp(85),
+    bottom: hp(5),
     alignSelf: 'center',
   },
 });

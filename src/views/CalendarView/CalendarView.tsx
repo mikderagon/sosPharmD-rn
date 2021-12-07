@@ -14,6 +14,7 @@ import {
 } from '../../helpers/layout/responsiveLayout';
 import TopNavBar from '../../components/NavBar/TopNavBar';
 import colors from '../../styles/colors';
+import CustomSlider from '../../components/CustomSlider/CustomSlider';
 
 const CalendarView = ({ navigation }) => {
   const weekdays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((w, index) => (
@@ -32,8 +33,9 @@ const CalendarView = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
         contentInset={{ bottom: hp(10) }}>
-        <Calendar />
-        <Calendar />
+        <CustomSlider />
+        {/* <Calendar />
+        <Calendar /> */}
       </ScrollView>
     </View>
   );

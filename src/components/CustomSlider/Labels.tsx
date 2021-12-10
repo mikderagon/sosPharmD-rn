@@ -18,15 +18,17 @@ export default ({ rowOfNumbers }: LabelProps) => {
       }}>
       {rowOfNumbers.map((e, i) => {
         return (
-          <View key={e} style={{ flex: 1 }}>
-            <Animated.Text
-              style={{
-                color: colors.main,
-                textAlign: 'center',
-                fontSize: 24,
-              }}>
-              {e}
-            </Animated.Text>
+          <View key={i} style={{ flex: 1 }}>
+            {e > 0 && (
+              <Animated.Text
+                style={{
+                  color: colors.main,
+                  textAlign: 'center',
+                  fontSize: 24,
+                }}>
+                {e}
+              </Animated.Text>
+            )}
           </View>
         );
       })}

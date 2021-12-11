@@ -21,14 +21,19 @@ const styles = StyleSheet.create({
 });
 
 interface CustomSliderProps {
-  initial?: number;
-  end?: number;
+  startPosition?: number;
+  endPosition?: number;
   rowOfNumbers: number[];
 }
 
-export default ({ initial = 0, end = 0, rowOfNumbers }: CustomSliderProps) => {
-  const x1 = new Value(initial);
-  const x2 = new Value(Math.max(initial, end));
+export default ({
+  startPosition = 0,
+  endPosition = 0,
+  rowOfNumbers,
+}: CustomSliderProps) => {
+  const x1 = new Value(startPosition);
+  // const x2 = new Value(Math.max(initial, end));
+  const x2 = new Value(startPosition);
   return (
     <View style={styles.container}>
       <Animated.View
@@ -49,8 +54,9 @@ export default ({ initial = 0, end = 0, rowOfNumbers }: CustomSliderProps) => {
         {...{
           x: x1,
           count: rowOfNumbers.length,
-          initialIndex: rowOfNumbers[0],
-          offsetIndex: initial,
+          startPosition: rowOfNumbers[0],
+          offsetIndex: startPosition,
+          endIndex: endPosition,
         }}
       />
       <Cursor
@@ -58,8 +64,9 @@ export default ({ initial = 0, end = 0, rowOfNumbers }: CustomSliderProps) => {
         {...{
           x: x2,
           count: rowOfNumbers.length,
-          initialIndex: rowOfNumbers[0],
-          offsetIndex: initial,
+          startPosition: rowOfNumbers[0],
+          offsetIndex: startPosition,
+          endIndex: endPosition,
         }}
       />
     </View>

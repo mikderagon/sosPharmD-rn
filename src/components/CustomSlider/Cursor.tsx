@@ -25,11 +25,19 @@ interface CursorProps {
   x: Animated.Value<number>;
   size: number;
   count: number;
-  initialIndex: number;
+  startPosition: number;
+  endIndex: number;
   offsetIndex: number;
 }
 
-export default ({ size, count, x, initialIndex, offsetIndex }: CursorProps) => {
+export default ({
+  size,
+  count,
+  x,
+  startPosition,
+  endIndex,
+  offsetIndex,
+}: CursorProps) => {
   const snapPoints = new Array(count).fill(0).map((e, i) => i * size);
   const index = round(divide(x, size));
   const translationX = new Value(0);
@@ -52,7 +60,7 @@ export default ({ size, count, x, initialIndex, offsetIndex }: CursorProps) => {
       value,
     ),
     offsetIndex * size,
-    (count - 1) * size,
+    (count - 1) * size - endIndex * size,
   );
 
   // const translateX = clamp(
@@ -95,7 +103,12 @@ export default ({ size, count, x, initialIndex, offsetIndex }: CursorProps) => {
         }}>
         <ReText
           style={{ fontSize: 24, color: colors.white }}
-          text={concat(sub(add(index, initialIndex), offsetIndex - 1))}
+          text={concat(
+            sub(
+              add(index, startPosition),
+              offsetIndex - (offsetIndex > 0 ? 1 : 0),
+            ),
+          )}
         />
       </Animated.View>
     </PanGestureHandler>

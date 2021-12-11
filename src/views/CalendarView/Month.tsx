@@ -37,15 +37,41 @@ export default ({ navigation }) => {
     j++;
   }
 
-  let secondRow = [0, 0, 0, 0, 0, 0];
+  let secondRow = [0, 0, 0, 0, 0, 0, 0];
   for (let i = 0; i < secondRow.length; i++) {
     secondRow[i] = j;
     j++;
   }
+
+  let thirdRow = [0, 0, 0, 0, 0, 0, 0];
+  for (let i = 0; i < thirdRow.length; i++) {
+    thirdRow[i] = j;
+    j++;
+  }
+
+  let fourthRow = [0, 0, 0, 0, 0, 0, 0];
+  for (let i = 0; i < fourthRow.length; i++) {
+    fourthRow[i] = j;
+    j++;
+  }
+
+  let lastDayOfMonth = 31;
+  let lastRow = [0, 0, 0, 0, 0, 0, 0];
+  for (let i = 0; i < lastRow.length; i++) {
+    lastRow[i] = j;
+    if (j === lastDayOfMonth) {
+      break;
+    }
+    j++;
+  }
+  let endPosition = lastRow.length - lastRow.indexOf(0);
   return (
     <View style={styles.container}>
-      <CustomSlider initial={weekdayIndex} rowOfNumbers={firstRow} />
-      {/* <CustomSlider rowOfNumbers={secondRow} /> */}
+      <CustomSlider startPosition={weekdayIndex} rowOfNumbers={firstRow} />
+      <CustomSlider rowOfNumbers={secondRow} />
+      <CustomSlider rowOfNumbers={thirdRow} />
+      <CustomSlider rowOfNumbers={fourthRow} />
+      <CustomSlider rowOfNumbers={lastRow} {...{ endPosition }} />
       {/* <CustomSlider rowOfNumbers={[15, 16, 17, 18, 19, 20, 21]} /> */}
     </View>
   );

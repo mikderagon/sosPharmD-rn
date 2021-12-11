@@ -49,7 +49,6 @@ export default ({ navigation }) => {
         onCreateCalendar={() => navigation.navigate('CalendarCreation')}
       />
       <View style={styles.weekdaysContainer}>{weekdays}</View>
-      <Month {...{ navigation }} />
     </View>
   );
 };

@@ -29,6 +29,7 @@ export default ({ navigation }) => {
     new Date().getMonth(),
     1,
   ).getDay();
+
   let firstRow = [0, 0, 0, 0, 0, 0, 0];
   firstRow[weekdayIndex] = 1;
   let j = 2;
@@ -64,7 +65,9 @@ export default ({ navigation }) => {
     }
     j++;
   }
+
   let endPosition = lastRow.length - lastRow.indexOf(0);
+
   return (
     <View style={styles.container}>
       <CustomSlider startPosition={weekdayIndex} rowOfNumbers={firstRow} />
@@ -72,7 +75,6 @@ export default ({ navigation }) => {
       <CustomSlider rowOfNumbers={thirdRow} />
       <CustomSlider rowOfNumbers={fourthRow} />
       <CustomSlider rowOfNumbers={lastRow} {...{ endPosition }} />
-      {/* <CustomSlider rowOfNumbers={[15, 16, 17, 18, 19, 20, 21]} /> */}
     </View>
   );
 };

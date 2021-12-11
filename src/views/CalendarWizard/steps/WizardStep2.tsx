@@ -7,6 +7,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../../helpers/layout/responsiveLayout';
+import Month from '../../CalendarView/Month';
 
 const WizardStep2 = ({ navigation, onNext, onPrev }) => {
   const {
@@ -16,14 +17,15 @@ const WizardStep2 = ({ navigation, onNext, onPrev }) => {
   } = useForm();
   return (
     <View style={styles.container}>
-      <Text>Select the hours</Text>
+      <Month {...{ navigation }} />
+      {/* <Text>Select the hours</Text>
       <TouchableOpacity onPress={onPrev}>
         <Text>Previous Step</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={onNext}>
         <Text>Next Step</Text>
       </TouchableOpacity>
-      <CustomSlider />
+      <CustomSlider /> */}
     </View>
   );
 };

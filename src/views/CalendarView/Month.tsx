@@ -36,10 +36,16 @@ export default ({ navigation }) => {
     firstRow[i] = j;
     j++;
   }
+
+  let secondRow = [0, 0, 0, 0, 0, 0];
+  for (let i = 0; i < secondRow.length; i++) {
+    secondRow[i] = j;
+    j++;
+  }
   return (
     <View style={styles.container}>
       <CustomSlider initial={weekdayIndex} rowOfNumbers={firstRow} />
-      {/* <CustomSlider rowOfNumbers={[8, 9, 10, 11, 12, 13, 14]} /> */}
+      {/* <CustomSlider rowOfNumbers={secondRow} /> */}
       {/* <CustomSlider rowOfNumbers={[15, 16, 17, 18, 19, 20, 21]} /> */}
     </View>
   );

@@ -36,7 +36,7 @@ export default ({ size, count, x, initialIndex, offsetIndex }: CursorProps) => {
   const velocityX = new Value(0);
   const state = new Value(State.UNDETERMINED);
   const gestureHandler = onGestureEvent({ state, translationX, velocityX });
-  const offset = new Value(0);
+  const offset = new Value(offsetIndex * size);
   const value = add(offset, translationX);
 
   const translateX = clamp(
@@ -49,9 +49,9 @@ export default ({ size, count, x, initialIndex, offsetIndex }: CursorProps) => {
           to: snapPoint(value, velocityX, snapPoints),
         }),
       ),
-      add(value, offsetIndex * size),
+      value,
     ),
-    0,
+    offsetIndex * size,
     (count - 1) * size,
   );
 

@@ -5,28 +5,49 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../helpers/layout/responsiveLayout';
-import colors from '../../styles/colors';
+import colors, { themeColors } from '../../styles/colors';
 import shadows from '../../styles/shadows';
 
-const FilterIcon = require('../../../assets/images/filters.png');
-const PlusIcon = require('../../../assets/images/plus.png');
+interface TopNavBarProps {
+  navigation: any;
+  headerTitle?: string;
+  leftHeaderIcon?: any;
+  leftHeaderAction?: () => void;
+  rightHeaderIcon?: any;
+  rightHeaderAction?: () => void;
+}
 
-const TopNavBar = ({ navigation, onCreateCalendar }) => {
+const TopNavBar = ({
+  navigation,
+  headerTitle,
+  leftHeaderIcon,
+  leftHeaderAction,
+  rightHeaderIcon,
+  rightHeaderAction,
+}: TopNavBarProps) => {
   return (
     <View style={[styles.container, shadows.main]}>
       <View style={styles.innerContainer}>
         <View style={styles.headerLeft}>
-          <TouchableOpacity>
-            <Image source={FilterIcon} style={styles.iconSize} />
-          </TouchableOpacity>
+          {leftHeaderIcon && (
+            <TouchableOpacity onPress={leftHeaderAction}>
+              <Image source={leftHeaderIcon} style={styles.iconSize} />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.headerCenter}>
-          <Text style={styles.headerText}>Calendriers</Text>
+          {headerTitle && (
+            <Text numberOfLines={1} style={styles.headerText}>
+              {headerTitle}
+            </Text>
+          )}
         </View>
         <View style={styles.headerRight}>
-          <TouchableOpacity onPress={onCreateCalendar}>
-            <Image source={PlusIcon} style={styles.iconSize} />
-          </TouchableOpacity>
+          {rightHeaderIcon && (
+            <TouchableOpacity onPress={rightHeaderAction}>
+              <Image source={rightHeaderIcon} style={styles.iconSize} />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>
@@ -37,11 +58,11 @@ const styles = StyleSheet.create({
   container: {
     top: 0,
     zIndex: 2000,
-    height: hp(9),
+    height: hp(10),
     width: '100%',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: themeColors.light,
   },
   innerContainer: {
     marginBottom: hp(1),
@@ -53,20 +74,20 @@ const styles = StyleSheet.create({
   headerCenter: { width: wp(30), alignItems: 'center' },
   headerRight: { width: wp(30), alignItems: 'flex-end' },
   headerText: {
-    fontSize: 13,
-    color: '#494949',
+    fontSize: 18,
+    color: themeColors.dark,
     fontWeight: '500',
   },
   headerTextRed: {
-    fontSize: 12,
+    fontSize: 18,
     color: 'red',
     fontWeight: '300',
   },
   iconSize: {
-    tintColor: colors.main,
-    height: 14,
+    tintColor: themeColors.dark,
+    height: 20,
     resizeMode: 'contain',
-    width: 14,
+    width: 18,
   },
 });
 

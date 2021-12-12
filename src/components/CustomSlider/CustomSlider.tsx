@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Animated, { multiply } from 'react-native-reanimated';
-import colors from '../../styles/colors';
+import colors, { themeColors } from '../../styles/colors';
 import Cursor from './Cursor';
 import Labels from './Labels';
 
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     width: totalWidth,
     height,
     borderRadius: height / 2,
-    backgroundColor: '#f1f2f6',
+    backgroundColor: themeColors.dark,
   },
 });
 
@@ -32,7 +32,6 @@ export default ({
   rowOfNumbers,
 }: CustomSliderProps) => {
   const x1 = new Value(startPosition);
-  // const x2 = new Value(Math.max(initial, end));
   const x2 = new Value(startPosition);
   return (
     <View style={styles.container}>

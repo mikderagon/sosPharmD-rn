@@ -6,16 +6,20 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../helpers/layout/responsiveLayout';
-import colors from '../../styles/colors';
+import colors, { themeColors } from '../../styles/colors';
 import Month from './Month';
+
+const FilterIcon = require('../../../assets/images/filters.png');
+const PlusIcon = require('../../../assets/images/plus.png');
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: themeColors.dark,
     height: hp(100),
     width: wp(100),
   },
   weekdaysContainer: {
-    backgroundColor: colors.lightMain,
+    backgroundColor: themeColors.dark,
     height: hp(4),
     width: wp(100),
     flexDirection: 'row',
@@ -27,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   weekdayFont: {
-    color: colors.main,
+    color: themeColors.light,
   },
   scrollViewContent: {
     justifyContent: 'center',
@@ -46,7 +50,11 @@ export default ({ navigation }) => {
     <View style={styles.container}>
       <TopNavBar
         navigation={navigation}
-        onCreateCalendar={() => navigation.navigate('CalendarCreation')}
+        headerTitle="Calendriers"
+        leftHeaderIcon={FilterIcon}
+        leftHeaderAction={() => {}}
+        rightHeaderIcon={PlusIcon}
+        rightHeaderAction={() => navigation.navigate('CalendarCreation')}
       />
       <View style={styles.weekdaysContainer}>{weekdays}</View>
       <Month {...{ navigation }} />

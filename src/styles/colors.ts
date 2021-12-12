@@ -1,6 +1,13 @@
 import { hexToRgba } from '../helpers/hexToRgba';
 
-const themeColor = '#f57242';
+const themeColor = '#3FC1C9';
+
+export const themeColors = {
+  dark: '#364F6B',
+  light: '#3FC1C9',
+  accent1: '#F5F5F5',
+  accent2: '#FC5185',
+};
 
 const colors = {
   darkerBlue: '#303D5C',

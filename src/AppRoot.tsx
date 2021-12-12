@@ -13,6 +13,7 @@ import { store } from './store';
 import { StackParamList } from './types';
 import * as firestore from './server/firestore';
 import { Locum, Owner } from './models';
+import { StatusBar } from 'react-native';
 
 const AppRoot = () => {
   const { state, dispatch } = useContext(store);
@@ -51,6 +52,7 @@ const AppRoot = () => {
 
   return (
     <>
+      <StatusBar barStyle="dark-content" />
       <Navigator
         initialRouteName={initialRouteName.current as keyof StackParamList}
       />

@@ -5,7 +5,7 @@ import { Image, ImageSourcePropType, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import SettingsView from '../views/SettingsView/SettingsView';
 import CalendarNavigator from '../navigation/CalendarNavigator';
-import colors from '../styles/colors';
+import colors, { themeColors } from '../styles/colors';
 import shadows from '../styles/shadows';
 import { StackParamList } from '../types';
 import ProfileView from '../views/ProfileView';
@@ -43,7 +43,7 @@ const tabBarOptions: tabBarTypes = {
 };
 
 const getTabBarIcon = ({ focused, route }) => {
-  const focusedColor = colors.main;
+  const focusedColor = themeColors.dark;
   const unfocusedColor = colors.lightGray;
   return (
     <View
@@ -62,14 +62,6 @@ const getTabBarIcon = ({ focused, route }) => {
           resizeMode: 'contain',
         }}
       />
-      <Text
-        style={{
-          color: focused ? focusedColor : unfocusedColor,
-          fontSize: 11,
-          marginTop: 1,
-        }}>
-        {route.name}
-      </Text>
     </View>
   );
 };
@@ -91,7 +83,7 @@ const Navigator = (props: Props) => {
     <Tab.Navigator
       tabBarOptions={{
         showLabel: false,
-        style: shadows.main,
+        style: { ...shadows.main, backgroundColor: themeColors.light },
       }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => getTabBarIcon({ focused, route }),

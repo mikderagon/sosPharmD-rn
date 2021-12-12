@@ -1,27 +1,7 @@
 import React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { View } from 'react-native';
 import 'react-native-gesture-handler';
-import Calendar from '../../components/Calendar/Calendar';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import TopNavBar from '../../components/NavBar/TopNavBar';
-import colors from '../../styles/colors';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
-
-const styles = StyleSheet.create({
-  container: {
-    height: hp(100),
-    width: wp(100),
-  },
-});
 
 export default ({ navigation }) => {
   const weekdayIndex = new Date(
@@ -69,12 +49,12 @@ export default ({ navigation }) => {
   let endPosition = lastRow.length - lastRow.indexOf(0);
 
   return (
-    <View style={styles.container}>
+    <>
       <CustomSlider startPosition={weekdayIndex} rowOfNumbers={firstRow} />
       <CustomSlider rowOfNumbers={secondRow} />
       <CustomSlider rowOfNumbers={thirdRow} />
       <CustomSlider rowOfNumbers={fourthRow} />
       <CustomSlider rowOfNumbers={lastRow} {...{ endPosition }} />
-    </View>
+    </>
   );
 };

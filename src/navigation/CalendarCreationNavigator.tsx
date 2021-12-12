@@ -4,7 +4,6 @@ import 'react-native-gesture-handler';
 import { store } from '../store';
 import CalendarCreationView from '../views/CalendarCreationView/CalendarCreationView';
 import CalendarView from '../views/CalendarView';
-import CalendarWizard from '../views/CalendarWizard';
 
 const Stack = createStackNavigator();
 
@@ -20,16 +19,7 @@ const Navigator = (props: Props) => {
       <Stack.Screen
         name="Main"
         component={CalendarCreationView}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="CalendarWizard"
-        component={CalendarWizard}
-        options={{
-          headerShown: false,
-        }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

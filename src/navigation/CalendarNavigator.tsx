@@ -28,6 +28,7 @@ const Navigator = (props: Props) => {
         component={CalendarCreationNavigator}
         options={{
           headerShown: false,
+          gestureEnabled: false,
         }}
       />
     </Stack.Navigator>

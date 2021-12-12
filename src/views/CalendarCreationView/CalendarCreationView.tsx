@@ -2,8 +2,9 @@ import {
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
 } from '@react-navigation/bottom-tabs';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
+  Button,
   ScrollView,
   ScrollViewComponent,
   StyleSheet,
@@ -19,6 +20,8 @@ import {
   widthPercentageToDP as wp,
 } from '../../helpers/layout/responsiveLayout';
 import colors from '../../styles/colors';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Month from '../CalendarView/Month';
 
 const CalendarCreationView = ({ navigation }) => {
   const {
@@ -26,6 +29,37 @@ const CalendarCreationView = ({ navigation }) => {
     control,
     formState: { errors },
   } = useForm();
+
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
+
+  const [startTimeVisible, setStartTimeVisible] = useState(false);
+  const [endTimeVisible, setEndTimeVisible] = useState(false);
+
+  const confirmStartTime = (time: Date) => {
+    setStartTimeVisible(false);
+    setStartTime(time);
+  };
+
+  const confirmEndTime = (time: Date) => {
+    setEndTimeVisible(false);
+    setEndTime(time);
+  };
+
+  const cancelStartTime = () => {
+    setStartTimeVisible(false);
+  };
+
+  const cancelEndTime = () => {
+    setEndTimeVisible(false);
+  };
+
+  const toTimeFormat = (time: Date): string => {
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    return `${hours}:${minutes}`;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -37,26 +71,46 @@ const CalendarCreationView = ({ navigation }) => {
           <Text style={[styles.headerText, { opacity: 0 }]}>Create</Text>
         </View>
       </View>
-      <ScrollView
+      {/* <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
-        contentInset={{ bottom: hp(10) }}>
-        {/* <View style={styles.calendar}>
-          <Text>Calendar 1</Text>
-        </View> */}
-        <TouchableOpacity
-          style={styles.calendar}
-          onPress={() => navigation.navigate('CalendarWizard')}>
-          <Text>Calendar Creation Wizard</Text>
-        </TouchableOpacity>
-        <Input
-          autoFocus
-          control={control}
-          name="firstName"
-          placeholder="Prénom"
+        contentInset={{ bottom: hp(10) }}> */}
+      <Input
+        autoFocus
+        control={control}
+        name="firstName"
+        placeholder="Prénom"
+      />
+      <Input autoFocus control={control} name="lastName" placeholder="Nom" />
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text>Start Time</Text>
+        <Button
+          title={toTimeFormat(startTime)}
+          onPress={() => setStartTimeVisible(true)}
         />
-        <Input autoFocus control={control} name="lastName" placeholder="Nom" />
-      </ScrollView>
+      </View>
+      <DateTimePickerModal
+        isVisible={startTimeVisible}
+        mode="time"
+        onConfirm={confirmStartTime}
+        onCancel={cancelStartTime}
+      />
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text>End Time</Text>
+        <Button
+          title={toTimeFormat(endTime)}
+          onPress={() => setEndTimeVisible(true)}
+        />
+      </View>
+      <DateTimePickerModal
+        isVisible={endTimeVisible}
+        mode="time"
+        onConfirm={confirmEndTime}
+        onCancel={cancelEndTime}
+        minimumDate={startTime}
+      />
+      <Month {...{ navigation }} />
+      {/* </ScrollView> */}
       {/* <View style={styles.footer}>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Create this Calendar</Text>
@@ -70,6 +124,7 @@ const styles = StyleSheet.create({
   container: {
     height: hp(100),
     width: wp(100),
+    alignItems: 'center',
   },
   header: {
     height: hp(9),

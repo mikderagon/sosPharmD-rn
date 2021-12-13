@@ -17,6 +17,7 @@ interface Props {
   text?: string;
   active?: boolean;
   loading?: boolean;
+  color: string;
 }
 
 const Button = ({
@@ -24,11 +25,12 @@ const Button = ({
   text = 'Log in',
   active = true,
   loading,
+  color,
 }: Props) => {
   return (
     <TouchableOpacity
       activeOpacity={active ? 0.2 : 1}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: color }]}
       onPress={() => {
         active ? onPress() : {};
       }}>

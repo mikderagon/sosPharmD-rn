@@ -31,8 +31,9 @@ type Gender = 'm' | 'f';
 const BackCaret = require('../../../assets/images/backCaret.png');
 const PharmacistFemale = require('../../../assets/images/pharmacist_female.png');
 const PharmacistMale = require('../../../assets/images/pharmacist_male.png');
+const Clock = require('../../../assets/images/clock.png');
 
-const CalendarCreationView = ({ navigation }) => {
+const CalendarTimeView = ({ navigation }) => {
   const {
     handleSubmit,
     control,
@@ -74,12 +75,13 @@ const CalendarCreationView = ({ navigation }) => {
 
   const toTimeFormat = (time: Date): string => {
     const hours = time.getHours();
-    const minutes = time.getMinutes();
+    let minutes = time.getMinutes();
+    minutes = minutes.toString().length === 1 ? `0${minutes}` : minutes;
     return `${hours}:${minutes}`;
   };
 
   const onNext = () => {
-    navigation.navigate('CalendarTimeView');
+    'next';
   };
 
   return (
@@ -97,68 +99,165 @@ const CalendarCreationView = ({ navigation }) => {
       <TopNavBar
         navigation={navigation}
         leftHeaderIcon={BackCaret}
-        leftHeaderAction={() => navigation.navigate('Calendar')}
+        leftHeaderAction={() => navigation.navigate('CalendarCreationView')}
       />
 
       <Text
         style={{
           textAlign: 'center',
           color: themeColors.accent1,
-          marginVertical: hp(3),
+          marginVertical: hp(4),
           width: wp(80),
-          fontSize: 16,
+          fontSize: 19,
           fontWeight: '800',
         }}>
-        Identifier le ou la pharmacien(nne) propriétaire associé(e) au
-        calendrier
+        Sélection des heures
       </Text>
 
       <View
         style={{
-          flexDirection: 'row',
+          backgroundColor: themeColors.light,
+          width: wp(95),
           alignItems: 'center',
-          marginTop: hp(1),
+          justifyContent: 'center',
+          borderRadius: 25,
         }}>
-        <TouchableOpacity onPress={() => setSelectedPharmacist('m')}>
+        <TouchableOpacity onPress={() => setStartTimeVisible(true)}>
           <Image
-            source={PharmacistMale}
+            source={Clock}
             style={{
-              height: hp(15),
-              width: hp(15),
+              tintColor: themeColors.dark,
+              marginVertical: hp(2),
+              height: hp(16),
+              width: hp(16),
               resizeMode: 'contain',
-              tintColor: selectedPharmacist === 'm' ? '#fff' : '#000',
             }}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setSelectedPharmacist('f')}>
-          <Image
-            source={PharmacistFemale}
+
+        <TouchableOpacity
+          onPress={() => setStartTimeVisible(true)}
+          style={{
+            backgroundColor: themeColors.dark,
+            borderRadius: hp(2),
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: hp(2),
+            paddingVertical: wp(3),
+            paddingHorizontal: wp(3),
+          }}>
+          <Text
             style={{
-              height: hp(15),
-              width: hp(15),
+              color: themeColors.accent1,
+              fontSize: 16,
+              fontWeight: '800',
+              marginLeft: wp(2),
+            }}>
+            Start Time
+          </Text>
+          <View
+            style={{
+              marginLeft: wp(5),
+              marginRight: wp(3),
+              borderRadius: 10,
+              height: hp(5),
+              paddingHorizontal: wp(6),
+              backgroundColor: themeColors.accent1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: themeColors.dark,
+              }}>
+              {toTimeFormat(startTime)}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      <View
+        style={{
+          marginTop: hp(6),
+          backgroundColor: themeColors.light,
+          width: wp(95),
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 25,
+        }}>
+        <TouchableOpacity onPress={() => setEndTimeVisible(true)}>
+          <Image
+            source={Clock}
+            style={{
+              tintColor: themeColors.dark,
+              marginVertical: hp(2),
+              height: hp(16),
+              width: hp(16),
               resizeMode: 'contain',
-              tintColor: selectedPharmacist === 'f' ? '#fff' : '#000',
             }}
           />
         </TouchableOpacity>
-      </View>
-      <View style={{ marginTop: hp(3) }}>
-        <Input
-          autoFocus
-          control={control}
-          name="firstName"
-          placeholder="Prénom"
-        />
-      </View>
-      <View style={{ height: hp(2) }} />
-      <Input control={control} name="lastName" placeholder="Nom" />
-      <View style={{ height: hp(2) }} />
 
-      <NextButton text="Suivant" onPress={onNext} color={themeColors.light} />
+        <TouchableOpacity
+          onPress={() => setStartTimeVisible(true)}
+          style={{
+            backgroundColor: themeColors.dark,
+            borderRadius: hp(2),
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: hp(2),
+            paddingVertical: wp(3),
+            paddingHorizontal: wp(3),
+          }}>
+          <Text
+            style={{
+              color: themeColors.accent1,
+              fontSize: 16,
+              fontWeight: '800',
+              marginLeft: wp(2),
+            }}>
+            End Time
+          </Text>
+          <View
+            style={{
+              marginLeft: wp(5),
+              marginRight: wp(3),
+              borderRadius: 10,
+              height: hp(5),
+              paddingHorizontal: wp(6),
+              backgroundColor: themeColors.accent1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: themeColors.dark,
+              }}>
+              {toTimeFormat(endTime)}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
 
-      {/*
-      <View style={styles.weekdaysContainer}>{weekdays}</View>
-      <Month {...{ navigation }} /> */}
+      <DateTimePickerModal
+        isVisible={startTimeVisible}
+        mode="time"
+        onConfirm={confirmStartTime}
+        onCancel={cancelStartTime}
+      />
+      <DateTimePickerModal
+        isVisible={endTimeVisible}
+        mode="time"
+        onConfirm={confirmEndTime}
+        onCancel={cancelEndTime}
+        minimumDate={startTime}
+      />
+
+      <View style={{ position: 'absolute', bottom: hp(7) }}>
+        <NextButton text="Suivant" onPress={onNext} color={themeColors.light} />
+      </View>
     </View>
   );
 };
@@ -244,4 +343,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CalendarCreationView;
+export default CalendarTimeView;

@@ -75,27 +75,17 @@ const CalendarTimeView = ({ navigation }) => {
 
   const toTimeFormat = (time: Date): string => {
     const hours = time.getHours();
-    let minutes = time.getMinutes();
-    minutes = minutes.toString().length === 1 ? `0${minutes}` : minutes;
+    let minutes = time.getMinutes().toString();
+    minutes = minutes.length === 1 ? `0${minutes}` : minutes;
     return `${hours}:${minutes}`;
   };
 
   const onNext = () => {
-    'next';
+    navigation.navigate('CalendarDateView');
   };
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.header}>
-        <View style={styles.headerInner}>
-          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
-            <Text style={styles.headerTextRed}>Go Back</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerText}>Create a Calendar</Text>
-          <Text style={[styles.headerText, { opacity: 0 }]}>Create</Text>
-        </View>
-      </View> */}
-
       <TopNavBar
         navigation={navigation}
         leftHeaderIcon={BackCaret}
@@ -106,7 +96,7 @@ const CalendarTimeView = ({ navigation }) => {
         style={{
           textAlign: 'center',
           color: themeColors.accent1,
-          marginVertical: hp(4),
+          marginVertical: hp(3),
           width: wp(80),
           fontSize: 19,
           fontWeight: '800',
@@ -179,7 +169,7 @@ const CalendarTimeView = ({ navigation }) => {
 
       <View
         style={{
-          marginTop: hp(6),
+          marginTop: hp(4),
           backgroundColor: themeColors.light,
           width: wp(95),
           alignItems: 'center',
@@ -200,7 +190,7 @@ const CalendarTimeView = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => setStartTimeVisible(true)}
+          onPress={() => setEndTimeVisible(true)}
           style={{
             backgroundColor: themeColors.dark,
             borderRadius: hp(2),

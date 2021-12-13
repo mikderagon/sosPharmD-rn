@@ -31,8 +31,9 @@ type Gender = 'm' | 'f';
 const BackCaret = require('../../../assets/images/backCaret.png');
 const PharmacistFemale = require('../../../assets/images/pharmacist_female.png');
 const PharmacistMale = require('../../../assets/images/pharmacist_male.png');
+const Clock = require('../../../assets/images/clock.png');
 
-const CalendarCreationView = ({ navigation }) => {
+const CalendarDateView = ({ navigation }) => {
   const {
     handleSubmit,
     control,
@@ -74,30 +75,21 @@ const CalendarCreationView = ({ navigation }) => {
 
   const toTimeFormat = (time: Date): string => {
     const hours = time.getHours();
-    const minutes = time.getMinutes();
+    let minutes = time.getMinutes();
+    minutes = minutes.toString().length === 1 ? `0${minutes}` : minutes;
     return `${hours}:${minutes}`;
   };
 
   const onNext = () => {
-    navigation.navigate('CalendarTimeView');
+    'next';
   };
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.header}>
-        <View style={styles.headerInner}>
-          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
-            <Text style={styles.headerTextRed}>Go Back</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerText}>Create a Calendar</Text>
-          <Text style={[styles.headerText, { opacity: 0 }]}>Create</Text>
-        </View>
-      </View> */}
-
       <TopNavBar
         navigation={navigation}
         leftHeaderIcon={BackCaret}
-        leftHeaderAction={() => navigation.navigate('Calendar')}
+        leftHeaderAction={() => navigation.navigate('CalendarTimeView')}
       />
 
       <Text
@@ -106,55 +98,18 @@ const CalendarCreationView = ({ navigation }) => {
           color: themeColors.accent1,
           marginVertical: hp(3),
           width: wp(80),
-          fontSize: 16,
+          fontSize: 19,
           fontWeight: '800',
         }}>
-        Identifier le ou la pharmacien(nne) propriétaire associé(e) au
-        calendrier
+        Sélection des dates
       </Text>
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginTop: hp(1),
-        }}>
-        <TouchableOpacity onPress={() => setSelectedPharmacist('m')}>
-          <Image
-            source={PharmacistMale}
-            style={{
-              height: hp(15),
-              width: hp(15),
-              resizeMode: 'contain',
-              tintColor: selectedPharmacist === 'm' ? '#fff' : '#000',
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setSelectedPharmacist('f')}>
-          <Image
-            source={PharmacistFemale}
-            style={{
-              height: hp(15),
-              width: hp(15),
-              resizeMode: 'contain',
-              tintColor: selectedPharmacist === 'f' ? '#fff' : '#000',
-            }}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={{ marginTop: hp(3) }}>
-        <Input
-          autoFocus
-          control={control}
-          name="firstName"
-          placeholder="Prénom"
-        />
-      </View>
-      <View style={{ height: hp(2) }} />
-      <Input control={control} name="lastName" placeholder="Nom" />
-      <View style={{ height: hp(2) }} />
+      <View style={styles.weekdaysContainer}>{weekdays}</View>
+      <Month {...{ navigation }} />
 
-      <NextButton text="Suivant" onPress={onNext} color={themeColors.light} />
+      <View style={{ position: 'absolute', bottom: hp(7) }}>
+        <NextButton text="Suivant" onPress={onNext} color={themeColors.light} />
+      </View>
     </View>
   );
 };
@@ -240,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CalendarCreationView;
+export default CalendarDateView;

@@ -57,7 +57,6 @@ export default ({ navigation }) => {
         rightHeaderAction={() => navigation.navigate('CalendarCreation')}
       />
       <View style={styles.weekdaysContainer}>{weekdays}</View>
-      <Month {...{ navigation }} />
     </View>
   );
 };

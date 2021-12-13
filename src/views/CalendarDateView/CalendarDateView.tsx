@@ -3,8 +3,10 @@ import {
   BottomTabNavigationProp,
 } from '@react-navigation/bottom-tabs';
 import React, { useRef, useState } from 'react';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 import {
   Button,
+  FlatList,
   Image,
   ScrollView,
   ScrollViewComponent,
@@ -40,6 +42,14 @@ const CalendarDateView = ({ navigation }) => {
     formState: { errors },
   } = useForm();
 
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  let carouselRef: Carousel<{
+    source: any;
+    title: string;
+    text: string;
+  }>;
+
   const weekdays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((w, index) => (
     <View style={styles.weekday} key={`${index} ${w}`}>
       <Text style={styles.weekdayFont}>{w}</Text>
@@ -73,13 +83,6 @@ const CalendarDateView = ({ navigation }) => {
     setEndTimeVisible(false);
   };
 
-  const toTimeFormat = (time: Date): string => {
-    const hours = time.getHours();
-    let minutes = time.getMinutes();
-    minutes = minutes.toString().length === 1 ? `0${minutes}` : minutes;
-    return `${hours}:${minutes}`;
-  };
-
   const onNext = () => {
     'next';
   };
@@ -104,12 +107,43 @@ const CalendarDateView = ({ navigation }) => {
         Sélection des dates
       </Text>
 
-      <View style={styles.weekdaysContainer}>{weekdays}</View>
-      <Month {...{ navigation }} />
+      {/* <Carousel
+        ref={c => {
+          if (c !== null) {
+            carouselRef = c;
+          }
+        }}
+        data={[
+          <>
+            <View style={styles.weekdaysContainer}>{weekdays}</View>
+            <Month {...{ navigation }} />
+          </>,
+          <>
+            <View style={styles.weekdaysContainer}>{weekdays}</View>
+            <Month {...{ navigation }} />
+          </>,
+        ]}
+        renderItem={({ item }) => item}
+        sliderWidth={wp(100)}
+        itemWidth={wp(100)}
+        disableScrollViewPanResponder
+        pinchGestureEnabled={false}
+        onSnapToItem={index => setActiveSlide(index)}
+      /> */}
 
-      <View style={{ position: 'absolute', bottom: hp(7) }}>
-        <NextButton text="Suivant" onPress={onNext} color={themeColors.light} />
-      </View>
+      <View style={styles.weekdaysContainer}>{weekdays}</View>
+      <FlatList
+        data={[
+          <Month {...{ navigation }} />,
+          <Month {...{ navigation }} />,
+          <Month {...{ navigation }} />,
+        ]}
+        renderItem={({ item }) => (
+          <View style={{ marginVertical: hp(2) }}>{item}</View>
+        )}
+        keyExtractor={() => (Math.random() * 10).toString()}
+        ListFooterComponent={() => <View style={{ height: hp(30) }} />}
+      />
     </View>
   );
 };

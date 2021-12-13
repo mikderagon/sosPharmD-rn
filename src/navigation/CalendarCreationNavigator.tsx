@@ -16,7 +16,7 @@ const Navigator = (props: Props) => {
   const { initialRouteName } = props;
   const { state, dispatch } = useContext(store);
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{ gestureEnabled: false }}>
       <Stack.Screen
         name="CalendarCreationView"
         component={CalendarCreationView}

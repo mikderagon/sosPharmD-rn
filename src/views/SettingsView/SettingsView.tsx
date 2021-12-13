@@ -18,13 +18,16 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import colors from '../../styles/colors';
+import colors, { themeColors } from '../../styles/colors';
 import { NavigationProp } from '../../types';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../helpers/layout/responsiveLayout';
 import * as firestore from '../../server/firestore';
+import TopNavBar from '../../components/NavBar/TopNavBar';
+
+const BackCaret = require('../../../assets/images/backCaret.png');
 
 const SettingsView = ({ navigation }) => {
   function handleSignOut() {
@@ -39,60 +42,47 @@ const SettingsView = ({ navigation }) => {
   }
   return (
     <View style={[styles.container]}>
-      <>
-        <View style={styles.innerView}>
-          <TouchableOpacity
-            style={styles.row}
-            onPress={() => {
-              Alert.alert('Se Déconnecter', '', [
-                {
-                  text: 'Non',
-                  onPress: () => {},
-                  style: 'cancel',
-                },
-                {
-                  text: 'Oui',
-                  onPress: () => {
-                    handleSignOut();
-                    navigation.reset({
-                      index: 0,
-                      routes: [{ name: 'SignIn' }],
-                    });
-                  },
-                },
-              ]);
-            }}>
-            <Text style={styles.rowText}>Se Déconnecter</Text>
-          </TouchableOpacity>
-        </View>
-      </>
+      <TopNavBar
+        navigation={navigation}
+        leftHeaderIcon={BackCaret}
+        leftHeaderAction={() => {
+          Alert.alert('Se Déconnecter', '', [
+            {
+              text: 'Non',
+              onPress: () => {},
+              style: 'cancel',
+            },
+            {
+              text: 'Oui',
+              onPress: () => {
+                handleSignOut();
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'SignIn' }],
+                });
+              },
+            },
+          ]);
+        }}
+        headerTitle="Log out"
+      />
     </View>
   );
 };
 
-const panelDimensions = {
-  height: hp(100),
-  width: wp(100),
-};
-
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    height: panelDimensions.height,
-    width: panelDimensions.width,
+    height: hp(100),
+    width: wp(100),
+    backgroundColor: themeColors.dark,
     position: 'absolute',
     right: 0,
     zIndex: 2,
   },
-  innerView: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: '#fff',
-  },
   header: {
     height: hp(10),
     width: '100%',
-    backgroundColor: colors.main,
+    backgroundColor: themeColors.light,
   },
   innerHeader: {
     bottom: 10,
@@ -105,12 +95,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 17,
     fontWeight: '600',
-    color: '#fff',
+    color: themeColors.light,
   },
   row: {
     marginVertical: 50,
     height: hp(5),
-    backgroundColor: '#fff',
+    backgroundColor: themeColors.light,
     justifyContent: 'center',
   },
   rowText: {

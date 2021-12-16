@@ -2,6 +2,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, {
+  call,
   cond,
   Easing,
   eq,
@@ -17,7 +18,7 @@ import {
   snapPoint,
   timing,
 } from 'react-native-redash';
-import colors from '../../styles/colors';
+import colors, { themeColors } from '../../styles/colors';
 
 const { Value, round, divide, concat, add, sub } = Animated;
 
@@ -28,6 +29,7 @@ interface CursorProps {
   startPosition: number;
   endIndex: number;
   offsetIndex: number;
+  retrieveIndex: (idx: number) => void;
 }
 
 export default ({
@@ -37,6 +39,7 @@ export default ({
   startPosition,
   endIndex,
   offsetIndex,
+  retrieveIndex,
 }: CursorProps) => {
   const snapPoints = new Array(count).fill(0).map((e, i) => i * size);
   const index = round(divide(x, size));
@@ -62,24 +65,14 @@ export default ({
     offsetIndex * size,
     (count - 1) * size - endIndex * size,
   );
-
-  // const translateX = clamp(
-  //   cond(
-  //     eq(state, State.END),
-  //     set(
-  //       offset,
-  //       timing({
-  //         from: value,
-  //         to: snapPoint(value, velocityX, snapPoints),
-  //       }),
-  //     ),
-  //     value,
-  //   ),
-  //   0,
-  //   (count - 1) * size,
-  // );
-
   useCode(() => set(x, translateX), []);
+  useCode(() => {
+    return call([index], idx => {
+      const val =
+        idx[0] + startPosition - offsetIndex - (offsetIndex > 0 ? 1 : 0);
+      retrieveIndex(val);
+    });
+  }, [index]);
   return (
     <PanGestureHandler {...gestureHandler}>
       <Animated.View
@@ -88,7 +81,7 @@ export default ({
           width: size,
           height: size,
           borderRadius: size / 2,
-          backgroundColor: colors.lightMain,
+          backgroundColor: themeColors.light,
           elevation: 5,
           shadowColor: '#000',
           shadowOffset: {
@@ -102,7 +95,7 @@ export default ({
           transform: [{ translateX }],
         }}>
         <ReText
-          style={{ fontSize: 24, color: colors.white }}
+          style={{ fontSize: 24, color: themeColors.accent2 }}
           text={concat(
             sub(
               add(index, startPosition),

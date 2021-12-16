@@ -1,5 +1,11 @@
-import * as React from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Animated, { multiply } from 'react-native-reanimated';
 import colors, { themeColors } from '../../styles/colors';
 import Cursor from './Cursor';
@@ -31,10 +37,20 @@ export default ({
   endPosition = 0,
   rowOfNumbers,
 }: CustomSliderProps) => {
+  const [cursor1Position, setCursor1Position] = useState(null);
+  const [cursor2Position, setCursor2Position] = useState(null);
+  const handleCursor1Change = cursorIndex => {
+    setCursor1Position(cursorIndex);
+  };
+  const handleCursor2Change = cursorIndex => {
+    setCursor2Position(cursorIndex);
+  };
+
   const x1 = new Value(startPosition);
   const x2 = new Value(startPosition);
-  return (
-    <View style={styles.container}>
+  const [ranges, setRanges] = useState([]);
+  const xvalues = [
+    <>
       <Animated.View
         style={{
           position: 'absolute',
@@ -47,7 +63,6 @@ export default ({
           borderRadius: height / 2,
         }}
       />
-      <Labels {...{ rowOfNumbers }} />
       <Cursor
         size={height}
         {...{
@@ -57,6 +72,7 @@ export default ({
           offsetIndex: startPosition,
           endIndex: endPosition,
         }}
+        retrieveIndex={handleCursor1Change}
       />
       <Cursor
         size={height}
@@ -67,7 +83,30 @@ export default ({
           offsetIndex: startPosition,
           endIndex: endPosition,
         }}
+        retrieveIndex={handleCursor2Change}
       />
+    </>,
+    ,
+  ];
+
+  const addRange = () => {
+    setRanges([...ranges, xvalues[0]]);
+    setCursor1Position(rowOfNumbers[0]);
+    setCursor2Position(rowOfNumbers[0]);
+  };
+  console.log(cursor1Position, cursor2Position);
+  return (
+    <View style={styles.container}>
+      {(ranges.length === 0 ||
+        (cursor1Position > rowOfNumbers[0] &&
+          cursor2Position > rowOfNumbers[0])) && (
+        <TouchableOpacity
+          style={{ zIndex: 1, height, width, backgroundColor: 'transparent' }}
+          onPress={addRange}
+        />
+      )}
+      <Labels {...{ rowOfNumbers }} />
+      {ranges}
     </View>
   );
 };

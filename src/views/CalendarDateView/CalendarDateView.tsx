@@ -36,20 +36,6 @@ const PharmacistMale = require('../../../assets/images/pharmacist_male.png');
 const Clock = require('../../../assets/images/clock.png');
 
 const CalendarDateView = ({ navigation }) => {
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
-
-  const [activeSlide, setActiveSlide] = useState(0);
-
-  let carouselRef: Carousel<{
-    source: any;
-    title: string;
-    text: string;
-  }>;
-
   const weekdays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((w, index) => (
     <View style={styles.weekday} key={`${index} ${w}`}>
       <Text style={styles.weekdayFont}>{w}</Text>
@@ -106,30 +92,6 @@ const CalendarDateView = ({ navigation }) => {
         }}>
         Sélection des dates
       </Text>
-
-      {/* <Carousel
-        ref={c => {
-          if (c !== null) {
-            carouselRef = c;
-          }
-        }}
-        data={[
-          <>
-            <View style={styles.weekdaysContainer}>{weekdays}</View>
-            <Month {...{ navigation }} />
-          </>,
-          <>
-            <View style={styles.weekdaysContainer}>{weekdays}</View>
-            <Month {...{ navigation }} />
-          </>,
-        ]}
-        renderItem={({ item }) => item}
-        sliderWidth={wp(100)}
-        itemWidth={wp(100)}
-        disableScrollViewPanResponder
-        pinchGestureEnabled={false}
-        onSnapToItem={index => setActiveSlide(index)}
-      /> */}
 
       <View style={styles.weekdaysContainer}>{weekdays}</View>
       <FlatList
@@ -202,18 +164,18 @@ const styles = StyleSheet.create({
     height: hp(5),
     width: wp(70),
     borderRadius: wp(2),
-    backgroundColor: colors.main,
+    backgroundColor: themeColors.accent1,
     marginTop: '10%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
-    color: colors.white,
+    color: '#fff',
     fontWeight: '600',
     fontSize: 14,
   },
   weekdaysContainer: {
-    backgroundColor: colors.lightMain,
+    backgroundColor: themeColors.light,
     height: hp(4),
     width: wp(100),
     flexDirection: 'row',

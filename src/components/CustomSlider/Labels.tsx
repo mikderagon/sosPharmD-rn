@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import colors from '../../styles/colors';
+import { themeColors } from '../../styles/colors';
 
 interface LabelProps {
   rowOfNumbers: number[];
@@ -22,7 +22,7 @@ export default ({ rowOfNumbers }: LabelProps) => {
             {e > 0 && (
               <Animated.Text
                 style={{
-                  color: colors.main,
+                  color: themeColors.accent1,
                   textAlign: 'center',
                   fontSize: 24,
                 }}>

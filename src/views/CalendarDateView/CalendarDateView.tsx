@@ -76,12 +76,13 @@ const CalendarDateView = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TopNavBar
+        headerTitle="Sélection des dates"
         navigation={navigation}
         leftHeaderIcon={BackCaret}
         leftHeaderAction={() => navigation.navigate('CalendarTimeView')}
       />
 
-      <Text
+      {/* <Text
         style={{
           textAlign: 'center',
           color: themeColors.accent1,
@@ -91,7 +92,7 @@ const CalendarDateView = ({ navigation }) => {
           fontWeight: '800',
         }}>
         Sélection des dates
-      </Text>
+      </Text> */}
 
       <View style={styles.weekdaysContainer}>{weekdays}</View>
       <FlatList

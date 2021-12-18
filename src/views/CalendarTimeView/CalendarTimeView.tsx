@@ -87,22 +87,11 @@ const CalendarTimeView = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TopNavBar
+        headerTitle="Sélection des heures"
         navigation={navigation}
         leftHeaderIcon={BackCaret}
         leftHeaderAction={() => navigation.navigate('CalendarCreationView')}
       />
-
-      <Text
-        style={{
-          textAlign: 'center',
-          color: themeColors.accent1,
-          marginVertical: hp(3),
-          width: wp(80),
-          fontSize: 19,
-          fontWeight: '800',
-        }}>
-        Sélection des heures
-      </Text>
 
       <View
         style={{

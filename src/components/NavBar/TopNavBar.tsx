@@ -70,9 +70,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  headerLeft: { width: wp(30), alignItems: 'flex-start' },
-  headerCenter: { width: wp(30), alignItems: 'center' },
-  headerRight: { width: wp(30), alignItems: 'flex-end' },
+  headerLeft: { width: wp(15), alignItems: 'flex-start' },
+  headerCenter: { width: wp(60), alignItems: 'center' },
+  headerRight: { width: wp(15), alignItems: 'flex-end' },
   headerText: {
     fontSize: 18,
     color: themeColors.dark,

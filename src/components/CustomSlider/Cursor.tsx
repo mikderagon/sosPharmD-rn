@@ -96,6 +96,12 @@ export default ({
         }}>
         <ReText
           style={{ fontSize: 24, color: themeColors.accent2 }}
+          // text={concat(
+          //   sub(
+          //     add(index, startPosition),
+          //     offsetIndex - (offsetIndex > 0 ? 1 : 0),
+          //   ),
+          // )}
           text={concat(
             sub(
               add(index, startPosition),

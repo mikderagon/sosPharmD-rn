@@ -1,7 +1,24 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
+import { heightPercentageToDP as hp } from '../../helpers/layout/responsiveLayout';
+import { themeColors } from '../../styles/colors';
+
+const MONTHS_FR = [
+  'Janvier',
+  'Février',
+  'Mars',
+  'Avril',
+  'Mai',
+  'Juin',
+  'Juillet',
+  'Août',
+  'September',
+  'Octobre',
+  'Novembre',
+  'Décembre',
+];
 
 export default ({ month }) => {
   const weekdayIndex = month.getDay();
@@ -46,6 +63,11 @@ export default ({ month }) => {
 
   return (
     <>
+      <View style={styles.monthNameContainer}>
+        <Text style={styles.monthName}>
+          {MONTHS_FR[month.getMonth()]} {month.getFullYear()}
+        </Text>
+      </View>
       <CustomSlider startPosition={weekdayIndex} rowOfNumbers={firstRow} />
       <CustomSlider rowOfNumbers={secondRow} />
       <CustomSlider rowOfNumbers={thirdRow} />
@@ -54,3 +76,21 @@ export default ({ month }) => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  monthNameContainer: {
+    backgroundColor: themeColors.accent2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: hp(5),
+    marginBottom: hp(1),
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+  },
+  monthName: {
+    color: themeColors.accent1,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});

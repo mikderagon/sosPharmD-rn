@@ -3,12 +3,8 @@ import { View } from 'react-native';
 import 'react-native-gesture-handler';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
 
-export default ({ navigation }) => {
-  const weekdayIndex = new Date(
-    new Date().getFullYear(),
-    new Date().getMonth(),
-    1,
-  ).getDay();
+export default ({ month }) => {
+  const weekdayIndex = month.getDay();
 
   let firstRow = [0, 0, 0, 0, 0, 0, 0];
   firstRow[weekdayIndex] = 1;

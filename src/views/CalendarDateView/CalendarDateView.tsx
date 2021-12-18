@@ -27,52 +27,20 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Month from '../CalendarView/Month';
 import TopNavBar from '../../components/NavBar/TopNavBar';
 import NextButton from '../../components/Button/LoginButton';
-
-type Gender = 'm' | 'f';
+import CalendarsList from './CalendarsList';
+import WeekdaysBar from '../../components/WeekdaysBar/WeekdaysBar';
 
 const BackCaret = require('../../../assets/images/backCaret.png');
-const PharmacistFemale = require('../../../assets/images/pharmacist_female.png');
-const PharmacistMale = require('../../../assets/images/pharmacist_male.png');
-const Clock = require('../../../assets/images/clock.png');
 
-const CalendarDateView = ({ navigation }) => {
-  const weekdays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((w, index) => (
-    <View style={styles.weekday} key={`${index} ${w}`}>
-      <Text style={styles.weekdayFont}>{w}</Text>
-    </View>
-  ));
+const getMonth = m => {
+  return new Date(new Date().getFullYear(), new Date().getMonth() + m, 1);
+};
+const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => getMonth(i));
 
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
-
-  const [startTimeVisible, setStartTimeVisible] = useState(false);
-  const [endTimeVisible, setEndTimeVisible] = useState(false);
-
-  const [selectedPharmacist, setSelectedPharmacist] =
-    useState<Gender>(undefined);
-
-  const confirmStartTime = (time: Date) => {
-    setStartTimeVisible(false);
-    setStartTime(time);
-  };
-
-  const confirmEndTime = (time: Date) => {
-    setEndTimeVisible(false);
-    setEndTime(time);
-  };
-
-  const cancelStartTime = () => {
-    setStartTimeVisible(false);
-  };
-
-  const cancelEndTime = () => {
-    setEndTimeVisible(false);
-  };
-
+export default ({ navigation }) => {
   const onNext = () => {
     'next';
   };
-
   return (
     <View style={styles.container}>
       <TopNavBar
@@ -83,20 +51,18 @@ const CalendarDateView = ({ navigation }) => {
         rightHeaderIcon={BackCaret}
         rightHeaderAction={() => console.log('undo last move')}
       />
+      <WeekdaysBar />
 
-      <View style={styles.weekdaysContainer}>{weekdays}</View>
-      <FlatList
-        data={[
-          <Month {...{ navigation, triggerUndo }} />,
-          <Month {...{ navigation, triggerUndo }} />,
-          <Month {...{ navigation, triggerUndo }} />,
-        ]}
-        renderItem={({ item }) => (
-          <View style={{ marginVertical: hp(2) }}>{item}</View>
-        )}
-        keyExtractor={() => (Math.random() * 10).toString()}
-        ListFooterComponent={() => <View style={{ height: hp(30) }} />}
-      />
+      <CalendarsList {...{ months }} />
+
+      {/* ranges selected and */}
+      <View style={{ marginBottom: hp(3) }}>
+        <NextButton
+          onPress={onNext}
+          color={themeColors.accent2}
+          text="Suivant"
+        />
+      </View>
     </View>
   );
 };
@@ -165,21 +131,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
   },
-  weekdaysContainer: {
-    backgroundColor: themeColors.light,
-    height: hp(4),
-    width: wp(100),
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  weekday: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  weekdayFont: {
-    color: themeColors.dark,
-  },
 });
-
-export default CalendarDateView;

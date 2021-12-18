@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import {
+  PanGestureHandler,
+  State,
+  LongPressGestureHandler,
+} from 'react-native-gesture-handler';
 import Animated, {
   call,
   cond,
@@ -95,13 +99,7 @@ export default ({
           transform: [{ translateX }],
         }}>
         <ReText
-          style={{ fontSize: 24, color: themeColors.accent2 }}
-          // text={concat(
-          //   sub(
-          //     add(index, startPosition),
-          //     offsetIndex - (offsetIndex > 0 ? 1 : 0),
-          //   ),
-          // )}
+          style={{ fontSize: 24, color: themeColors.accent1 }}
           text={concat(
             sub(
               add(index, startPosition),

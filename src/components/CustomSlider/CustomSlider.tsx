@@ -142,15 +142,10 @@ export default ({
       }
     }
   };
-  console.log(cursor1Position, cursor2Position);
+
   return (
     <View style={styles.container}>
       {ranges.length < 3 &&
-        // all of the cursors are at greater than rowOfNumbers[0]
-        // can add if ranges length is still not more than 3
-        // AND all present cursors are not at the rowOfNumbers[0]
-        // all cursors !== null
-        // => cursor1 > 0 && cursor2 > 0
         [
           cursor1Position,
           cursor2Position,

@@ -80,26 +80,16 @@ const CalendarDateView = ({ navigation }) => {
         navigation={navigation}
         leftHeaderIcon={BackCaret}
         leftHeaderAction={() => navigation.navigate('CalendarTimeView')}
+        rightHeaderIcon={BackCaret}
+        rightHeaderAction={() => console.log('undo last move')}
       />
-
-      {/* <Text
-        style={{
-          textAlign: 'center',
-          color: themeColors.accent1,
-          marginVertical: hp(3),
-          width: wp(80),
-          fontSize: 19,
-          fontWeight: '800',
-        }}>
-        Sélection des dates
-      </Text> */}
 
       <View style={styles.weekdaysContainer}>{weekdays}</View>
       <FlatList
         data={[
-          <Month {...{ navigation }} />,
-          <Month {...{ navigation }} />,
-          <Month {...{ navigation }} />,
+          <Month {...{ navigation, triggerUndo }} />,
+          <Month {...{ navigation, triggerUndo }} />,
+          <Month {...{ navigation, triggerUndo }} />,
         ]}
         renderItem={({ item }) => (
           <View style={{ marginVertical: hp(2) }}>{item}</View>
@@ -188,7 +178,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   weekdayFont: {
-    color: colors.main,
+    color: themeColors.dark,
   },
 });
 

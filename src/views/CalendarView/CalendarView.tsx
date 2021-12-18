@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   weekdayFont: {
-    color: themeColors.light,
+    color: themeColors.dark,
   },
   scrollViewContent: {
     justifyContent: 'center',

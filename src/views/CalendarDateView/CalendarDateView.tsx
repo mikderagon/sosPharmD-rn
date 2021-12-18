@@ -1,34 +1,15 @@
-import {
-  BottomTabNavigationOptions,
-  BottomTabNavigationProp,
-} from '@react-navigation/bottom-tabs';
-import React, { useRef, useState } from 'react';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import {
-  Button,
-  FlatList,
-  Image,
-  ScrollView,
-  ScrollViewComponent,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
-import { Input } from '../../components/TextInput';
-import { useForm } from 'react-hook-form';
+import NextButton from '../../components/Button/LoginButton';
+import TopNavBar from '../../components/NavBar/TopNavBar';
+import WeekdaysBar from '../../components/WeekdaysBar/WeekdaysBar';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../helpers/layout/responsiveLayout';
-import colors, { themeColors } from '../../styles/colors';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Month from '../CalendarView/Month';
-import TopNavBar from '../../components/NavBar/TopNavBar';
-import NextButton from '../../components/Button/LoginButton';
+import { themeColors } from '../../styles/colors';
 import CalendarsList from './CalendarsList';
-import WeekdaysBar from '../../components/WeekdaysBar/WeekdaysBar';
 
 const BackCaret = require('../../../assets/images/backCaret.png');
 
@@ -48,8 +29,6 @@ export default ({ navigation }) => {
         navigation={navigation}
         leftHeaderIcon={BackCaret}
         leftHeaderAction={() => navigation.navigate('CalendarTimeView')}
-        rightHeaderIcon={BackCaret}
-        rightHeaderAction={() => console.log('undo last move')}
       />
       <WeekdaysBar />
 

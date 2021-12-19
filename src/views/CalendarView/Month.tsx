@@ -65,8 +65,6 @@ export default ({ month }) => {
     j++;
   }
 
-  console.log(month, 'entering last row at j', j, lastDayOfMonth);
-
   let lastRow = [0, 0, 0, 0, 0, 0, 0];
   for (let i = 0; i < lastRow.length; i++) {
     if (j > lastDayOfMonth) {
@@ -76,13 +74,14 @@ export default ({ month }) => {
     j++;
   }
 
-  let endPosition =
-    lastRow.filter(n => n > 0).length > 0
-      ? lastRow.length - lastRow.indexOf(0)
-      : fifthRow.length - fifthRow.indexOf(0);
+  const hasSixthRow = lastRow.filter(n => n > 0).length > 0;
 
-  // console.log(fifthRow, lastRow);
-  // console.log(endPosition);
+  let endPosition = hasSixthRow
+    ? lastRow.length - lastRow.indexOf(0)
+    : fifthRow.length -
+      (fifthRow[fifthRow.length - 1] === 0
+        ? fifthRow.indexOf(0)
+        : fifthRow.indexOf(lastDayOfMonth) + 1);
 
   return (
     <>
@@ -95,8 +94,11 @@ export default ({ month }) => {
       <CustomSlider rowOfNumbers={secondRow} />
       <CustomSlider rowOfNumbers={thirdRow} />
       <CustomSlider rowOfNumbers={fourthRow} />
-      <CustomSlider rowOfNumbers={fifthRow} {...{ endPosition }} />
-      {lastRow.filter(n => n > 0).length > 0 && (
+      <CustomSlider
+        rowOfNumbers={fifthRow}
+        {...{ endPosition: hasSixthRow ? 0 : endPosition }}
+      />
+      {hasSixthRow && (
         <CustomSlider rowOfNumbers={lastRow} {...{ endPosition }} />
       )}
     </>

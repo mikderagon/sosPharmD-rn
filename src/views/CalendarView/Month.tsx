@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
+import { Value } from 'react-native-reanimated';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
 import { heightPercentageToDP as hp } from '../../helpers/layout/responsiveLayout';
 import { themeColors } from '../../styles/colors';
@@ -20,7 +21,9 @@ const MONTHS_FR = [
   'Décembre',
 ];
 
-export default ({ month }) => {
+export default ({ month, selectedDates, setSelectedDates }) => {
+  // const [cursorPositions, setCursorPositions] = useState([]);
+
   const weekdayIndex = month.getDay();
 
   let firstRow = [0, 0, 0, 0, 0, 0, 0];
@@ -90,16 +93,64 @@ export default ({ month }) => {
           {MONTHS_FR[month.getMonth()]} {month.getFullYear()}
         </Text>
       </View>
-      <CustomSlider startPosition={weekdayIndex} rowOfNumbers={firstRow} />
-      <CustomSlider rowOfNumbers={secondRow} />
-      <CustomSlider rowOfNumbers={thirdRow} />
-      <CustomSlider rowOfNumbers={fourthRow} />
       <CustomSlider
+        row={1}
+        {...{
+          month,
+          cursorPositions: selectedDates,
+          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
+        }}
+        startPosition={weekdayIndex}
+        rowOfNumbers={firstRow}
+      />
+      <CustomSlider
+        row={2}
+        {...{
+          month,
+          cursorPositions: selectedDates,
+          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
+        }}
+        rowOfNumbers={secondRow}
+      />
+      <CustomSlider
+        row={3}
+        {...{
+          month,
+          cursorPositions: selectedDates,
+          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
+        }}
+        rowOfNumbers={thirdRow}
+      />
+      <CustomSlider
+        row={4}
+        {...{
+          month,
+          cursorPositions: selectedDates,
+          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
+        }}
+        rowOfNumbers={fourthRow}
+      />
+      <CustomSlider
+        row={5}
         rowOfNumbers={fifthRow}
-        {...{ endPosition: hasSixthRow ? 0 : endPosition }}
+        {...{
+          month,
+          cursorPositions: selectedDates,
+          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
+          endPosition: hasSixthRow ? 0 : endPosition,
+        }}
       />
       {hasSixthRow && (
-        <CustomSlider rowOfNumbers={lastRow} {...{ endPosition }} />
+        <CustomSlider
+          row={6}
+          rowOfNumbers={lastRow}
+          {...{
+            month,
+            cursorPositions: selectedDates,
+            setCursorPositions: addedCursors => setSelectedDates(addedCursors),
+            endPosition,
+          }}
+        />
       )}
     </>
   );

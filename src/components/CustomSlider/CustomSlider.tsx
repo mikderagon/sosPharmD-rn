@@ -9,6 +9,7 @@ import {
 import Animated, { multiply } from 'react-native-reanimated';
 import colors, { themeColors } from '../../styles/colors';
 import Cursor from './Cursor';
+import Cursors from './Cursors';
 import Labels from './Labels';
 
 const { Value, max, min, add } = Animated;
@@ -27,63 +28,63 @@ const styles = StyleSheet.create({
 });
 
 interface CustomSliderProps {
+  row: number;
   startPosition?: number;
   endPosition?: number;
   rowOfNumbers: number[];
+  cursorPositions: any[];
+  setCursorPositions: (data) => void;
 }
 
 export default ({
+  month,
+  row,
   startPosition = 0,
   endPosition = 0,
   rowOfNumbers,
+  cursorPositions,
+  setCursorPositions,
 }: CustomSliderProps) => {
-  const [cursor1Position, setCursor1Position] = useState(null);
-  const [cursor2Position, setCursor2Position] = useState(null);
-  const handleCursor1Change = cursorIndex => {
-    setCursor1Position(cursorIndex);
-  };
-  const handleCursor2Change = cursorIndex => {
-    setCursor2Position(cursorIndex);
-  };
+  const [cursors, setCursors] = useState([]);
 
-  const [cursor3Position, setCursor3Position] = useState(null);
-  const [cursor4Position, setCursor4Position] = useState(null);
-  const handleCursor3Change = cursorIndex => {
-    setCursor3Position(cursorIndex);
-  };
-  const handleCursor4Change = cursorIndex => {
-    setCursor4Position(cursorIndex);
-  };
+  const getNewCursors = () => {
+    const c1 = new Value(startPosition);
+    const c2 = new Value(startPosition);
 
-  const [cursor5Position, setCursor5Position] = useState(null);
-  const [cursor6Position, setCursor6Position] = useState(null);
-  const handleCursor5Change = cursorIndex => {
-    setCursor5Position(cursorIndex);
-  };
-  const handleCursor6Change = cursorIndex => {
-    setCursor6Position(cursorIndex);
-  };
+    let indexes = [];
 
-  const x1 = new Value(startPosition);
-  const x2 = new Value(startPosition);
-  const x3 = new Value(startPosition);
-  const x4 = new Value(startPosition);
-  const x5 = new Value(startPosition);
-  const x6 = new Value(startPosition);
+    const retrieveIndex1 = index => {
+      indexes[0] = index;
 
-  const [ranges, setRanges] = useState([]);
+      if (indexes.length === 2) {
+        setCursorPositions([
+          { month, row, cursor: cursors.length * 2 + 1, position: indexes[0] },
+          { month, row, cursor: cursors.length * 2 + 2, position: indexes[1] },
+        ]);
+      }
+    };
 
-  const getCursors = (v1, v2, retrieveIndex1, retrieveIndex2) => {
+    const retrieveIndex2 = index => {
+      indexes[1] = index;
+
+      if (indexes.length === 2) {
+        setCursorPositions([
+          { month, row, cursor: cursors.length * 2 + 1, position: indexes[0] },
+          { month, row, cursor: cursors.length * 2 + 2, position: indexes[1] },
+        ]);
+      }
+    };
+
     return (
       <>
         <Animated.View
           style={{
             position: 'absolute',
             top: 0,
-            left: min(v1, v2),
+            left: min(c1, c2),
             right: 0,
             backgroundColor: colors.lightMain,
-            width: add(max(add(v2, multiply(-1, v1)), 0), height),
+            width: add(max(add(c2, multiply(-1, c1)), 0), height),
             height,
             borderRadius: height / 2,
           }}
@@ -91,7 +92,7 @@ export default ({
         <Cursor
           size={height}
           {...{
-            x: v1,
+            x: c1,
             count: rowOfNumbers.length,
             startPosition: rowOfNumbers[0],
             offsetIndex: startPosition,
@@ -102,7 +103,7 @@ export default ({
         <Cursor
           size={height}
           {...{
-            x: v2,
+            x: c2,
             count: rowOfNumbers.length,
             startPosition: rowOfNumbers[0],
             offsetIndex: startPosition,
@@ -114,34 +115,34 @@ export default ({
     );
   };
 
-  const xvalues = [
-    getCursors(x1, x2, handleCursor1Change, handleCursor2Change),
-    getCursors(x3, x4, handleCursor3Change, handleCursor4Change),
-    getCursors(x5, x6, handleCursor5Change, handleCursor6Change),
-  ];
-
-  const addRange = () => {
-    switch (ranges.length) {
-      case 0: {
-        setRanges([...ranges, xvalues[0]]);
-        setCursor1Position(rowOfNumbers[0]);
-        setCursor2Position(rowOfNumbers[0]);
-        break;
-      }
-      case 1: {
-        setRanges([...ranges, xvalues[1]]);
-        setCursor3Position(rowOfNumbers[0]);
-        setCursor4Position(rowOfNumbers[0]);
-        break;
-      }
-      case 2: {
-        setRanges([...ranges, xvalues[2]]);
-        setCursor5Position(rowOfNumbers[0]);
-        setCursor6Position(rowOfNumbers[0]);
-        break;
-      }
-    }
+  const addCursors = () => {
+    setCursors([...cursors, getNewCursors()]);
   };
+
+  console.log(cursorPositions);
+
+  return (
+    <View style={styles.container}>
+      {cursors.length < 3 &&
+        cursorPositions
+          .filter(c => c.row === row && c.month === month)
+          .filter(c => c.position > rowOfNumbers[0]).length ===
+          cursors.length * 2 && (
+          <TouchableOpacity
+            style={{
+              marginLeft: startPosition * width,
+              zIndex: 1,
+              height,
+              width,
+              backgroundColor: 'transparent',
+            }}
+            onPress={addCursors}
+          />
+        )}
+      <Labels {...{ rowOfNumbers }} />
+      {cursors}
+    </View>
+  );
 
   return (
     <View style={styles.container}>

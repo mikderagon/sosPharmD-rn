@@ -4,13 +4,12 @@ import 'react-native-gesture-handler';
 import { heightPercentageToDP as hp } from '../../helpers/layout/responsiveLayout';
 import Month from '../CalendarView/Month';
 
-export default ({ months }) => {
+export default ({ months, selectedDates, setSelectedDates }) => {
   return (
     <FlatList
       data={months.map(month => (
-        <Month {...{ month }} />
+        <Month {...{ month, selectedDates, setSelectedDates }} />
       ))}
-      // data={Array.from({ length: 5 }).fill(<Month />)}
       renderItem={({ item }) => (
         <View style={{ marginVertical: hp(2) }}>{item}</View>
       )}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
 import NextButton from '../../components/Button/LoginButton';
@@ -18,7 +18,8 @@ const getMonth = m => {
 };
 const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => getMonth(i));
 
-export default ({ navigation }) => {
+export default ({ route, navigation }) => {
+  const { selectedDates, setSelectedDates } = route.params;
   const onNext = () => {
     'next';
   };
@@ -32,7 +33,7 @@ export default ({ navigation }) => {
       />
       <WeekdaysBar />
 
-      <CalendarsList {...{ months }} />
+      <CalendarsList {...{ months, selectedDates, setSelectedDates }} />
 
       {/* ranges selected and */}
       <View style={{ marginBottom: hp(3) }}>

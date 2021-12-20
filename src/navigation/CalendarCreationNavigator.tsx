@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import 'react-native-gesture-handler';
 import { store } from '../store';
 import CalendarCreationView from '../views/CalendarCreationView';
@@ -15,6 +15,11 @@ interface Props {
 const Navigator = (props: Props) => {
   const { initialRouteName } = props;
   const { state, dispatch } = useContext(store);
+
+  const [selectedDates, setSelectedDates] = useState([]);
+
+  // console.log(selectedDates);
+
   return (
     <Stack.Navigator screenOptions={{ gestureEnabled: false }}>
       <Stack.Screen
@@ -30,6 +35,13 @@ const Navigator = (props: Props) => {
       <Stack.Screen
         name="CalendarDateView"
         component={CalendarDateView}
+        initialParams={{
+          selectedDates,
+          setSelectedDates: addedDates => {
+            console.log('add:', addedDates);
+            setSelectedDates([...selectedDates, ...addedDates]);
+          },
+        }}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

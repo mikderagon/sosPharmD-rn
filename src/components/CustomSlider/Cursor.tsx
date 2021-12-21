@@ -22,10 +22,9 @@ interface CursorProps {
   x: Animated.Value<number>;
   initialPosition: number; // 1 to 7
   minPosition?: number;
-  maxPosition?: number;
-  setMaxPosition?: (n: number) => void;
   size: number;
   count: number;
+  fetchCursorPosition: (n: number) => void;
 }
 
 export default ({
@@ -34,8 +33,7 @@ export default ({
   x,
   initialPosition = 0,
   minPosition,
-  maxPosition,
-  setMaxPosition,
+  fetchCursorPosition,
 }: CursorProps) => {
   const snapPoints = new Array(count).fill(0).map((e, i) => i * size);
 
@@ -73,11 +71,8 @@ export default ({
 
   useCode(() => {
     return call([x], i => {
-      const n = Number(i);
-      if (setMaxPosition) {
-        console.log(Math.trunc(n / size + 1));
-        // setMaxPosition();
-      }
+      const n = Math.trunc(Number(i) / size + 1);
+      fetchCursorPosition(n);
     });
   }, [x]);
 

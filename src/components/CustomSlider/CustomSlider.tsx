@@ -20,8 +20,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ({ x1, x2, cursorPosition1, cursorPosition2 }) => {
-  const [maxPosition, setMaxPosition] = React.useState(0);
+export default ({
+  x1,
+  x2,
+  cursorPosition1,
+  cursorPosition2,
+  setCursorPosition1,
+  setCursorPosition2,
+}) => {
   const sliderStart = 0;
   const cursorProps = {
     size: sliderHeight,
@@ -37,7 +43,7 @@ export default ({ x1, x2, cursorPosition1, cursorPosition2 }) => {
           ...cursorProps,
           x: x1,
           initialPosition: cursorPosition1,
-          // maxPosition,
+          fetchCursorPosition: position => setCursorPosition1(position),
         }}
       />
       <Cursor
@@ -45,7 +51,7 @@ export default ({ x1, x2, cursorPosition1, cursorPosition2 }) => {
           ...cursorProps,
           x: x2,
           initialPosition: cursorPosition2,
-          setMaxPosition: i => setMaxPosition(i),
+          fetchCursorPosition: position => setCursorPosition2(position),
         }}
       />
     </View>

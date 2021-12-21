@@ -22,6 +22,9 @@ const MONTHS_FR = [
 ];
 
 export default ({ month, selectedDates, setSelectedDates }) => {
+  const [cursorPosition1, setCursorPosition1] = useState(3);
+  const [cursorPosition2, setCursorPosition2] = useState(4);
+
   const weekdayIndex = month.getDay();
 
   let firstRow = [0, 0, 0, 0, 0, 0, 0];
@@ -42,8 +45,10 @@ export default ({ month, selectedDates, setSelectedDates }) => {
       <CustomSlider
         x1={new Value(0)}
         x2={new Value(0)}
-        cursorPosition1={3}
-        cursorPosition2={4}
+        cursorPosition1={cursorPosition1}
+        cursorPosition2={cursorPosition2}
+        setCursorPosition1={n => setCursorPosition1(n)}
+        setCursorPosition2={n => setCursorPosition2(n)}
       />
     </>
   );

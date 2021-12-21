@@ -7,9 +7,13 @@ import Month from '../CalendarView/Month';
 export default ({ months, selectedDates, setSelectedDates }) => {
   return (
     <FlatList
-      data={months.map(month => (
-        <Month {...{ month, selectedDates, setSelectedDates }} />
-      ))}
+      data={months.map((month, index) =>
+        index === 0 ? (
+          <Month {...{ month, selectedDates, setSelectedDates }} />
+        ) : (
+          <View />
+        ),
+      )}
       renderItem={({ item }) => (
         <View style={{ marginVertical: hp(2) }}>{item}</View>
       )}

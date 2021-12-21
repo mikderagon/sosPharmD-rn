@@ -71,12 +71,11 @@ export default ({
   );
   useCode(() => set(x, translateX), []);
   useCode(() => {
-    return call([index], idx => {
-      const val =
-        idx[0] + startPosition - offsetIndex - (offsetIndex > 0 ? 1 : 0);
-      retrieveIndex(val);
+    return call([x], i => {
+      const n = Math.trunc(Number(i) / size);
+      retrieveIndex(n);
     });
-  }, [index]);
+  }, [x]);
   return (
     <PanGestureHandler {...gestureHandler}>
       <Animated.View

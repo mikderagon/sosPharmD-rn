@@ -1,55 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import Animated, { multiply } from 'react-native-reanimated';
-import colors, { themeColors } from '../../styles/colors';
+import React, { useState } from 'react';
+import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
+import Animated from 'react-native-reanimated';
+import { themeColors } from '../../styles/colors';
 import Cursor from './Cursor';
-import Cursors from './Cursors';
+import FillerBar from './FillerBar';
 import Labels from './Labels';
 
-const { Value, max, min, add } = Animated;
+const { Value } = Animated;
 
-const { width: totalWidth } = Dimensions.get('window');
-const count = 7;
-const width = totalWidth / count;
-const height = width;
+const { width: sliderWidth } = Dimensions.get('window');
+
+const weekLength = 7;
+const count = weekLength;
+
+const sliderHeight = sliderWidth / count;
+
 const styles = StyleSheet.create({
   container: {
-    width: totalWidth,
-    height,
-    borderRadius: height / 2,
+    width: sliderWidth,
+    height: sliderHeight,
+    borderRadius: sliderHeight / 2,
     backgroundColor: themeColors.dark,
   },
+  button: {
+    zIndex: 1,
+    height: sliderHeight,
+    width: sliderHeight,
+    borderRadius: sliderHeight / 2,
+    backgroundColor: 'transparent',
+    borderColor: themeColors.light,
+    borderWidth: 1,
+    shadowColor: themeColors.light,
+    shadowOpacity: 1,
+    shadowOffset: { height: 2, width: 2 },
+  },
 });
-
-interface CustomSliderProps {
-  row: number;
-  startPosition?: number;
-  endPosition?: number;
-  rowOfNumbers: number[];
-  cursorPositions: any[];
-  setCursorPositions: (data) => void;
-}
 
 export default ({
   month,
   row,
+  labels,
+  firstDay,
   startPosition = 0,
   endPosition = 0,
-  rowOfNumbers,
   cursorPositions,
   setCursorPositions,
-}: CustomSliderProps) => {
+}) => {
+  // components to render
   const [cursors, setCursors] = useState([]);
 
   const getNewCursors = () => {
-    const c1 = new Value(startPosition);
-    const c2 = new Value(startPosition);
+    const x1 = new Value(0);
+    const x2 = new Value(0);
 
     let indexes = [];
 
@@ -75,41 +77,30 @@ export default ({
       }
     };
 
+    const cursorProps = {
+      size: sliderHeight,
+      count: labels.length,
+      startPosition: firstDay,
+      offsetIndex: startPosition,
+      endIndex: endPosition,
+    };
+
     return (
       <>
-        <Animated.View
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: min(c1, c2),
-            right: 0,
-            backgroundColor: colors.lightMain,
-            width: add(max(add(c2, multiply(-1, c1)), 0), height),
-            height,
-            borderRadius: height / 2,
+        <FillerBar height={sliderHeight} x1={x1} x2={x2} />
+        <Cursor
+          {...{
+            ...cursorProps,
+            x: x1,
+            fetchCursorPosition: position => retrieveIndex1(position),
           }}
         />
         <Cursor
-          size={height}
           {...{
-            x: c1,
-            count: rowOfNumbers.length,
-            startPosition: rowOfNumbers[0],
-            offsetIndex: startPosition,
-            endIndex: endPosition,
+            ...cursorProps,
+            x: x2,
+            fetchCursorPosition: position => retrieveIndex2(position),
           }}
-          retrieveIndex={retrieveIndex1}
-        />
-        <Cursor
-          size={height}
-          {...{
-            x: c2,
-            count: rowOfNumbers.length,
-            startPosition: rowOfNumbers[0],
-            offsetIndex: startPosition,
-            endIndex: endPosition,
-          }}
-          retrieveIndex={retrieveIndex2}
         />
       </>
     );
@@ -119,58 +110,25 @@ export default ({
     setCursors([...cursors, getNewCursors()]);
   };
 
-  console.log(cursorPositions);
-
   return (
     <View style={styles.container}>
       {cursors.length < 3 &&
         cursorPositions
           .filter(c => c.row === row && c.month === month)
-          .filter(c => c.position > rowOfNumbers[0]).length ===
+          .filter(c => c.position > labels[0]).length ===
           cursors.length * 2 && (
           <TouchableOpacity
-            style={{
-              marginLeft: startPosition * width,
-              zIndex: 1,
-              height,
-              width,
-              backgroundColor: 'transparent',
-            }}
+            style={[
+              styles.button,
+              {
+                marginLeft: sliderHeight * startPosition,
+              },
+            ]}
             onPress={addCursors}
           />
         )}
-      <Labels {...{ rowOfNumbers }} />
+      <Labels {...{ labels }} />
       {cursors}
-    </View>
-  );
-
-  return (
-    <View style={styles.container}>
-      {ranges.length < 3 &&
-        [
-          cursor1Position,
-          cursor2Position,
-          cursor3Position,
-          cursor4Position,
-          cursor5Position,
-          cursor6Position,
-        ]
-          .filter(c => c)
-          .filter(c => c > rowOfNumbers[0]).length ===
-          ranges.length * 2 && (
-          <TouchableOpacity
-            style={{
-              marginLeft: startPosition * width,
-              zIndex: 1,
-              height,
-              width,
-              backgroundColor: 'transparent',
-            }}
-            onPress={addRange}
-          />
-        )}
-      <Labels {...{ rowOfNumbers }} />
-      {ranges}
     </View>
   );
 };

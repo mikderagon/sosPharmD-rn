@@ -4,10 +4,10 @@ import Animated from 'react-native-reanimated';
 import { themeColors } from '../../styles/colors';
 
 interface LabelProps {
-  rowOfNumbers: number[];
+  labels: number[];
 }
 
-export default ({ rowOfNumbers }: LabelProps) => {
+export default ({ labels }: LabelProps) => {
   return (
     <View
       style={{
@@ -16,7 +16,7 @@ export default ({ rowOfNumbers }: LabelProps) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      {rowOfNumbers.map((e, i) => {
+      {labels.map((e, i) => {
         return (
           <View key={i} style={{ flex: 1 }}>
             {e > 0 && (

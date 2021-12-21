@@ -38,7 +38,6 @@ const Navigator = (props: Props) => {
         initialParams={{
           selectedDates,
           setSelectedDates: addedDates => {
-            console.log('add:', addedDates);
             setSelectedDates([...selectedDates, ...addedDates]);
           },
         }}

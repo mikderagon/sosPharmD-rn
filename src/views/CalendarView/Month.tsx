@@ -22,8 +22,6 @@ const MONTHS_FR = [
 ];
 
 export default ({ month, selectedDates, setSelectedDates }) => {
-  // const [cursorPositions, setCursorPositions] = useState([]);
-
   const weekdayIndex = month.getDay();
 
   let firstRow = [0, 0, 0, 0, 0, 0, 0];
@@ -94,47 +92,52 @@ export default ({ month, selectedDates, setSelectedDates }) => {
         </Text>
       </View>
       <CustomSlider
-        row={1}
         {...{
+          row: 1,
           month,
+          startPosition: weekdayIndex,
+          firstDay: firstRow[0],
+          labels: firstRow,
           cursorPositions: selectedDates,
           setCursorPositions: addedCursors => setSelectedDates(addedCursors),
         }}
-        startPosition={weekdayIndex}
-        rowOfNumbers={firstRow}
       />
       <CustomSlider
-        row={2}
         {...{
+          row: 2,
           month,
+          firstDay: secondRow[0],
+          labels: secondRow,
           cursorPositions: selectedDates,
           setCursorPositions: addedCursors => setSelectedDates(addedCursors),
         }}
-        rowOfNumbers={secondRow}
       />
       <CustomSlider
-        row={3}
         {...{
+          row: 3,
           month,
+          firstDay: thirdRow[0],
+          labels: thirdRow,
           cursorPositions: selectedDates,
           setCursorPositions: addedCursors => setSelectedDates(addedCursors),
         }}
-        rowOfNumbers={thirdRow}
       />
       <CustomSlider
-        row={4}
         {...{
+          row: 4,
           month,
+          firstDay: fourthRow[0],
+          labels: fourthRow,
           cursorPositions: selectedDates,
           setCursorPositions: addedCursors => setSelectedDates(addedCursors),
         }}
-        rowOfNumbers={fourthRow}
       />
       <CustomSlider
-        row={5}
-        rowOfNumbers={fifthRow}
         {...{
+          row: 5,
           month,
+          firstDay: fifthRow[0],
+          labels: fifthRow,
           cursorPositions: selectedDates,
           setCursorPositions: addedCursors => setSelectedDates(addedCursors),
           endPosition: hasSixthRow ? 0 : endPosition,
@@ -142,13 +145,14 @@ export default ({ month, selectedDates, setSelectedDates }) => {
       />
       {hasSixthRow && (
         <CustomSlider
-          row={6}
-          rowOfNumbers={lastRow}
           {...{
+            row: 6,
             month,
+            firstDay: lastRow[0],
+            labels: lastRow,
+            endPosition,
             cursorPositions: selectedDates,
             setCursorPositions: addedCursors => setSelectedDates(addedCursors),
-            endPosition,
           }}
         />
       )}

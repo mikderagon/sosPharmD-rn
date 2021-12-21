@@ -26,32 +26,31 @@ import colors, { themeColors } from '../../styles/colors';
 
 const { Value, round, divide, concat, add, sub } = Animated;
 
-interface CursorProps {
-  x: Animated.Value<number>;
-  size: number;
-  count: number;
-  startPosition: number;
-  endIndex: number;
-  offsetIndex: number;
-  retrieveIndex: (idx: number) => void;
-}
-
 export default ({
+  x,
   size,
   count,
-  x,
   startPosition,
   endIndex,
   offsetIndex,
-  retrieveIndex,
-}: CursorProps) => {
+  fetchCursorPosition,
+}) => {
   const snapPoints = new Array(count).fill(0).map((e, i) => i * size);
+
   const index = round(divide(x, size));
+
+  const cursorLabel = concat(
+    sub(add(index, startPosition), offsetIndex - (offsetIndex ? 1 : 0)),
+  );
+
+  const state = new Value(State.UNDETERMINED);
+
   const translationX = new Value(0);
   const velocityX = new Value(0);
-  const state = new Value(State.UNDETERMINED);
-  const gestureHandler = onGestureEvent({ state, translationX, velocityX });
   const offset = new Value(offsetIndex * size);
+
+  const gestureHandler = onGestureEvent({ state, translationX, velocityX });
+
   const value = add(offset, translationX);
 
   const translateX = clamp(
@@ -69,44 +68,50 @@ export default ({
     offsetIndex * size,
     (count - 1) * size - endIndex * size,
   );
+
   useCode(() => set(x, translateX), []);
+
   useCode(() => {
     return call([x], i => {
       const n = Math.trunc(Number(i) / size);
-      retrieveIndex(n);
+      fetchCursorPosition(n);
     });
   }, [x]);
+
   return (
     <PanGestureHandler {...gestureHandler}>
       <Animated.View
-        style={{
-          ...StyleSheet.absoluteFillObject,
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          backgroundColor: themeColors.light,
-          elevation: 5,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2,
+        style={[
+          styles.container,
+          {
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            transform: [{ translateX: x }],
           },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          justifyContent: 'center',
-          alignItems: 'center',
-          transform: [{ translateX }],
-        }}>
+        ]}>
         <ReText
           style={{ fontSize: 24, color: themeColors.accent1 }}
-          text={concat(
-            sub(
-              add(index, startPosition),
-              offsetIndex - (offsetIndex > 0 ? 1 : 0),
-            ),
-          )}
+          text={cursorLabel}
         />
       </Animated.View>
     </PanGestureHandler>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: themeColors.light,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

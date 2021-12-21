@@ -22,8 +22,6 @@ const MONTHS_FR = [
 ];
 
 export default ({ month, selectedDates, setSelectedDates }) => {
-  // const [cursorPositions, setCursorPositions] = useState([]);
-
   const weekdayIndex = month.getDay();
 
   let firstRow = [0, 0, 0, 0, 0, 0, 0];
@@ -34,58 +32,6 @@ export default ({ month, selectedDates, setSelectedDates }) => {
     j++;
   }
 
-  let secondRow = [0, 0, 0, 0, 0, 0, 0];
-  for (let i = 0; i < secondRow.length; i++) {
-    secondRow[i] = j;
-    j++;
-  }
-
-  let thirdRow = [0, 0, 0, 0, 0, 0, 0];
-  for (let i = 0; i < thirdRow.length; i++) {
-    thirdRow[i] = j;
-    j++;
-  }
-
-  let fourthRow = [0, 0, 0, 0, 0, 0, 0];
-  for (let i = 0; i < fourthRow.length; i++) {
-    fourthRow[i] = j;
-    j++;
-  }
-
-  const lastDayOfMonth = new Date(
-    month.getFullYear(),
-    month.getMonth() + 1,
-    0,
-  ).getDate();
-
-  let fifthRow = [0, 0, 0, 0, 0, 0, 0];
-  for (let i = 0; i < fifthRow.length; i++) {
-    fifthRow[i] = j;
-    if (j === lastDayOfMonth) {
-      j++;
-      break;
-    }
-    j++;
-  }
-
-  let lastRow = [0, 0, 0, 0, 0, 0, 0];
-  for (let i = 0; i < lastRow.length; i++) {
-    if (j > lastDayOfMonth) {
-      break;
-    }
-    lastRow[i] = j;
-    j++;
-  }
-
-  const hasSixthRow = lastRow.filter(n => n > 0).length > 0;
-
-  let endPosition = hasSixthRow
-    ? lastRow.length - lastRow.indexOf(0)
-    : fifthRow.length -
-      (fifthRow[fifthRow.length - 1] === 0
-        ? fifthRow.indexOf(0)
-        : fifthRow.indexOf(lastDayOfMonth) + 1);
-
   return (
     <>
       <View style={styles.monthNameContainer}>
@@ -94,64 +40,11 @@ export default ({ month, selectedDates, setSelectedDates }) => {
         </Text>
       </View>
       <CustomSlider
-        row={1}
-        {...{
-          month,
-          cursorPositions: selectedDates,
-          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
-        }}
-        startPosition={weekdayIndex}
-        rowOfNumbers={firstRow}
+        x1={new Value(0)}
+        x2={new Value(0)}
+        cursorPosition1={3}
+        cursorPosition2={4}
       />
-      <CustomSlider
-        row={2}
-        {...{
-          month,
-          cursorPositions: selectedDates,
-          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
-        }}
-        rowOfNumbers={secondRow}
-      />
-      <CustomSlider
-        row={3}
-        {...{
-          month,
-          cursorPositions: selectedDates,
-          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
-        }}
-        rowOfNumbers={thirdRow}
-      />
-      <CustomSlider
-        row={4}
-        {...{
-          month,
-          cursorPositions: selectedDates,
-          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
-        }}
-        rowOfNumbers={fourthRow}
-      />
-      <CustomSlider
-        row={5}
-        rowOfNumbers={fifthRow}
-        {...{
-          month,
-          cursorPositions: selectedDates,
-          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
-          endPosition: hasSixthRow ? 0 : endPosition,
-        }}
-      />
-      {hasSixthRow && (
-        <CustomSlider
-          row={6}
-          rowOfNumbers={lastRow}
-          {...{
-            month,
-            cursorPositions: selectedDates,
-            setCursorPositions: addedCursors => setSelectedDates(addedCursors),
-            endPosition,
-          }}
-        />
-      )}
     </>
   );
 };

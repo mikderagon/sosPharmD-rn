@@ -18,7 +18,7 @@ const Navigator = (props: Props) => {
 
   const [selectedDates, setSelectedDates] = useState([]);
 
-  // console.log(selectedDates);
+  console.log(selectedDates);
 
   return (
     <Stack.Navigator screenOptions={{ gestureEnabled: false }}>
@@ -38,7 +38,6 @@ const Navigator = (props: Props) => {
         initialParams={{
           selectedDates,
           setSelectedDates: addedDates => {
-            console.log('add:', addedDates);
             setSelectedDates([...selectedDates, ...addedDates]);
           },
         }}

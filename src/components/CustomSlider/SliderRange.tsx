@@ -94,7 +94,6 @@ export default ({
     setCursor1Position(rowOfNumbers[0]);
     setCursor2Position(rowOfNumbers[0]);
   };
-  console.log(cursor1Position, cursor2Position);
   return (
     <View style={styles.container}>
       {(ranges.length === 0 ||

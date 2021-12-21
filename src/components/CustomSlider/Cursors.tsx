@@ -37,7 +37,6 @@ export default ({
   const retrieveIndex1 = index => {};
 
   const retrieveIndex2 = index => {
-    console.log(index);
     setMaxIndex(index);
     renderCursors();
   };

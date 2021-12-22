@@ -33,7 +33,13 @@ export default ({ route, navigation }) => {
       />
       <WeekdaysBar />
 
-      <CalendarsList {...{ months, selectedDates, setSelectedDates }} />
+      <CalendarsList
+        {...{
+          months,
+          selectedDates,
+          setSelectedDates: addedDates => setSelectedDates(addedDates),
+        }}
+      />
 
       {/* ranges selected and */}
       <View style={{ marginBottom: hp(3) }}>

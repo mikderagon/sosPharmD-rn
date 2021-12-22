@@ -84,6 +84,12 @@ export default ({ month, selectedDates, setSelectedDates }) => {
         ? fifthRow.indexOf(0)
         : fifthRow.indexOf(lastDayOfMonth) + 1);
 
+  const defaultMonthProps = {
+    month,
+    selectedDates,
+    setSelectedDates,
+  };
+
   return (
     <>
       <View style={styles.monthNameContainer}>
@@ -93,66 +99,54 @@ export default ({ month, selectedDates, setSelectedDates }) => {
       </View>
       <CustomSlider
         {...{
+          ...defaultMonthProps,
           row: 1,
-          month,
           startPosition: weekdayIndex,
           firstDay: firstRow[0],
           labels: firstRow,
-          cursorPositions: selectedDates,
-          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
         }}
       />
       <CustomSlider
         {...{
+          ...defaultMonthProps,
           row: 2,
-          month,
           firstDay: secondRow[0],
           labels: secondRow,
-          cursorPositions: selectedDates,
-          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
         }}
       />
       <CustomSlider
         {...{
+          ...defaultMonthProps,
           row: 3,
-          month,
           firstDay: thirdRow[0],
           labels: thirdRow,
-          cursorPositions: selectedDates,
-          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
         }}
       />
       <CustomSlider
         {...{
+          ...defaultMonthProps,
           row: 4,
-          month,
           firstDay: fourthRow[0],
           labels: fourthRow,
-          cursorPositions: selectedDates,
-          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
         }}
       />
       <CustomSlider
         {...{
+          ...defaultMonthProps,
           row: 5,
-          month,
           firstDay: fifthRow[0],
           labels: fifthRow,
-          cursorPositions: selectedDates,
-          setCursorPositions: addedCursors => setSelectedDates(addedCursors),
           endPosition: hasSixthRow ? 0 : endPosition,
         }}
       />
       {hasSixthRow && (
         <CustomSlider
           {...{
+            ...defaultMonthProps,
             row: 6,
-            month,
             firstDay: lastRow[0],
             labels: lastRow,
             endPosition,
-            cursorPositions: selectedDates,
-            setCursorPositions: addedCursors => setSelectedDates(addedCursors),
           }}
         />
       )}

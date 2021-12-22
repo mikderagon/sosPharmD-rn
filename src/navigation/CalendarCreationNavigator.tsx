@@ -1,6 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext, useState } from 'react';
 import 'react-native-gesture-handler';
+import _ from 'underscore';
 import { store } from '../store';
 import CalendarCreationView from '../views/CalendarCreationView';
 import CalendarDateView from '../views/CalendarDateView';
@@ -20,6 +21,20 @@ const Navigator = (props: Props) => {
 
   // console.log(selectedDates);
 
+  const addDates = addedDates => {
+    setSelectedDates(_selectedDates => {
+      const dupes = _selectedDates.filter(
+        date =>
+          date.month === addedDates[0].month &&
+          date.row === addedDates[0].row &&
+          addedDates.map(a => a.cursor).includes(date.cursor),
+      );
+      const dupeSet = JSON.stringify(dupes);
+      console.log(dupeSet);
+      return [..._selectedDates, ...addedDates];
+    });
+  };
+
   return (
     <Stack.Navigator screenOptions={{ gestureEnabled: false }}>
       <Stack.Screen
@@ -37,9 +52,7 @@ const Navigator = (props: Props) => {
         component={CalendarDateView}
         initialParams={{
           selectedDates,
-          setSelectedDates: addedDates => {
-            setSelectedDates([...selectedDates, ...addedDates]);
-          },
+          setSelectedDates: dates => addDates(dates),
         }}
         options={{ headerShown: false }}
       />

@@ -17,21 +17,13 @@ const Navigator = (props: Props) => {
   const { initialRouteName } = props;
   const { state, dispatch } = useContext(store);
 
-  const [selectedDates, setSelectedDates] = useState([]);
+  const [selectedDates, setSelectedDates] = useState({});
 
-  // console.log(selectedDates);
+  console.log(selectedDates);
 
   const addDates = addedDates => {
     setSelectedDates(_selectedDates => {
-      const dupes = _selectedDates.filter(
-        date =>
-          date.month === addedDates[0].month &&
-          date.row === addedDates[0].row &&
-          addedDates.map(a => a.cursor).includes(date.cursor),
-      );
-      const dupeSet = JSON.stringify(dupes);
-      console.log(dupeSet);
-      return [..._selectedDates, ...addedDates];
+      return { ..._selectedDates, ...addedDates };
     });
   };
 

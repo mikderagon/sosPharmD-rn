@@ -59,10 +59,12 @@ export default ({
       indexes[0] = index;
 
       if (indexes.length === 2) {
-        setSelectedDates([
-          { month, row, cursor: cursors.length * 2 + 1, position: indexes[0] },
-          { month, row, cursor: cursors.length * 2 + 2, position: indexes[1] },
-        ]);
+        setSelectedDates({
+          [`${month.toLocaleString().split(',')[0]}/${row}/${1}`]: indexes[0],
+          [`${month.toLocaleString().split(',')[0]}/${row}/${2}`]: indexes[1],
+          // { month, row, cursor: cursors.length * 2 + 1, position: indexes[0] },
+          // { month, row, cursor: cursors.length * 2 + 2, position: indexes[1] },
+        });
       }
     };
 
@@ -70,10 +72,12 @@ export default ({
       indexes[1] = index;
 
       if (indexes.length === 2) {
-        setSelectedDates([
-          { month, row, cursor: cursors.length * 2 + 1, position: indexes[0] },
-          { month, row, cursor: cursors.length * 2 + 2, position: indexes[1] },
-        ]);
+        setSelectedDates({
+          [`${month.toLocaleString().split(',')[0]}/${row}/${1}`]: indexes[0],
+          [`${month.toLocaleString().split(',')[0]}/${row}/${2}`]: indexes[1],
+          // { month, row, cursor: cursors.length * 2 + 1, position: indexes[0] },
+          // { month, row, cursor: cursors.length * 2 + 2, position: indexes[1] },
+        });
       }
     };
 
@@ -112,21 +116,22 @@ export default ({
 
   return (
     <View style={styles.container}>
-      {cursors.length < 3 &&
-        selectedDates
-          .filter(c => c.row === row && c.month === month)
-          .filter(c => c.position > labels[0]).length ===
-          cursors.length * 2 && (
-          <TouchableOpacity
-            style={[
-              styles.button,
-              {
-                marginLeft: sliderHeight * startPosition,
-              },
-            ]}
-            onPress={addCursors}
-          />
-        )}
+      {cursors.length < 3 && (
+        // selectedDates
+        // .filter(c => c.row === row && c.month === month)
+        // .filter(c => c.position > labels[0]).length ===
+        // cursors.length * 2
+        // &&
+        <TouchableOpacity
+          style={[
+            styles.button,
+            {
+              marginLeft: sliderHeight * startPosition,
+            },
+          ]}
+          onPress={addCursors}
+        />
+      )}
       <Labels {...{ labels }} />
       {cursors}
     </View>

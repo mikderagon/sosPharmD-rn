@@ -74,7 +74,7 @@ export default ({
   useCode(() => {
     return call([x], i => {
       const n = Math.trunc(Number(i) / size);
-      fetchCursorPosition(n);
+      fetchCursorPosition(n + startPosition);
     });
   }, [x]);
 

@@ -100,6 +100,7 @@ export default ({ month, selectedDates, setSelectedDates }) => {
       <CustomSlider
         {...{
           ...defaultMonthProps,
+          key: `${month}/${1}`,
           row: 1,
           startPosition: weekdayIndex,
           firstDay: firstRow[0],
@@ -109,6 +110,7 @@ export default ({ month, selectedDates, setSelectedDates }) => {
       <CustomSlider
         {...{
           ...defaultMonthProps,
+          key: `${month}/${2}`,
           row: 2,
           firstDay: secondRow[0],
           labels: secondRow,
@@ -117,6 +119,7 @@ export default ({ month, selectedDates, setSelectedDates }) => {
       <CustomSlider
         {...{
           ...defaultMonthProps,
+          key: `${month}/${3}`,
           row: 3,
           firstDay: thirdRow[0],
           labels: thirdRow,
@@ -125,6 +128,7 @@ export default ({ month, selectedDates, setSelectedDates }) => {
       <CustomSlider
         {...{
           ...defaultMonthProps,
+          key: `${month}/${4}`,
           row: 4,
           firstDay: fourthRow[0],
           labels: fourthRow,
@@ -133,6 +137,7 @@ export default ({ month, selectedDates, setSelectedDates }) => {
       <CustomSlider
         {...{
           ...defaultMonthProps,
+          key: `${month}/${5}`,
           row: 5,
           firstDay: fifthRow[0],
           labels: fifthRow,
@@ -143,6 +148,7 @@ export default ({ month, selectedDates, setSelectedDates }) => {
         <CustomSlider
           {...{
             ...defaultMonthProps,
+            key: `${month}/${6}`,
             row: 6,
             firstDay: lastRow[0],
             labels: lastRow,

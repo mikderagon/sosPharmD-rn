@@ -19,7 +19,7 @@ const Navigator = (props: Props) => {
 
   const [selectedDates, setSelectedDates] = useState({});
 
-  console.log(selectedDates);
+  // console.log(selectedDates);
 
   const addDates = addedDates => {
     setSelectedDates(_selectedDates => {

@@ -8,11 +8,13 @@ import {
 import { themeColors } from '../../styles/colors';
 
 export default () => {
-  const weekdays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((w, index) => (
-    <View style={styles.weekday} key={`${index} ${w}`}>
-      <Text style={styles.weekdayFont}>{w}</Text>
-    </View>
-  ));
+  const weekdays = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'].map(
+    (w, index) => (
+      <View style={styles.weekday} key={`${index} ${w}`}>
+        <Text style={styles.weekdayFont}>{w}</Text>
+      </View>
+    ),
+  );
 
   return <View style={styles.container}>{weekdays}</View>;
 };

@@ -7,9 +7,9 @@ import Month from '../CalendarView/Month';
 export default ({ months, selectedDates, setSelectedDates }) => {
   return (
     <FlatList
-      data={months.map((month, index) => (
+      data={months.map(month => (
         <Month
-          key={index}
+          key={month.toLocaleString()}
           {...{
             month,
             selectedDates,
@@ -20,7 +20,6 @@ export default ({ months, selectedDates, setSelectedDates }) => {
       renderItem={({ item }) => (
         <View style={{ marginVertical: hp(2) }}>{item}</View>
       )}
-      keyExtractor={() => (Math.random() * 10).toString()}
       ListFooterComponent={() => <View style={{ height: hp(30) }} />}
       showsVerticalScrollIndicator={false}
     />

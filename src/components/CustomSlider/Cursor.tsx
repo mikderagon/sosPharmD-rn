@@ -1,19 +1,12 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import {
-  PanGestureHandler,
-  State,
-  LongPressGestureHandler,
-} from 'react-native-gesture-handler';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, {
   call,
   cond,
-  Easing,
   eq,
   set,
   useCode,
-  useSharedValue,
-  withTiming,
 } from 'react-native-reanimated';
 import {
   clamp,
@@ -22,7 +15,7 @@ import {
   snapPoint,
   timing,
 } from 'react-native-redash';
-import colors, { themeColors } from '../../styles/colors';
+import { themeColors } from '../../styles/colors';
 
 const { Value, round, divide, concat, add, sub } = Animated;
 

@@ -79,21 +79,11 @@ const CalendarCreationView = ({ navigation }) => {
   };
 
   const onNext = () => {
-    navigation.navigate('CalendarTimeView');
+    navigation.navigate('CalendarDateView');
   };
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.header}>
-        <View style={styles.headerInner}>
-          <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
-            <Text style={styles.headerTextRed}>Go Back</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerText}>Create a Calendar</Text>
-          <Text style={[styles.headerText, { opacity: 0 }]}>Create</Text>
-        </View>
-      </View> */}
-
       <TopNavBar
         navigation={navigation}
         leftHeaderIcon={BackCaret}

@@ -15,27 +15,6 @@ const count = weekLength;
 
 const sliderHeight = sliderWidth / count;
 
-const styles = StyleSheet.create({
-  container: {
-    width: sliderWidth,
-    height: sliderHeight,
-    borderRadius: sliderHeight / 2,
-    backgroundColor: themeColors.dark,
-  },
-  button: {
-    zIndex: 1,
-    height: sliderHeight,
-    width: sliderHeight,
-    borderRadius: sliderHeight / 2,
-    backgroundColor: 'transparent',
-    borderColor: themeColors.light,
-    borderWidth: 1,
-    shadowColor: themeColors.light,
-    shadowOpacity: 1,
-    shadowOffset: { height: 2, width: 2 },
-  },
-});
-
 export default ({
   month,
   row,
@@ -60,10 +39,12 @@ export default ({
 
       if (indexes.length === 2) {
         setSelectedDates({
-          [`${month.toLocaleString().split(',')[0]}/${row}/${1}`]: indexes[0],
-          [`${month.toLocaleString().split(',')[0]}/${row}/${2}`]: indexes[1],
-          // { month, row, cursor: cursors.length * 2 + 1, position: indexes[0] },
-          // { month, row, cursor: cursors.length * 2 + 2, position: indexes[1] },
+          [`${month.toLocaleString().split(',')[0]}/${row}/${
+            cursors.length + 1
+          }`]: indexes[0],
+          [`${month.toLocaleString().split(',')[0]}/${row}/${
+            cursors.length + 2
+          }`]: indexes[1],
         });
       }
     };
@@ -73,10 +54,12 @@ export default ({
 
       if (indexes.length === 2) {
         setSelectedDates({
-          [`${month.toLocaleString().split(',')[0]}/${row}/${1}`]: indexes[0],
-          [`${month.toLocaleString().split(',')[0]}/${row}/${2}`]: indexes[1],
-          // { month, row, cursor: cursors.length * 2 + 1, position: indexes[0] },
-          // { month, row, cursor: cursors.length * 2 + 2, position: indexes[1] },
+          [`${month.toLocaleString().split(',')[0]}/${row}/${
+            cursors.length + 1
+          }`]: indexes[0],
+          [`${month.toLocaleString().split(',')[0]}/${row}/${
+            cursors.length + 2
+          }`]: indexes[1],
         });
       }
     };
@@ -90,7 +73,7 @@ export default ({
     };
 
     return (
-      <>
+      <React.Fragment key={`${month}/${row}/${Math.random() * 10}`}>
         <FillerBar height={sliderHeight} x1={x1} x2={x2} />
         <Cursor
           {...{
@@ -106,7 +89,7 @@ export default ({
             fetchCursorPosition: position => retrieveIndex2(position),
           }}
         />
-      </>
+      </React.Fragment>
     );
   };
 
@@ -116,12 +99,7 @@ export default ({
 
   return (
     <View style={styles.container}>
-      {cursors.length < 3 && (
-        // selectedDates
-        // .filter(c => c.row === row && c.month === month)
-        // .filter(c => c.position > labels[0]).length ===
-        // cursors.length * 2
-        // &&
+      {cursors.length < 1 && (
         <TouchableOpacity
           style={[
             styles.button,
@@ -137,3 +115,24 @@ export default ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: sliderWidth,
+    height: sliderHeight,
+    borderRadius: sliderHeight / 2,
+    backgroundColor: themeColors.dark,
+  },
+  button: {
+    zIndex: 1,
+    height: sliderHeight,
+    width: sliderHeight,
+    borderRadius: sliderHeight / 2,
+    backgroundColor: 'transparent',
+    borderColor: themeColors.light,
+    borderWidth: 1,
+    shadowColor: themeColors.light,
+    shadowOpacity: 1,
+    shadowOffset: { height: 2, width: 2 },
+  },
+});

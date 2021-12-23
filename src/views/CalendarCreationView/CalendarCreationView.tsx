@@ -51,15 +51,6 @@ export default ({ route, navigation }) => {
     setEndTimeVisible(false);
   };
 
-  const toTimeFormat = (time: Date): string => {
-    const hours = time.getHours();
-    let minutes = time.getMinutes().toString();
-    minutes = minutes.length === 1 ? `0${minutes}` : minutes;
-    return `${hours}:${minutes}`;
-  };
-
-  console.log(selectedDates);
-
   const isValidCalendar = () => {
     const timeValidity = startTime < endTime;
     const dateValidity = true;

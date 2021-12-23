@@ -9,8 +9,8 @@ import 'react-native-gesture-handler';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import colors from '../../styles/colors';
+} from '../../shared/helpers/layout/responsiveLayout';
+import colors from '../../shared/styles/colors';
 
 interface Props {
   onPress: () => void;

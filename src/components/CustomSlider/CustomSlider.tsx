@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { themeColors } from '../../styles/colors';
+import { themeColors } from '../../shared/styles/colors';
 import Cursor from './Cursor';
 import FillerBar from './FillerBar';
 import Labels from './Labels';

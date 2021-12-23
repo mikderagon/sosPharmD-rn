@@ -15,7 +15,7 @@ import {
   snapPoint,
   timing,
 } from 'react-native-redash';
-import { themeColors } from '../../styles/colors';
+import { themeColors } from '../../shared/styles/colors';
 
 const { Value, round, divide, concat, add, sub } = Animated;
 

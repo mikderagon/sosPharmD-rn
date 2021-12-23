@@ -1,11 +1,11 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import 'react-native-gesture-handler';
-import colors from '../../styles/colors';
+import colors from '../../shared/styles/colors';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
+} from '../../shared/helpers/layout/responsiveLayout';
 
 interface ButtonProps {
   text: string;

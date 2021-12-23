@@ -4,8 +4,8 @@ import 'react-native-gesture-handler';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import { themeColors } from '../../styles/colors';
+} from '../../shared/helpers/layout/responsiveLayout';
+import { themeColors } from '../../shared/styles/colors';
 
 export default ({ time, toggle, label }) => {
   const toTimeFormat = (): string => {

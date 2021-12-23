@@ -1,12 +1,11 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
-import { store } from '../../store';
-import colors from '../../styles/colors';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
+} from '../../shared/helpers/layout/responsiveLayout';
+import { store } from '../../store';
 
 const CELLS_COUNT = 35;
 const width = wp(95);

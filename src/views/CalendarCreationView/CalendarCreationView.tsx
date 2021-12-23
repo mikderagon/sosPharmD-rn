@@ -1,28 +1,20 @@
 import React, { useState } from 'react';
-import {
-  Alert,
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Alert, Image, StyleSheet, TextInput, View } from 'react-native';
 import 'react-native-gesture-handler';
-import NextButton from '../../components/Button/LoginButton';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import TopNavBar from '../../components/NavBar/TopNavBar';
 import WeekdaysBar from '../../components/WeekdaysBar/WeekdaysBar';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import { themeColors } from '../../styles/colors';
+} from '../../shared/helpers/layout/responsiveLayout';
+import { themeColors } from '../../shared/styles/colors';
 import CalendarsList from './CalendarsList';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import TimePicker from './TimePicker';
 
-const BackCaret = require('../../../assets/images/backCaret.png');
-const Clock = require('../../../assets/images/clock.png');
+const BackCaretIcon = require('../../../assets/images/backCaret.png');
+const ClockIcon = require('../../../assets/images/clock.png');
+const PlusIcon = require('../../../assets/images/plus.png');
 
 const getMonth = m => {
   return new Date(new Date().getFullYear(), new Date().getMonth() + m, 1);
@@ -79,43 +71,21 @@ export default ({ route, navigation }) => {
       <TopNavBar
         headerTitle="Nouveau Calendrier"
         navigation={navigation}
-        leftHeaderIcon={BackCaret}
+        leftHeaderIcon={BackCaretIcon}
         leftHeaderAction={() => navigation.navigate('Calendar')}
-        rightHeaderIcon={isValidCalendar() ? BackCaret : null}
+        rightHeaderIcon={isValidCalendar() ? PlusIcon : null}
         rightHeaderAction={onNext}
       />
 
       <TextInput
-        style={{
-          marginTop: hp(2),
-          backgroundColor: '#fff',
-          borderRadius: 5,
-          height: hp(5),
-          width: wp(95),
-          paddingHorizontal: wp(2),
-        }}
+        style={styles.nameInput}
+        autoFocus
         placeholder="Propriétaire"
         placeholderTextColor="#aaa"
       />
 
-      <View
-        style={{
-          flexDirection: 'row',
-          width: wp(95),
-          justifyContent: 'space-between',
-          marginTop: hp(2),
-          marginBottom: hp(2),
-        }}>
-        <Image
-          source={Clock}
-          style={{
-            height: hp(4.5),
-            width: hp(4.5),
-            resizeMode: 'contain',
-            tintColor: themeColors.accent1,
-            // marginRight: wp(4),
-          }}
-        />
+      <View style={styles.timePickersContainer}>
+        <Image source={ClockIcon} style={styles.clockIcon} />
         <TimePicker
           time={startTime}
           label="De:"
@@ -153,17 +123,6 @@ export default ({ route, navigation }) => {
           setSelectedDates: addedDates => setSelectedDates(addedDates),
         }}
       />
-
-      {/* ranges selected and */}
-      {/* {startTime < endTime && (
-        <View style={{ marginBottom: hp(3) }}>
-          <NextButton
-            onPress={onNext}
-            color={themeColors.accent2}
-            text="Ajouter"
-          />
-        </View>
-      )} */}
     </View>
   );
 };
@@ -194,6 +153,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#ddd',
   },
+  timePickersContainer: {
+    flexDirection: 'row',
+    width: wp(95),
+    justifyContent: 'space-between',
+    marginTop: hp(2),
+    marginBottom: hp(2),
+  },
   headerInner: {
     marginBottom: hp(1),
     width: '90%',
@@ -209,6 +175,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'red',
     fontWeight: '300',
+  },
+  nameInput: {
+    marginTop: hp(2),
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    height: hp(5),
+    width: wp(95),
+    paddingHorizontal: wp(2),
   },
   footer: {
     position: 'absolute',
@@ -226,6 +200,12 @@ const styles = StyleSheet.create({
     marginTop: '10%',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  clockIcon: {
+    height: hp(4.5),
+    width: hp(4.5),
+    resizeMode: 'contain',
+    tintColor: themeColors.accent1,
   },
   buttonText: {
     color: '#fff',

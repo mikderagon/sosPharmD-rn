@@ -10,9 +10,9 @@ import React, { useContext, useRef, useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
 import Navigator from './navigation/Navigator';
 import { store } from './store';
-import { StackParamList } from './types';
-import * as firestore from './server/firestore';
-import { Locum, Owner } from './models';
+import { StackParamList } from './navigation/types';
+import * as firestore from './shared/server/firestore';
+import { Locum, Owner } from './shared/models';
 import { StatusBar } from 'react-native';
 
 const AppRoot = () => {

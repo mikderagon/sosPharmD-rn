@@ -1,14 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import React from 'react';
-import { Image, ImageSourcePropType, Text, View } from 'react-native';
+import { Image, ImageSourcePropType, View } from 'react-native';
 import 'react-native-gesture-handler';
-import SettingsView from '../views/SettingsView/SettingsView';
 import CalendarNavigator from '../navigation/CalendarNavigator';
-import colors, { themeColors } from '../styles/colors';
-import shadows from '../styles/shadows';
-import { StackParamList } from '../types';
-import ProfileView from '../views/ProfileView';
+import colors, { themeColors } from '../shared/styles/colors';
+import shadows from '../shared/styles/shadows';
+import SettingsView from '../views/SettingsView/SettingsView';
+import { StackParamList } from './types';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,7 +49,6 @@ const getTabBarIcon = ({ focused, route }) => {
       style={{
         alignItems: 'center',
         justifyContent: 'center',
-        // marginBottom: 2,
         bottom: -10,
       }}>
       <Image

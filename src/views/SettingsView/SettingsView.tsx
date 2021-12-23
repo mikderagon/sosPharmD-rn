@@ -7,25 +7,15 @@
  */
 
 import React from 'react';
-import { useEffect } from 'react';
-import { Alert, Text } from 'react-native';
-import {
-  Animated,
-  Easing,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import 'react-native-gesture-handler';
-import colors, { themeColors } from '../../styles/colors';
-import { NavigationProp } from '../../types';
+import TopNavBar from '../../components/NavBar/TopNavBar';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import * as firestore from '../../server/firestore';
-import TopNavBar from '../../components/NavBar/TopNavBar';
+} from '../../shared/helpers/layout/responsiveLayout';
+import * as firestore from '../../shared/server/firestore';
+import { themeColors } from '../../shared/styles/colors';
 
 const BackCaret = require('../../../assets/images/backCaret.png');
 

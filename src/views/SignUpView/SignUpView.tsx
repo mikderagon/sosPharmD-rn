@@ -1,18 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { AnimatedTrail } from '../../components/Animations';
+import AnimatedTrail from '../../components/Animations';
 import Button from '../../components/Button/LoginButton';
 import { Input, PasswordInput } from '../../components/TextInput';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import * as firestore from '../../server/firestore';
+} from '../../shared/helpers/layout/responsiveLayout';
+import colors from '../../shared/styles/colors';
 import { store } from '../../store';
-import colors from '../../styles/colors';
 
 const SignUpLocumView = ({ navigation }) => {
   const { state, dispatch } = useContext(store);

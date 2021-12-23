@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import { widthPercentageToDP as wp } from '../../helpers/layout/responsiveLayout';
+import { widthPercentageToDP as wp } from '../../shared/helpers/layout/responsiveLayout';
 
 type InputProps = {
   autoFocus?: boolean;

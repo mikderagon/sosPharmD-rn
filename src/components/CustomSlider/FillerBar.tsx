@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
-import colors from '../../styles/colors';
+import colors from '../../shared/styles/colors';
 
 const { max, min, add, multiply } = Animated;
 

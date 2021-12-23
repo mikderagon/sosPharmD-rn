@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
-import { Value } from 'react-native-reanimated';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
-import { heightPercentageToDP as hp } from '../../helpers/layout/responsiveLayout';
-import { themeColors } from '../../styles/colors';
+import { heightPercentageToDP as hp } from '../../shared/helpers/layout/responsiveLayout';
+import { themeColors } from '../../shared/styles/colors';
 
 const MONTHS_FR = [
   'Janvier',

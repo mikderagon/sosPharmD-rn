@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import 'react-native-gesture-handler';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import colors, { themeColors } from '../../styles/colors';
-import shadows from '../../styles/shadows';
+} from '../../shared/helpers/layout/responsiveLayout';
+import { themeColors } from '../../shared/styles/colors';
+import shadows from '../../shared/styles/shadows';
 
 interface TopNavBarProps {
   navigation: any;

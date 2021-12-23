@@ -12,8 +12,8 @@ import Button from '../../components/Button/Button';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import { NavigationProps } from '../../types';
+} from '../../shared/helpers/layout/responsiveLayout';
+import { NavigationProps } from '../../navigation/types';
 
 const OnboardingImage1 = require('assets/images/onboarding1.png');
 const OnboardingImage2 = require('assets/images/onboarding2.png');

@@ -1,11 +1,8 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext, useState } from 'react';
 import 'react-native-gesture-handler';
-import _ from 'underscore';
 import { store } from '../store';
 import CalendarCreationView from '../views/CalendarCreationView';
-import CalendarDateView from '../views/CalendarDateView';
-import CalendarTimeView from '../views/CalendarTimeView';
 
 const Stack = createStackNavigator();
 

@@ -8,17 +8,17 @@ import {
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import { AnimatedTrail } from '../../components/Animations';
+import AnimatedTrail from '../../components/Animations';
 import LoginButton from '../../components/Button/LoginButton';
 import { Input } from '../../components/TextInput';
+import { NavigationProps } from '../../navigation/types';
+import signIn from '../../shared/api/signIn';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import signIn from '../../api/signIn';
+} from '../../shared/helpers/layout/responsiveLayout';
+import colors from '../../shared/styles/colors';
 import { store } from '../../store';
-import colors from '../../styles/colors';
-import { NavigationProps } from '../../types';
 
 const usernameImage = require('assets/images/user.png');
 const passwordImage = require('assets/images/password.png');

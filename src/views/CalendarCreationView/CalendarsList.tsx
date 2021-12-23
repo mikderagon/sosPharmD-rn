@@ -1,8 +1,8 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
 import 'react-native-gesture-handler';
-import { heightPercentageToDP as hp } from '../../helpers/layout/responsiveLayout';
-import Month from '../CalendarView/Month';
+import { heightPercentageToDP as hp } from '../../shared/helpers/layout/responsiveLayout';
+import Month from './Month';
 
 export default ({ months, selectedDates, setSelectedDates }) => {
   return (

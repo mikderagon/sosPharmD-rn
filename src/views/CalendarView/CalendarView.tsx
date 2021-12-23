@@ -1,13 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import TopNavBar from '../../components/NavBar/TopNavBar';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from '../../helpers/layout/responsiveLayout';
-import colors, { themeColors } from '../../styles/colors';
-import Month from './Month';
+} from '../../shared/helpers/layout/responsiveLayout';
+import { themeColors } from '../../shared/styles/colors';
 
 const FilterIcon = require('../../../assets/images/filters.png');
 const PlusIcon = require('../../../assets/images/plus.png');
@@ -18,34 +17,21 @@ const styles = StyleSheet.create({
     height: hp(100),
     width: wp(100),
   },
-  weekdaysContainer: {
-    backgroundColor: themeColors.dark,
-    height: hp(4),
-    width: wp(100),
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  weekday: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  weekdayFont: {
-    color: themeColors.dark,
-  },
   scrollViewContent: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: hp(1),
+  },
+  welcomeContainer: {
+    paddingVertical: hp(1),
+    paddingHorizontal: wp(2),
+    width: wp(95),
+    borderRadius: 10,
+    backgroundColor: themeColors.accent1,
   },
 });
 
 export default ({ navigation }) => {
-  const weekdays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((w, index) => (
-    <View style={styles.weekday} key={`${index} ${w}`}>
-      <Text style={styles.weekdayFont}>{w}</Text>
-    </View>
-  ));
-
   return (
     <View style={styles.container}>
       <TopNavBar
@@ -56,7 +42,12 @@ export default ({ navigation }) => {
         rightHeaderIcon={PlusIcon}
         rightHeaderAction={() => navigation.navigate('CalendarCreation')}
       />
-      <View style={styles.weekdaysContainer}>{weekdays}</View>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.welcomeContainer}>
+          <Text>Bienvenue, Mikael!</Text>
+          <Text>Voici votre liste de calendriers</Text>
+        </View>
+      </ScrollView>
     </View>
   );
 };

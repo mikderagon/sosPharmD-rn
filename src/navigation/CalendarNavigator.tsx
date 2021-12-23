@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import 'react-native-gesture-handler';
 import CalendarCreationNavigator from '../navigation/CalendarCreationNavigator';
 import { store } from '../store';
+import CalendarCreationView from '../views/CalendarCreationView';
 import CalendarView from '../views/CalendarView';
 
 const Stack = createStackNavigator();
@@ -25,7 +26,7 @@ const Navigator = (props: Props) => {
       />
       <Stack.Screen
         name="CalendarCreation"
-        component={CalendarCreationNavigator}
+        component={CalendarCreationView}
         options={{
           headerShown: false,
           gestureEnabled: false,

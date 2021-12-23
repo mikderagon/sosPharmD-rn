@@ -9,20 +9,15 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { ImageSourcePropType } from 'react-native';
 import 'react-native-gesture-handler';
 import { store } from '../store';
-import { StackParamList } from '../types';
 import OnboardingView from '../views/OnboardingView';
 import SignInView from '../views/SignInView';
 import SignUpView from '../views/SignUpView';
 import TabNavigator from './TabNavigator';
+import { StackParamList } from './types';
 
 const Stack = createStackNavigator<StackParamList>();
-
-const HomeIcon = require('../assets/images/HomeIcon.png');
-const CalendarIcon = require('../assets/images/CalendarIcon.png');
-const UserIcon = require('../assets/images/UserIcon.png');
 
 const defaultTheme = {
   dark: false,

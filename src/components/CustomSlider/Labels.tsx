@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { themeColors } from '../../styles/colors';
+import { themeColors } from '../../shared/styles/colors';
 
 interface LabelProps {
   labels: number[];

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Alert, Image, StyleSheet, TextInput, View } from 'react-native';
 import 'react-native-gesture-handler';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -21,12 +21,23 @@ const getMonth = m => {
 };
 const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => getMonth(i));
 
-export default ({ route, navigation }) => {
-  const { selectedDates, setSelectedDates } = route.params;
+export default ({ navigation }) => {
+  const [selectedDates, setSelectedDates] = useState([]);
+
+  const addDates = addedDates => {
+    // setSelectedDates([...selectedDates, ...addedDates]);
+    // setSelectedDates(_selectedDates => {
+    //   return { ..._selectedDates, ...addedDates };
+    // });
+  };
+
+  // console.log(selectedDates);
+
   const onNext = () => {
     Alert.alert('next');
     ('next');
   };
+
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
 
@@ -111,7 +122,7 @@ export default ({ route, navigation }) => {
         {...{
           months,
           selectedDates,
-          setSelectedDates: addedDates => setSelectedDates(addedDates),
+          setSelectedDates: dates => addDates(dates),
         }}
       />
     </View>

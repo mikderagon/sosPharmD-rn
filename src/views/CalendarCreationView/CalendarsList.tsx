@@ -7,16 +7,18 @@ import Month from './Month';
 export default ({ months, selectedDates, setSelectedDates }) => {
   return (
     <FlatList
-      data={months.map(month => (
-        <Month
-          key={month.toLocaleString()}
-          {...{
-            month,
-            selectedDates,
-            setSelectedDates,
-          }}
-        />
-      ))}
+      data={months.map(month => {
+        return (
+          <Month
+            key={month.toLocaleString()}
+            {...{
+              month,
+              selectedDates,
+              setSelectedDates,
+            }}
+          />
+        );
+      })}
       renderItem={({ item }) => (
         <View style={{ marginVertical: hp(2) }}>{item}</View>
       )}

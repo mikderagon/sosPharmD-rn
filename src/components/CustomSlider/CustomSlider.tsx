@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
-import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import {
+  Button,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Animated from 'react-native-reanimated';
 import { themeColors } from '../../shared/styles/colors';
 import Cursor from './Cursor';
@@ -16,77 +22,47 @@ const count = weekLength;
 const sliderHeight = sliderWidth / count;
 
 export default ({
-  month,
-  row,
+  // month,
+  // row,
   labels,
-  firstDay,
   startPosition = 0,
   endPosition = 0,
-  selectedDates,
-  setSelectedDates,
+  fetchCursorPosition1,
+  fetchCursorPosition2,
+  cursorPosition1,
+  cursorPosition2,
 }) => {
   // components to render
   const [cursors, setCursors] = useState([]);
 
+  const x1 = new Value(0);
+  const x2 = new Value(0);
+
   const getNewCursors = () => {
-    const x1 = new Value(0);
-    const x2 = new Value(0);
-
-    let indexes = [];
-
-    const retrieveIndex1 = index => {
-      indexes[0] = index;
-
-      if (indexes.length === 2) {
-        setSelectedDates({
-          [`${month.toLocaleString().split(',')[0]}/${row}/${
-            cursors.length + 1
-          }`]: indexes[0],
-          [`${month.toLocaleString().split(',')[0]}/${row}/${
-            cursors.length + 2
-          }`]: indexes[1],
-        });
-      }
-    };
-
-    const retrieveIndex2 = index => {
-      indexes[1] = index;
-
-      if (indexes.length === 2) {
-        setSelectedDates({
-          [`${month.toLocaleString().split(',')[0]}/${row}/${
-            cursors.length + 1
-          }`]: indexes[0],
-          [`${month.toLocaleString().split(',')[0]}/${row}/${
-            cursors.length + 2
-          }`]: indexes[1],
-        });
-      }
-    };
-
     const cursorProps = {
       size: sliderHeight,
       count: labels.length,
-      startPosition: firstDay,
       offsetIndex: startPosition,
       endIndex: endPosition,
     };
 
     return (
-      <React.Fragment key={`${month}/${row}/${Math.random() * 10}`}>
+      <React.Fragment key={`${Math.random() * 10}`}>
         <FillerBar height={sliderHeight} x1={x1} x2={x2} />
         <Cursor
           {...{
             ...cursorProps,
             x: x1,
-            fetchCursorPosition: position => retrieveIndex1(position),
+            startPosition: cursorPosition1 || labels[0],
+            fetchCursorPosition: position => fetchCursorPosition1(position),
           }}
         />
         <Cursor
           {...{
             ...cursorProps,
             x: x2,
-            fetchCursorPosition: position => retrieveIndex2(position),
+            startPosition: cursorPosition2 || labels[0],
+            fetchCursorPosition: position => fetchCursorPosition2(position),
           }}
         />
       </React.Fragment>
@@ -94,12 +70,12 @@ export default ({
   };
 
   const addCursors = () => {
-    setCursors([...cursors, getNewCursors()]);
+    setCursors([getNewCursors()]);
   };
 
   return (
     <View style={styles.container}>
-      {cursors.length < 1 && (
+      {cursors.length === 0 && (
         <TouchableOpacity
           style={[
             styles.button,

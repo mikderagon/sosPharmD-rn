@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import CustomSlider from '../../components/CustomSlider/CustomSlider';
@@ -21,6 +21,9 @@ const MONTHS_FR = [
 ];
 
 export default ({ month, selectedDates, setSelectedDates }) => {
+  // const _selectedDates = [1, 5, 6, 7, 9, 10, 11, 18, 19, 20];
+  const [cursors, setCursors] = useState([]);
+
   const weekdayIndex = month.getDay();
 
   let firstRow = [0, 0, 0, 0, 0, 0, 0];
@@ -83,11 +86,110 @@ export default ({ month, selectedDates, setSelectedDates }) => {
         ? fifthRow.indexOf(0)
         : fifthRow.indexOf(lastDayOfMonth) + 1);
 
-  const defaultMonthProps = {
-    month,
-    selectedDates,
-    setSelectedDates,
+  const getCursorPosition1 = rowNumber => {
+    let row;
+    switch (rowNumber) {
+      case 1:
+        row = firstRow;
+        break;
+      case 2:
+        row = secondRow;
+        break;
+      case 3:
+        row = thirdRow;
+        break;
+      case 4:
+        row = fourthRow;
+        break;
+      case 5:
+        row = fifthRow;
+        break;
+      case 6:
+        row = lastRow;
+        break;
+      default:
+        row = lastRow;
+        break;
+    }
+
+    for (const n of row) {
+      for (const d of selectedDates) {
+        if (n === d) {
+          return n;
+        }
+      }
+    }
   };
+
+  const getCursorPosition2 = rowNumber => {
+    let row;
+    switch (rowNumber) {
+      case 1:
+        row = firstRow;
+        break;
+      case 2:
+        row = secondRow;
+        break;
+      case 3:
+        row = thirdRow;
+        break;
+      case 4:
+        row = fourthRow;
+        break;
+      case 5:
+        row = fifthRow;
+        break;
+      case 6:
+        row = lastRow;
+        break;
+      default:
+        row = lastRow;
+        break;
+    }
+
+    for (const n of row) {
+      for (let d = selectedDates[selectedDates.length - 1]; d > 0; d--) {
+        if (n === d) {
+          return n;
+        }
+      }
+    }
+  };
+
+  const getRowOfCursor = cursorPosition => {
+    let i = 0;
+    for (const row of [
+      firstRow,
+      secondRow,
+      thirdRow,
+      fourthRow,
+      fifthRow,
+      lastRow,
+    ]) {
+      i++;
+      if (row[0] <= cursorPosition && row[row.length - 1] >= cursorPosition) {
+        return i;
+      }
+    }
+  };
+
+  const formatKey = (row, cursor) => {
+    return `${month.getFullYear()}-${
+      month.getMonth() + 1
+    }/row=${row}/cursor=${cursor}`;
+  };
+
+  const setCursorPosition1 = (rowNumber, position) => {
+    const newDate = [formatKey(rowNumber, 1), position];
+    setCursors([...cursors, ...newDate]);
+  };
+
+  const setCursorPosition2 = (rowNumber, position) => {
+    const newDate = [formatKey(rowNumber, 2), position];
+    setCursors([...cursors, ...newDate]);
+  };
+
+  console.log(cursors);
 
   return (
     <>
@@ -98,60 +200,62 @@ export default ({ month, selectedDates, setSelectedDates }) => {
       </View>
       <CustomSlider
         {...{
-          ...defaultMonthProps,
+          // ...defaultMonthProps,
           key: `${month}/${1}`,
-          row: 1,
           startPosition: weekdayIndex,
-          firstDay: firstRow[0],
           labels: firstRow,
+          // cursorPosition1: getCursorPosition1(1),
+          // cursorPosition2: getCursorPosition2(1),
+          fetchCursorPosition1: position => setCursorPosition1(1, position),
+          fetchCursorPosition2: position => setCursorPosition2(1, position),
         }}
       />
       <CustomSlider
         {...{
-          ...defaultMonthProps,
+          // ...defaultMonthProps,
           key: `${month}/${2}`,
-          row: 2,
-          firstDay: secondRow[0],
           labels: secondRow,
+          fetchCursorPosition1: position => setCursorPosition1(2, position),
+          fetchCursorPosition2: position => setCursorPosition2(2, position),
         }}
       />
       <CustomSlider
         {...{
-          ...defaultMonthProps,
+          // ...defaultMonthProps,
           key: `${month}/${3}`,
-          row: 3,
-          firstDay: thirdRow[0],
           labels: thirdRow,
+          fetchCursorPosition1: position => setCursorPosition1(3, position),
+          fetchCursorPosition2: position => setCursorPosition2(3, position),
         }}
       />
       <CustomSlider
         {...{
-          ...defaultMonthProps,
+          // ...defaultMonthProps,
           key: `${month}/${4}`,
-          row: 4,
-          firstDay: fourthRow[0],
           labels: fourthRow,
+          fetchCursorPosition1: position => setCursorPosition1(4, position),
+          fetchCursorPosition2: position => setCursorPosition2(4, position),
         }}
       />
       <CustomSlider
         {...{
-          ...defaultMonthProps,
+          // ...defaultMonthProps,
           key: `${month}/${5}`,
-          row: 5,
-          firstDay: fifthRow[0],
           labels: fifthRow,
           endPosition: hasSixthRow ? 0 : endPosition,
+          fetchCursorPosition1: position => setCursorPosition1(5, position),
+          fetchCursorPosition2: position => setCursorPosition2(5, position),
         }}
       />
       {hasSixthRow && (
         <CustomSlider
           {...{
-            ...defaultMonthProps,
+            // ...defaultMonthProps,
             key: `${month}/${6}`,
-            row: 6,
-            firstDay: lastRow[0],
             labels: lastRow,
             endPosition,
+            fetchCursorPosition1: position => setCursorPosition1(6, position),
+            fetchCursorPosition2: position => setCursorPosition2(6, position),
           }}
         />
       )}

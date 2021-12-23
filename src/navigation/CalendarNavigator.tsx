@@ -16,16 +16,6 @@ const Navigator = (props: Props) => {
   const { initialRouteName } = props;
   const { state, dispatch } = useContext(store);
 
-  const [selectedDates, setSelectedDates] = useState({});
-
-  // console.log(selectedDates);
-
-  const addDates = addedDates => {
-    setSelectedDates(_selectedDates => {
-      return { ..._selectedDates, ...addedDates };
-    });
-  };
-
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -41,10 +31,6 @@ const Navigator = (props: Props) => {
         options={{
           headerShown: false,
           gestureEnabled: false,
-        }}
-        initialParams={{
-          selectedDates,
-          setSelectedDates: dates => addDates(dates),
         }}
       />
     </Stack.Navigator>

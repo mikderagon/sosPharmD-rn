@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     tintColor: themeColors.dark,
     height: 20,
     resizeMode: 'contain',
-    width: 18,
+    width: 20,
   },
 });
 

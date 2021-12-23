@@ -1,58 +1,45 @@
+import React, { useState } from 'react';
 import {
-  BottomTabNavigationOptions,
-  BottomTabNavigationProp,
-} from '@react-navigation/bottom-tabs';
-import React, { useRef, useState } from 'react';
-import {
-  Button,
+  Alert,
   Image,
-  ScrollView,
-  ScrollViewComponent,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import 'react-native-gesture-handler';
-import { Input } from '../../components/TextInput';
-import { useForm } from 'react-hook-form';
+import NextButton from '../../components/Button/LoginButton';
+import TopNavBar from '../../components/NavBar/TopNavBar';
+import WeekdaysBar from '../../components/WeekdaysBar/WeekdaysBar';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from '../../helpers/layout/responsiveLayout';
-import colors, { themeColors } from '../../styles/colors';
+import { themeColors } from '../../styles/colors';
+import CalendarsList from './CalendarsList';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Month from '../CalendarView/Month';
-import TopNavBar from '../../components/NavBar/TopNavBar';
-import NextButton from '../../components/Button/LoginButton';
-
-type Gender = 'm' | 'f';
+import TimePicker from './TimePicker';
 
 const BackCaret = require('../../../assets/images/backCaret.png');
-const PharmacistFemale = require('../../../assets/images/pharmacist_female.png');
-const PharmacistMale = require('../../../assets/images/pharmacist_male.png');
+const Clock = require('../../../assets/images/clock.png');
 
-const CalendarCreationView = ({ navigation }) => {
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
+const getMonth = m => {
+  return new Date(new Date().getFullYear(), new Date().getMonth() + m, 1);
+};
+const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => getMonth(i));
 
-  const weekdays = ['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((w, index) => (
-    <View style={styles.weekday} key={`${index} ${w}`}>
-      <Text style={styles.weekdayFont}>{w}</Text>
-    </View>
-  ));
-
+export default ({ route, navigation }) => {
+  const { selectedDates, setSelectedDates } = route.params;
+  const onNext = () => {
+    Alert.alert('next');
+    ('next');
+  };
   const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
 
   const [startTimeVisible, setStartTimeVisible] = useState(false);
   const [endTimeVisible, setEndTimeVisible] = useState(false);
-
-  const [selectedPharmacist, setSelectedPharmacist] =
-    useState<Gender>(undefined);
 
   const confirmStartTime = (time: Date) => {
     setStartTimeVisible(false);
@@ -74,77 +61,109 @@ const CalendarCreationView = ({ navigation }) => {
 
   const toTimeFormat = (time: Date): string => {
     const hours = time.getHours();
-    const minutes = time.getMinutes();
+    let minutes = time.getMinutes().toString();
+    minutes = minutes.length === 1 ? `0${minutes}` : minutes;
     return `${hours}:${minutes}`;
   };
 
-  const onNext = () => {
-    navigation.navigate('CalendarDateView');
+  console.log(selectedDates);
+
+  const isValidCalendar = () => {
+    const timeValidity = startTime < endTime;
+    const dateValidity = true;
+    return timeValidity && dateValidity;
   };
 
   return (
     <View style={styles.container}>
       <TopNavBar
+        headerTitle="Nouveau Calendrier"
         navigation={navigation}
         leftHeaderIcon={BackCaret}
         leftHeaderAction={() => navigation.navigate('Calendar')}
+        rightHeaderIcon={isValidCalendar() ? BackCaret : null}
+        rightHeaderAction={onNext}
       />
 
-      <Text
+      <TextInput
         style={{
-          textAlign: 'center',
-          color: themeColors.accent1,
-          marginVertical: hp(3),
-          width: wp(80),
-          fontSize: 16,
-          fontWeight: '800',
-        }}>
-        Identifier le ou la pharmacien(nne) propriétaire associé(e) au
-        calendrier
-      </Text>
+          marginTop: hp(2),
+          backgroundColor: '#fff',
+          borderRadius: 5,
+          height: hp(5),
+          width: wp(95),
+          paddingHorizontal: wp(2),
+        }}
+        placeholder="Propriétaire"
+        placeholderTextColor="#aaa"
+      />
 
       <View
         style={{
           flexDirection: 'row',
-          alignItems: 'center',
-          marginTop: hp(1),
+          width: wp(95),
+          justifyContent: 'space-between',
+          marginTop: hp(2),
+          marginBottom: hp(2),
         }}>
-        <TouchableOpacity onPress={() => setSelectedPharmacist('m')}>
-          <Image
-            source={PharmacistMale}
-            style={{
-              height: hp(15),
-              width: hp(15),
-              resizeMode: 'contain',
-              tintColor: selectedPharmacist === 'm' ? '#fff' : '#000',
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setSelectedPharmacist('f')}>
-          <Image
-            source={PharmacistFemale}
-            style={{
-              height: hp(15),
-              width: hp(15),
-              resizeMode: 'contain',
-              tintColor: selectedPharmacist === 'f' ? '#fff' : '#000',
-            }}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={{ marginTop: hp(3) }}>
-        <Input
-          autoFocus
-          control={control}
-          name="firstName"
-          placeholder="Prénom"
+        <Image
+          source={Clock}
+          style={{
+            height: hp(4.5),
+            width: hp(4.5),
+            resizeMode: 'contain',
+            tintColor: themeColors.accent1,
+            // marginRight: wp(4),
+          }}
+        />
+        <TimePicker
+          time={startTime}
+          label="De:"
+          toggle={() => setStartTimeVisible(!startTimeVisible)}
+        />
+        <TimePicker
+          time={endTime}
+          label="À:"
+          toggle={() => setEndTimeVisible(!endTimeVisible)}
         />
       </View>
-      <View style={{ height: hp(2) }} />
-      <Input control={control} name="lastName" placeholder="Nom" />
-      <View style={{ height: hp(2) }} />
 
-      <NextButton text="Suivant" onPress={onNext} color={themeColors.light} />
+      <DateTimePickerModal
+        date={startTime}
+        isVisible={startTimeVisible}
+        mode="time"
+        onConfirm={confirmStartTime}
+        onCancel={cancelStartTime}
+      />
+      <DateTimePickerModal
+        date={endTime}
+        isVisible={endTimeVisible}
+        mode="time"
+        onConfirm={confirmEndTime}
+        onCancel={cancelEndTime}
+        minimumDate={startTime}
+      />
+
+      <WeekdaysBar />
+
+      <CalendarsList
+        {...{
+          months,
+          selectedDates,
+          setSelectedDates: addedDates => setSelectedDates(addedDates),
+        }}
+      />
+
+      {/* ranges selected and */}
+      {/* {startTime < endTime && (
+        <View style={{ marginBottom: hp(3) }}>
+          <NextButton
+            onPress={onNext}
+            color={themeColors.accent2}
+            text="Ajouter"
+          />
+        </View>
+      )} */}
     </View>
   );
 };
@@ -203,31 +222,14 @@ const styles = StyleSheet.create({
     height: hp(5),
     width: wp(70),
     borderRadius: wp(2),
-    backgroundColor: colors.main,
+    backgroundColor: themeColors.accent1,
     marginTop: '10%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonText: {
-    color: colors.white,
+    color: '#fff',
     fontWeight: '600',
     fontSize: 14,
   },
-  weekdaysContainer: {
-    backgroundColor: colors.lightMain,
-    height: hp(4),
-    width: wp(100),
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  weekday: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  weekdayFont: {
-    color: colors.main,
-  },
 });
-
-export default CalendarCreationView;

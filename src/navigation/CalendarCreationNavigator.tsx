@@ -33,20 +33,10 @@ const Navigator = (props: Props) => {
         name="CalendarCreationView"
         component={CalendarCreationView}
         options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="CalendarTimeView"
-        component={CalendarTimeView}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="CalendarDateView"
-        component={CalendarDateView}
         initialParams={{
           selectedDates,
           setSelectedDates: dates => addDates(dates),
         }}
-        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
